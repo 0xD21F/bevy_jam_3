@@ -1,17 +1,17 @@
-mod debug;
 mod camera;
+mod debug;
+mod enemies;
+mod enemy;
+mod level;
 mod player;
 mod unit;
-mod level;
-mod enemy;
-mod enemies;
 
-use debug::*;
 use camera::*;
+use debug::*;
+use enemy::*;
+use level::*;
 use player::*;
 use unit::*;
-use level::*;
-use enemy::*;
 
 use bevy::{prelude::*, window::*};
 
@@ -51,7 +51,6 @@ fn main() {
         .register_type::<Velocity>()
         .run();
 }
-
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let level_bounds_half_extents = 50.0 * PIXELS_PER_METER;

@@ -4,7 +4,12 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use rand::Rng;
 
-use crate::{unit::{UnitBundle, Unit, Velocity}, PIXELS_PER_METER, player::Player, enemies::enemy_entity_plugins::EnemyEntityPlugins};
+use crate::{
+    enemies::enemy_entity_plugins::EnemyEntityPlugins,
+    player::Player,
+    unit::{Unit, UnitBundle, Velocity},
+    PIXELS_PER_METER,
+};
 
 #[derive(Component, Reflect)]
 pub struct Enemy;
@@ -41,8 +46,7 @@ pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_plugins(EnemyEntityPlugins)
+        app.add_plugins(EnemyEntityPlugins)
             .add_system(setup_enemy_spawn_timer.on_startup());
     }
 }

@@ -7,13 +7,11 @@ use bevy_prototype_debug_lines::*;
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
 
 #[derive(Resource)]
-pub struct DebugState {
-}
+pub struct DebugState {}
 
 impl Default for DebugState {
     fn default() -> Self {
-        Self {
-        }
+        Self {}
     }
 }
 

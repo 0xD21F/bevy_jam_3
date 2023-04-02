@@ -2,14 +2,18 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::Collider;
 use rand::Rng;
 
-use crate::{player::Player, enemy::{Enemy, EnemySpawnTimer, EnemyBundle}, unit::{Velocity, Unit, UnitBundle}, PIXELS_PER_METER};
+use crate::{
+    enemy::{Enemy, EnemyBundle, EnemySpawnTimer},
+    player::Player,
+    unit::{Unit, UnitBundle, Velocity},
+    PIXELS_PER_METER,
+};
 
 pub struct SkullerPlugin;
 
 impl Plugin for SkullerPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_system(skuller_movement_system)
+        app.add_system(skuller_movement_system)
             .add_system(spawn_skuller);
     }
 }
@@ -23,7 +27,12 @@ impl Default for Skuller {
     }
 }
 
-pub fn spawn_skuller(mut commands: Commands, asset_server: Res<AssetServer>, time: Res<Time>, mut spawn_timer: ResMut<EnemySpawnTimer>) {
+pub fn spawn_skuller(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    time: Res<Time>,
+    mut spawn_timer: ResMut<EnemySpawnTimer>,
+) {
     // Tick the timer
     spawn_timer.timer.tick(time.delta());
 
@@ -33,7 +42,7 @@ pub fn spawn_skuller(mut commands: Commands, asset_server: Res<AssetServer>, tim
         let enemy_entity = commands.spawn(EnemyBundle {
             unit_bundle: UnitBundle {
                 sprite: SpriteBundle {
-                    texture: asset_server.load("sprites/skull.png"),
+                    texture: asset_server.load("sprites/skuller.png"),
                     sprite: Sprite {
                         custom_size: Some(Vec2::new(sprite_size, sprite_size)),
                         ..default()
@@ -52,9 +61,18 @@ pub fn spawn_skuller(mut commands: Commands, asset_server: Res<AssetServer>, tim
     }
 }
 
-fn skuller_movement_system (
+fn skuller_movement_system(
     player_query: Query<&Transform, With<Player>>,
-    mut enemy_query: Query<(&mut Enemy, &mut Unit, &Skuller, &mut Velocity, &mut Transform), Without<Player>>,
+    mut enemy_query: Query<
+        (
+            &mut Enemy,
+            &mut Unit,
+            &Skuller,
+            &mut Velocity,
+            &mut Transform,
+        ),
+        Without<Player>,
+    >,
 ) {
     let player_position = player_query.single().translation;
     let desired_distance = 64.0; // the desired distance to maintain from the player

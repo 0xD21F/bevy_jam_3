@@ -6,14 +6,13 @@ pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_system(camera_movement_system)
+        app.add_system(camera_movement_system)
             .add_system(spawn_camera.on_startup());
     }
 }
 
 pub fn spawn_camera(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle{
+    commands.spawn(Camera2dBundle {
         transform: Transform {
             scale: Vec3::new(0.5, 0.5, 1.0),
             ..default()

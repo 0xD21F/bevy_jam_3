@@ -74,8 +74,7 @@ pub struct UnitPlugin;
 
 impl Plugin for UnitPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_system(apply_velocity_system);
+        app.add_system(apply_velocity_system);
     }
 }
 
