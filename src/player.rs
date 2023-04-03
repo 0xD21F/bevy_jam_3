@@ -3,17 +3,11 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     unit::{Unit, UnitBundle, Velocity},
-    PIXELS_PER_METER,
+    PIXELS_PER_METER, sprite_sheet_animation::{AnimationIndices, AnimationTimer},
 };
 
-#[derive(Component, Reflect)]
+#[derive(Component, Reflect, Default)]
 pub struct Player;
-
-impl Default for Player {
-    fn default() -> Self {
-        Self {}
-    }
-}
 
 #[derive(Bundle)]
 pub struct PlayerBundle {
@@ -36,24 +30,35 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_player.on_startup())
+        app
+            .add_system(spawn_player.on_startup())
             .add_system(player_movement_system);
     }
 }
 
-pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_player(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+) {
     let sprite_size = PIXELS_PER_METER * 2.0;
 
-    let player_entity = commands.spawn(PlayerBundle {
+    let texture_handle = asset_server.load("sprites/ape.png");
+    let texture_atlas =
+        TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 1, 1, None, None);
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+    // Use only the subset of sprites in the sheet that make up the run animation
+    let animation_indices = AnimationIndices { first: 0, last: 0 };
+
+    let _player_entity = commands.spawn(PlayerBundle {
         unit_bundle: UnitBundle {
-            sprite: SpriteBundle {
-                texture: asset_server.load("sprites/ape.png"),
-                sprite: Sprite {
-                    custom_size: Some(Vec2::new(sprite_size, sprite_size)),
-                    ..default()
-                },
+            sprite: SpriteSheetBundle {
+                texture_atlas: texture_atlas_handle,
+                sprite: TextureAtlasSprite::new(animation_indices.first),
                 ..default()
             },
+            animation_indices: animation_indices,
+            animation_timer: AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
             collider: Collider::cuboid(sprite_size / 2.0, sprite_size / 2.0),
             ..default()
         },

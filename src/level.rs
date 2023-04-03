@@ -44,7 +44,7 @@ fn spawn_level_element(
 
     let collider = Collider::cuboid(element.size.x / 2.0, element.size.y / 2.0);
 
-    let mut entity_builder = commands.spawn((
+    let mut _entity_builder = commands.spawn((
         sprite_bundle,
         collider,
         Sensor,

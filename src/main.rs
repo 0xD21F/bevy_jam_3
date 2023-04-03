@@ -1,16 +1,17 @@
 mod camera;
 mod debug;
 mod enemies;
-mod enemy;
 mod level;
 mod player;
+mod sprite_sheet_animation;
 mod unit;
 
 use camera::*;
 use debug::*;
-use enemy::*;
+use enemies::EnemyPlugin;
 use level::*;
 use player::*;
+use sprite_sheet_animation::SpriteSheetPlugin;
 use unit::*;
 
 use bevy::{prelude::*, window::*};
@@ -43,6 +44,7 @@ fn main() {
         .add_plugin(PlayerPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(UnitPlugin)
+        .add_plugin(SpriteSheetPlugin)
         .add_system(setup.on_startup())
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(
             PIXELS_PER_METER,

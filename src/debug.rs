@@ -6,14 +6,8 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_prototype_debug_lines::*;
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
 
-#[derive(Resource)]
+#[derive(Resource, Default)]
 pub struct DebugState {}
-
-impl Default for DebugState {
-    fn default() -> Self {
-        Self {}
-    }
-}
 
 pub struct DebugPlugin;
 
@@ -23,6 +17,8 @@ impl Plugin for DebugPlugin {
             app.add_plugin(WorldInspectorPlugin::new())
                 .add_plugin(RapierDebugRenderPlugin::default())
                 .add_plugin(DebugLinesPlugin::default())
+                // .add_plugin(LogDiagnosticsPlugin::default())
+                // .add_plugin(FrameTimeDiagnosticsPlugin::default())
                 .init_resource::<DebugState>();
         }
     }

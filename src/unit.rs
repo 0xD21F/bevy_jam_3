@@ -1,6 +1,7 @@
 use bevy::prelude::*;
-use bevy_prototype_debug_lines::{DebugLines, DebugShapes};
 use bevy_rapier2d::prelude::*;
+
+use crate::sprite_sheet_animation::{AnimationIndices, AnimationTimer};
 
 #[derive(Component, Reflect)]
 pub struct Unit {
@@ -54,7 +55,9 @@ impl Default for Flock {
 #[derive(Bundle)]
 pub struct UnitBundle {
     pub unit: Unit,
-    pub sprite: SpriteBundle,
+    pub animation_indices: AnimationIndices,
+    pub animation_timer: AnimationTimer,
+    pub sprite: SpriteSheetBundle,
     pub collider: Collider,
     pub velocity: Velocity,
 }
@@ -63,6 +66,8 @@ impl Default for UnitBundle {
     fn default() -> Self {
         Self {
             unit: Unit::default(),
+            animation_indices: AnimationIndices::default(),
+            animation_timer: AnimationTimer::default(),
             sprite: Default::default(),
             collider: Collider::cuboid(1.0, 1.0),
             velocity: Velocity::default(),

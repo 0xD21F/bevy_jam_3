@@ -11,7 +11,7 @@ impl Plugin for CameraPlugin {
     }
 }
 
-pub fn spawn_camera(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle {
         transform: Transform {
             scale: Vec3::new(0.5, 0.5, 1.0),
