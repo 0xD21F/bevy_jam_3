@@ -4,9 +4,9 @@ use bevy_rapier2d::prelude::Collider;
 use crate::{
     animation::Animated,
     entity::{
-        creature::{CreatureBundle, CreaturePlugin},
-        player::{PlayerBundle, PlayerPlugin},
-        EnemyPlugin, spawner::Spawner,
+        creature::{CreatureBundle},
+        player::{PlayerBundle},
+        spawner::Spawner,
     },
     level::{build_level, LevelElementDefinition},
     PIXELS_PER_METER,

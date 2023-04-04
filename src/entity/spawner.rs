@@ -1,17 +1,12 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::Collider;
-use rand::Rng;
 
 use crate::{
     animation::Animated,
-    behaviour::{approach_and_keep_distance::ApproachAndKeepDistance, separation::Separation},
     PIXELS_PER_METER,
 };
 
 use super::{
-    creature::{Creature, CreatureBundle},
-    skuller::{Skuller, SkullerBundle},
-    Enemy,
+    skuller::{SkullerBundle},
 };
 
 pub struct SpawnerPlugin;
@@ -47,7 +42,7 @@ fn spawn_system(
         spawner.timer.tick(time.delta());
         if spawner.timer.just_finished() {
             // If the spawn rate is greater than the number of entities left to spawn, set the spawn rate to the number of entities left to spawn
-            if (spawner.spawn_rate > spawner.spawn_count) {
+            if spawner.spawn_rate > spawner.spawn_count {
                 spawner.spawn_rate = spawner.spawn_count;
             }
 

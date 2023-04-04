@@ -1,7 +1,4 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
-
-use crate::{animation::Animated, PIXELS_PER_METER};
 
 use super::creature::{Creature, CreatureBundle, Velocity};
 

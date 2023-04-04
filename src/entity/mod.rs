@@ -28,6 +28,3 @@ impl Plugin for EnemyPlugin {
         app.add_plugins(EnemyEntityPlugins);
     }
 }
-
-pub fn setup_enemy_spawn_timer(mut commands: Commands) {
-}
