@@ -1,23 +1,23 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::sprite_sheet_animation::{AnimationIndices, AnimationTimer};
+use crate::animation::Animated;
 
 #[derive(Component, Reflect)]
-pub struct Unit {
+pub struct Creature {
     pub acceleration: f32,
     pub deceleration: f32,
     pub max_speed: f32,
     pub health: f32,
 }
 
-impl Default for Unit {
+impl Default for Creature {
     fn default() -> Self {
         Self {
-            acceleration: 500.0,
-            deceleration: 500.0,
-            max_speed: 500.0,
-            health: 100.0,
+            acceleration: 128.0,
+            deceleration: 128.0,
+            max_speed: 128.0,
+            health: 128.0,
         }
     }
 }
@@ -35,39 +35,20 @@ impl Default for Velocity {
     }
 }
 
-#[derive(Component, Reflect)]
-pub struct Flock {
-    pub separation_weight: f32,
-    pub alignment_weight: f32,
-    pub radius: f32,
-}
-
-impl Default for Flock {
-    fn default() -> Self {
-        Self {
-            separation_weight: 1.0,
-            alignment_weight: 1.0,
-            radius: 1.0,
-        }
-    }
-}
-
 #[derive(Bundle)]
-pub struct UnitBundle {
-    pub unit: Unit,
-    pub animation_indices: AnimationIndices,
-    pub animation_timer: AnimationTimer,
+pub struct CreatureBundle {
+    pub creature: Creature,
+    pub animation: Animated,
     pub sprite: SpriteSheetBundle,
     pub collider: Collider,
     pub velocity: Velocity,
 }
 
-impl Default for UnitBundle {
+impl Default for CreatureBundle {
     fn default() -> Self {
         Self {
-            unit: Unit::default(),
-            animation_indices: AnimationIndices::default(),
-            animation_timer: AnimationTimer::default(),
+            creature: Creature::default(),
+            animation: Animated::default(),
             sprite: Default::default(),
             collider: Collider::cuboid(1.0, 1.0),
             velocity: Velocity::default(),
@@ -75,9 +56,9 @@ impl Default for UnitBundle {
     }
 }
 
-pub struct UnitPlugin;
+pub struct CreaturePlugin;
 
-impl Plugin for UnitPlugin {
+impl Plugin for CreaturePlugin {
     fn build(&self, app: &mut App) {
         app.add_system(apply_velocity_system);
     }

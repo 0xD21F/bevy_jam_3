@@ -6,6 +6,8 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_prototype_debug_lines::*;
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
 
+use crate::{entity::{creature::{Creature, Velocity}, spawner::Spawner}, animation::Animated};
+
 #[derive(Resource, Default)]
 pub struct DebugState {}
 
@@ -19,6 +21,10 @@ impl Plugin for DebugPlugin {
                 .add_plugin(DebugLinesPlugin::default())
                 // .add_plugin(LogDiagnosticsPlugin::default())
                 // .add_plugin(FrameTimeDiagnosticsPlugin::default())
+                .register_type::<Creature>()
+                .register_type::<Velocity>()
+                .register_type::<Spawner>()
+                .register_type::<Animated>()
                 .init_resource::<DebugState>();
         }
     }

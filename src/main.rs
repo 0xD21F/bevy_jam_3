@@ -1,23 +1,21 @@
+mod animation;
+mod app_state;
+mod behaviour;
 mod camera;
 mod debug;
-mod enemies;
+mod entity;
 mod level;
-mod player;
-mod sprite_sheet_animation;
-mod unit;
 
+use animation::*;
+use app_state::{game::GamePlugin, main_menu::MainMenuPlugin, *};
 use camera::*;
 use debug::*;
-use enemies::EnemyPlugin;
+use entity::{creature::CreaturePlugin, player::PlayerPlugin, *, spawner::SpawnerPlugin};
 use level::*;
-use player::*;
-use sprite_sheet_animation::SpriteSheetPlugin;
-use unit::*;
 
 use bevy::{prelude::*, window::*};
 
 use bevy_rapier2d::prelude::*;
-use unit::Velocity;
 
 pub const PIXELS_PER_METER: f32 = 32.0;
 
@@ -40,49 +38,17 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_plugin(DebugPlugin)
+        .add_state::<AppState>()
+        .add_plugin(MainMenuPlugin)
+        .add_plugin(GamePlugin)
         .add_plugin(CameraPlugin)
         .add_plugin(PlayerPlugin)
         .add_plugin(EnemyPlugin)
-        .add_plugin(UnitPlugin)
-        .add_plugin(SpriteSheetPlugin)
-        .add_system(setup.on_startup())
+        .add_plugin(CreaturePlugin)
+        .add_plugin(SpawnerPlugin)
+        .add_plugin(SpriteSheetAnimationPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(
             PIXELS_PER_METER,
         ))
-        .register_type::<Unit>()
-        .register_type::<Velocity>()
         .run();
-}
-
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let level_bounds_half_extents = 50.0 * PIXELS_PER_METER;
-
-    let level_definition = [
-        // Bottom of the level
-        LevelElementDefinition {
-            position: Vec2::new(0.0, -level_bounds_half_extents),
-            size: Vec2::new(level_bounds_half_extents * 2.0, 1.0 * PIXELS_PER_METER),
-            ..default()
-        },
-        // Top of level
-        LevelElementDefinition {
-            position: Vec2::new(0.0, level_bounds_half_extents),
-            size: Vec2::new(level_bounds_half_extents * 2.0, 1.0 * PIXELS_PER_METER),
-            ..default()
-        },
-        // Left of level
-        LevelElementDefinition {
-            position: Vec2::new(-level_bounds_half_extents, 0.0),
-            size: Vec2::new(1.0 * PIXELS_PER_METER, level_bounds_half_extents * 2.0),
-            ..default()
-        },
-        // Right of level
-        LevelElementDefinition {
-            position: Vec2::new(level_bounds_half_extents, 0.0),
-            size: Vec2::new(1.0 * PIXELS_PER_METER, level_bounds_half_extents * 2.0),
-            ..default()
-        },
-    ];
-
-    build_level(&mut commands, &asset_server, &level_definition);
 }
