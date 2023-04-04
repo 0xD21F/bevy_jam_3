@@ -3,11 +3,7 @@ use bevy_rapier2d::prelude::Collider;
 
 use crate::{
     animation::Animated,
-    entity::{
-        creature::{CreatureBundle},
-        player::{PlayerBundle},
-        spawner::Spawner,
-    },
+    entity::{creature::CreatureBundle, player::PlayerBundle, spawner::Spawner},
     level::{build_level, LevelElementDefinition},
     PIXELS_PER_METER,
 };
@@ -19,9 +15,9 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_system(setup_level.in_schedule(OnEnter(AppState::InGame)))
-        .add_system(spawn_player.in_schedule(OnEnter(AppState::InGame)))
-        .add_system(spawn_spawner.in_schedule(OnEnter(AppState::InGame)));
-}
+            .add_system(spawn_player.in_schedule(OnEnter(AppState::InGame)))
+            .add_system(spawn_spawner.in_schedule(OnEnter(AppState::InGame)));
+    }
 }
 
 fn setup_level(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -90,18 +86,17 @@ pub fn spawn_player(
     });
 }
 
-pub fn spawn_spawner(
-    mut commands: Commands,
-) {
-    let _spawner_entity = commands.spawn((
-        Spawner {
-            timer: Timer::from_seconds(1.0, TimerMode::Repeating),
-            spawn_rate: 4,
-            spawn_count: 100,
-            ..default()
-        },
-        Transform::default(),
-        GlobalTransform::default(),
-    ))
-    .insert(Name::new("Spawner"));
+pub fn spawn_spawner(mut commands: Commands) {
+    let _spawner_entity = commands
+        .spawn((
+            Spawner {
+                timer: Timer::from_seconds(1.0, TimerMode::Repeating),
+                spawn_rate: 4,
+                spawn_count: 100,
+                ..default()
+            },
+            Transform::default(),
+            GlobalTransform::default(),
+        ))
+        .insert(Name::new("Spawner"));
 }

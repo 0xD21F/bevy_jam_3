@@ -10,7 +10,7 @@ use animation::*;
 use app_state::{game::GamePlugin, main_menu::MainMenuPlugin, *};
 use camera::*;
 use debug::*;
-use entity::{creature::CreaturePlugin, player::PlayerPlugin, *, spawner::SpawnerPlugin};
+use entity::{creature::CreaturePlugin, player::PlayerPlugin, spawner::SpawnerPlugin, *};
 
 use bevy::{prelude::*, window::*};
 

@@ -1,13 +1,8 @@
 use bevy::prelude::*;
 
-use crate::{
-    animation::Animated,
-    PIXELS_PER_METER,
-};
+use crate::{animation::Animated, PIXELS_PER_METER};
 
-use super::{
-    skuller::{SkullerBundle},
-};
+use super::skuller::SkullerBundle;
 
 pub struct SpawnerPlugin;
 
@@ -64,14 +59,12 @@ fn spawn_system(
                 };
                 let sprite_size = PIXELS_PER_METER;
 
-                let _enemy_entity = commands
-                    .spawn(
-                        SkullerBundle::new(
-                            texture_atlas_handle,
-                            sprite_size,
-                            animation,
-                            transform.clone()
-                        ));
+                let _enemy_entity = commands.spawn(SkullerBundle::new(
+                    texture_atlas_handle,
+                    sprite_size,
+                    animation,
+                    transform.clone(),
+                ));
 
                 // Decrement the number of entities left to spawn
                 spawner.spawn_count -= 1;

@@ -6,7 +6,13 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_prototype_debug_lines::*;
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
 
-use crate::{entity::{creature::{Creature, Velocity}, spawner::Spawner}, animation::Animated};
+use crate::{
+    animation::Animated,
+    entity::{
+        creature::{Creature, Velocity},
+        spawner::Spawner,
+    },
+};
 
 #[derive(Resource, Default)]
 pub struct DebugState {}

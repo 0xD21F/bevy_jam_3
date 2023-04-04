@@ -2,12 +2,13 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::Collider;
 
 use crate::{
+    animation::Animated,
     behaviour::{
         approach_and_keep_distance::{approach_and_keep_distance, ApproachAndKeepDistance},
         separation::{separation_system, Separation},
     },
     player::Player,
-    PIXELS_PER_METER, animation::Animated,
+    PIXELS_PER_METER,
 };
 
 use super::{
@@ -38,7 +39,12 @@ pub struct SkullerBundle {
 }
 
 impl SkullerBundle {
-    pub fn new(texture_atlas_handle: Handle<TextureAtlas>, sprite_size: f32, animation: Animated, transform: Transform) -> Self {
+    pub fn new(
+        texture_atlas_handle: Handle<TextureAtlas>,
+        sprite_size: f32,
+        animation: Animated,
+        transform: Transform,
+    ) -> Self {
         Self {
             creature: CreatureBundle {
                 creature: Creature {
