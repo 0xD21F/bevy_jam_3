@@ -116,7 +116,6 @@ pub fn spawn_spawner(mut commands: Commands, sprites: Res<SpriteAssets>) {
                 timer: Timer::from_seconds(5.0, TimerMode::Repeating),
                 spawn_rate: 10,
                 spawn_count: 50,
-                ..default()
             },
             SpriteBundle {
                 texture: sprites.sorcerian.clone(),

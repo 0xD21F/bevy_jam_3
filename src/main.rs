@@ -7,11 +7,11 @@ mod debug;
 mod entity;
 mod level;
 
-use animation::*;
-use app_state::{game::GamePlugin, main_menu::MainMenuPlugin, *};
-use camera::*;
+
+use app_state::{*};
+
 use debug::*;
-use entity::{creature::CreaturePlugin, player::PlayerPlugin, spawner::SpawnerPlugin, *};
+use entity::{*};
 
 use bevy::{prelude::*, window::*};
 

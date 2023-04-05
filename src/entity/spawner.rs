@@ -48,7 +48,7 @@ fn spawn_system(
                 spawner.spawn_rate = spawner.spawn_count;
             }
 
-            for _ in 0..spawner.spawn_rate as usize {
+            for _ in 0..spawner.spawn_rate {
                 // Spawn the entity
                 let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
                     sprites.skuller.clone(),
@@ -69,12 +69,12 @@ fn spawn_system(
                         texture_atlas_handle,
                         sprite_size,
                         Animated {
-                            timer: timer,
+                            timer,
                             first: 0,
                             last: 7,
                             ..default()
                         },
-                        transform.clone(),
+                        *transform,
                     ))
                     .insert(DontSetFacing);
 

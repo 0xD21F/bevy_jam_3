@@ -57,7 +57,7 @@ impl SkullerBundle {
                 sprite: SpriteSheetBundle {
                     texture_atlas: texture_atlas_handle,
                     sprite: TextureAtlasSprite::new(animation.first),
-                    transform: transform.clone(),
+                    transform,
                     ..default()
                 },
                 collider: Collider::ball(sprite_size / 3.0),

@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_prototype_debug_lines::{DebugLines, DebugShapes};
+
 use rand::Rng;
 
 use crate::{entity::creature::Velocity, PIXELS_PER_METER};
