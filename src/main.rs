@@ -2,6 +2,7 @@ mod animation;
 mod app_state;
 mod behaviour;
 mod camera;
+mod creature_state;
 mod debug;
 mod entity;
 mod level;
@@ -37,15 +38,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_plugin(DebugPlugin)
-        .add_state::<AppState>()
-        .add_plugin(MainMenuPlugin)
-        .add_plugin(GamePlugin)
-        .add_plugin(CameraPlugin)
-        .add_plugin(PlayerPlugin)
-        .add_plugin(EnemyPlugin)
-        .add_plugin(CreaturePlugin)
-        .add_plugin(SpawnerPlugin)
-        .add_plugin(SpriteSheetAnimationPlugin)
+        .add_plugin(AppStatePlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(
             PIXELS_PER_METER,
         ))

@@ -19,6 +19,11 @@ impl PluginGroup for EnemyEntityPlugins {
 }
 
 #[derive(Component, Reflect, Default)]
+pub struct ZSort {
+    pub offset_y: f32,
+}
+
+#[derive(Component, Reflect, Default)]
 pub struct Enemy;
 
 pub struct EnemyPlugin;

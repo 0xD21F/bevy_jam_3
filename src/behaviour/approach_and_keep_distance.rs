@@ -22,18 +22,23 @@ pub fn approach_and_keep_distance<T: Component, U: Component>(
         Without<T>,
     >,
 ) {
-    // If there's no target, don't do anything
-    let target = match target_query.get_single() {
-        Ok(target) => target,
-        Err(_) => return,
-    };
-
-    let target_position = Vec2::new(target.translation.x, target.translation.y);
-
     let mut rng = rand::thread_rng();
 
-    for (unit, approach_and_circle, mut velocity, _transform) in unit_query.iter_mut() {
-        let enemy_position = Vec2::new(_transform.translation.x, _transform.translation.y);
+    for (unit, approach_and_circle, mut velocity, transform) in unit_query.iter_mut() {
+        // Find the closest target
+        let target_position = target_query
+            .iter()
+            .map(|target_transform| target_transform.translation.truncate())
+            .min_by(|a, b| {
+                let distance_a = a.distance(transform.translation.truncate());
+                let distance_b = b.distance(transform.translation.truncate());
+                distance_a
+                    .partial_cmp(&distance_b)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .unwrap_or(Vec2::new(0.0, 0.0));
+
+        let enemy_position = transform.translation.truncate();
 
         let distance_from_player = target_position.distance(enemy_position);
         let change_velocity;

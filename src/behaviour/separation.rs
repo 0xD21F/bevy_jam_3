@@ -6,7 +6,7 @@ use crate::{entity::creature::Velocity, PIXELS_PER_METER};
 
 const EPSILON: f32 = 1e-6;
 const SEPARATION_FORCE: f32 = 25.0;
-const SEPARATION_STRENGTH: f32 = 1.0;
+const SEPARATION_STRENGTH: f32 = 2.0;
 
 #[derive(Component, Reflect)]
 pub struct Separation {
@@ -51,11 +51,14 @@ fn separate(position: Vec2, radius: f32, positions: &[Vec2]) -> Option<(Vec2, f3
 
 pub fn separation_system<T: Component>(
     mut enemy_query: Query<(&Separation, &Transform, &mut Velocity, &T)>,
-    mut debug_shapes: ResMut<DebugShapes>,
-    mut debug_lines: ResMut<DebugLines>,
+    // mut debug_shapes: ResMut<DebugShapes>,
+    // mut debug_lines: ResMut<DebugLines>,
 ) {
     // Create a vector of positions for the enemy entities.
     let mut positions: Vec<Vec2> = Vec::new();
+    for (_, transform, _, _) in enemy_query.iter_mut() {
+        positions.push(transform.translation.truncate());
+    }
 
     // Loop through the query and calculate the separation for each enemy entity.
     // Adjust the Velocity for each entity to steer away from nearby enemies.
@@ -85,21 +88,25 @@ pub fn separation_system<T: Component>(
             } else {
                 1.0 / steer_away
             };
-            debug_lines.line(
-                transform.translation,
-                transform.translation + separation.extend(0.0),
-                0.0,
-            );
+
+            if cfg!(debug_assertions) {
+                // debug_lines.line(
+                //     transform.translation,
+                //     transform.translation + separation.extend(0.0),
+                //     0.0,
+                // );
+            }
+
             let separation_scaled = separation * separation_scale;
 
             velocity.value += separation_scaled * SEPARATION_STRENGTH;
         }
 
-        debug_shapes
-            .rect()
-            .position(transform.translation)
-            .size(Vec2::new(separation.radius, separation.radius));
-        // Add the current enemy entity's position to the positions vector.
-        positions.push(enemy_position);
+        if cfg!(debug_assertions) {
+            // debug_shapes
+            //     .rect()
+            //     .position(transform.translation)
+            //     .size(Vec2::new(separation.radius, separation.radius));
+        }
     }
 }

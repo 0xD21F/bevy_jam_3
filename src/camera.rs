@@ -27,7 +27,8 @@ pub fn camera_movement_system(
 ) {
     for player_transform in player_query.iter() {
         for mut camera_transform in &mut camera_query.iter_mut() {
-            camera_transform.translation = player_transform.translation;
+            camera_transform.translation.x = player_transform.translation.x;
+            camera_transform.translation.y = player_transform.translation.y;
         }
     }
 }

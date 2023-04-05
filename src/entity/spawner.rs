@@ -1,14 +1,21 @@
+use std::time::Duration;
+
 use bevy::prelude::*;
+use rand::Rng;
 
-use crate::{animation::Animated, PIXELS_PER_METER};
+use crate::{
+    animation::Animated,
+    app_state::{loading::SpriteAssets, AppState},
+    PIXELS_PER_METER,
+};
 
-use super::skuller::SkullerBundle;
+use super::{creature::DontSetFacing, skuller::SkullerBundle};
 
 pub struct SpawnerPlugin;
 
 impl Plugin for SpawnerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_system);
+        app.add_system(spawn_system.in_set(OnUpdate(AppState::InGame)));
     }
 }
 
@@ -22,7 +29,7 @@ pub struct Spawner {
 
 fn spawn_system(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    sprites: Res<SpriteAssets>,
     time: Res<Time>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut query: Query<(Entity, &mut Spawner, &Transform)>,
@@ -44,27 +51,32 @@ fn spawn_system(
             for _ in 0..spawner.spawn_rate as usize {
                 // Spawn the entity
                 let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
-                    asset_server.load("sprites/skuller.png"),
+                    sprites.skuller.clone(),
                     Vec2::new(32.0, 32.0),
-                    5,
+                    8,
                     1,
                     None,
                     None,
                 ));
-                let animation = Animated {
-                    timer: Timer::from_seconds(0.1, TimerMode::Repeating),
-                    first: 0,
-                    last: 4,
-                    ..default()
-                };
                 let sprite_size = PIXELS_PER_METER;
+                let mut rng = rand::thread_rng();
 
-                let _enemy_entity = commands.spawn(SkullerBundle::new(
-                    texture_atlas_handle,
-                    sprite_size,
-                    animation,
-                    transform.clone(),
-                ));
+                let mut timer = Timer::from_seconds(0.15, TimerMode::Repeating);
+                timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+                let _enemy_entity = commands
+                    .spawn(SkullerBundle::new(
+                        texture_atlas_handle,
+                        sprite_size,
+                        Animated {
+                            timer: timer,
+                            first: 0,
+                            last: 7,
+                            ..default()
+                        },
+                        transform.clone(),
+                    ))
+                    .insert(DontSetFacing);
 
                 // Decrement the number of entities left to spawn
                 spawner.spawn_count -= 1;

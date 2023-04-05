@@ -13,7 +13,7 @@ use crate::{
 
 use super::{
     creature::{Creature, CreatureBundle, Velocity},
-    Enemy,
+    Enemy, ZSort,
 };
 
 pub struct SkullerPlugin;
@@ -60,15 +60,18 @@ impl SkullerBundle {
                     transform: transform.clone(),
                     ..default()
                 },
-                collider: Collider::cuboid(sprite_size / 2.0, sprite_size / 2.0),
+                collider: Collider::ball(sprite_size / 3.0),
                 velocity: Velocity::default(),
+                zsort: ZSort {
+                    offset_y: -(sprite_size / 2.0),
+                },
             },
             enemy: Enemy,
             skuller: Skuller,
             name: Name::new("Skuller"),
             approach_and_keep_distance: ApproachAndKeepDistance {
-                inner_distance: PIXELS_PER_METER * 2.0,
-                outer_distance: PIXELS_PER_METER * 4.0,
+                inner_distance: PIXELS_PER_METER * 4.0,
+                outer_distance: PIXELS_PER_METER * 5.0,
             },
             separation: Separation::default(),
         }

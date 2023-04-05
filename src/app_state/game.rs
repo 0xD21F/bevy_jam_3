@@ -2,25 +2,39 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::Collider;
 
 use crate::{
-    animation::Animated,
-    entity::{creature::CreatureBundle, player::PlayerBundle, spawner::Spawner},
-    level::{build_level, LevelElementDefinition},
+    animation::{Animated, SpriteSheetAnimationPlugin},
+    camera::CameraPlugin,
+    entity::{
+        creature::{Creature, CreatureBundle, CreaturePlugin},
+        player::{Player, PlayerBundle, PlayerPlugin},
+        spawner::{Spawner, SpawnerPlugin},
+        Enemy, EnemyPlugin, ZSort,
+    },
+    level::{build_level, LevelElement, LevelElementDefinition},
     PIXELS_PER_METER,
 };
 
-use super::AppState;
+use super::{loading::SpriteAssets, AppState};
 
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
+        app.add_plugin(CameraPlugin)
+            .add_plugin(SpriteSheetAnimationPlugin)
+            .add_plugin(PlayerPlugin)
+            .add_plugin(CreaturePlugin)
+            .add_plugin(EnemyPlugin)
+            .add_plugin(SpawnerPlugin);
+
         app.add_system(setup_level.in_schedule(OnEnter(AppState::InGame)))
             .add_system(spawn_player.in_schedule(OnEnter(AppState::InGame)))
-            .add_system(spawn_spawner.in_schedule(OnEnter(AppState::InGame)));
+            .add_system(spawn_spawner.in_schedule(OnEnter(AppState::InGame)))
+            .add_system(game_cleanup.in_schedule(OnExit(AppState::InGame)));
     }
 }
 
-fn setup_level(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn setup_level(mut commands: Commands, sprites: Res<SpriteAssets>) {
     let level_bounds_half_extents = 50.0 * PIXELS_PER_METER;
 
     let level_definition = [
@@ -50,17 +64,17 @@ fn setup_level(mut commands: Commands, asset_server: Res<AssetServer>) {
         },
     ];
 
-    build_level(&mut commands, &asset_server, &level_definition);
+    build_level(&mut commands, &sprites, &level_definition);
 }
 
 pub fn spawn_player(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    sprites: Res<SpriteAssets>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let sprite_size = PIXELS_PER_METER * 2.0;
 
-    let texture_handle = asset_server.load("sprites/ape.png");
+    let texture_handle = sprites.player.clone();
     let texture_atlas =
         TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 1, 1, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
@@ -79,24 +93,57 @@ pub fn spawn_player(
                 ..default()
             },
             animation,
-            collider: Collider::cuboid(sprite_size / 2.0, sprite_size / 2.0),
+            collider: Collider::ball(sprite_size / 3.0),
+            zsort: ZSort {
+                offset_y: -(sprite_size / 2.0 - 20.0),
+            },
+            creature: Creature {
+                max_speed: 512.0,
+                acceleration: 512.0,
+                deceleration: 512.0,
+                ..default()
+            },
             ..default()
         },
         ..default()
     });
 }
 
-pub fn spawn_spawner(mut commands: Commands) {
+pub fn spawn_spawner(mut commands: Commands, sprites: Res<SpriteAssets>) {
     let _spawner_entity = commands
         .spawn((
             Spawner {
-                timer: Timer::from_seconds(1.0, TimerMode::Repeating),
-                spawn_rate: 4,
-                spawn_count: 100,
+                timer: Timer::from_seconds(5.0, TimerMode::Repeating),
+                spawn_rate: 10,
+                spawn_count: 50,
                 ..default()
             },
-            Transform::default(),
-            GlobalTransform::default(),
+            SpriteBundle {
+                texture: sprites.sorcerian.clone(),
+                ..default()
+            },
         ))
-        .insert(Name::new("Spawner"));
+        .insert(Name::new("Spawner"))
+        .insert(ZSort::default());
+}
+
+pub fn game_cleanup(
+    mut commands: Commands,
+    spawner_query: Query<Entity, With<Spawner>>,
+    player_query: Query<Entity, With<Player>>,
+    enemy_query: Query<Entity, With<Enemy>>,
+    level_query: Query<Entity, With<LevelElement>>,
+) {
+    for entity in spawner_query.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+    for entity in player_query.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+    for entity in enemy_query.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+    for entity in level_query.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
 }

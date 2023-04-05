@@ -6,22 +6,22 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app.add_system(setup_main_menu.on_startup())
-            .add_system(menu.in_set(OnUpdate(AppState::MainMenu)))
-            .add_system(cleanup_menu.in_schedule(OnExit(AppState::MainMenu)));
+        app.add_system(main_menu_setup.in_schedule(OnEnter(AppState::MainMenu)))
+            .add_system(main_menu_system.in_set(OnUpdate(AppState::MainMenu)))
+            .add_system(main_menu_cleanup.in_schedule(OnExit(AppState::MainMenu)));
     }
 }
 
 #[derive(Resource)]
-struct MenuData {
-    button_entity: Entity,
+pub struct MenuUiData {
+    pub button_entity: Entity,
 }
 
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
 const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
 
-fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let button_entity = commands
         .spawn(NodeBundle {
             style: Style {
@@ -59,10 +59,10 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                 });
         })
         .id();
-    commands.insert_resource(MenuData { button_entity });
+    commands.insert_resource(MenuUiData { button_entity });
 }
 
-fn menu(
+pub fn main_menu_system(
     mut next_state: ResMut<NextState<AppState>>,
     mut interaction_query: Query<
         (&Interaction, &mut BackgroundColor),
@@ -85,6 +85,6 @@ fn menu(
     }
 }
 
-fn cleanup_menu(mut commands: Commands, menu_data: Res<MenuData>) {
+pub fn main_menu_cleanup(mut commands: Commands, menu_data: Res<MenuUiData>) {
     commands.entity(menu_data.button_entity).despawn_recursive();
 }

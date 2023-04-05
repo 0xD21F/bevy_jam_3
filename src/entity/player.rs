@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::app_state::AppState;
+
 use super::creature::{Creature, CreatureBundle, Velocity};
 
 #[derive(Component, Reflect, Default)]
@@ -34,12 +36,17 @@ pub fn player_movement_system(
     time: Res<Time>,
     keyboard_input: Res<Input<KeyCode>>,
     mut player_info: Query<(&Creature, &mut Velocity), With<Player>>,
+    mut next_state: ResMut<NextState<AppState>>,
 ) {
     for (unit, mut velocity) in player_info.iter_mut() {
         let left = keyboard_input.any_pressed([KeyCode::A, KeyCode::Left]);
         let right = keyboard_input.any_pressed([KeyCode::D, KeyCode::Right]);
         let up = keyboard_input.any_pressed([KeyCode::W, KeyCode::Up]);
         let down = keyboard_input.any_pressed([KeyCode::S, KeyCode::Down]);
+        let quit = keyboard_input.any_pressed([KeyCode::Escape]);
+        if quit {
+            next_state.set(AppState::MainMenu);
+        }
 
         let x_axis = -(left as i8) + right as i8;
         let y_axis = -(down as i8) + up as i8;

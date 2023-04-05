@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
+use crate::app_state::loading::SpriteAssets;
+
 #[derive(Component)]
 pub struct LevelElement;
 
@@ -11,20 +13,20 @@ pub enum LevelElementType {
 
 pub fn build_level(
     commands: &mut Commands,
-    asset_server: &Res<AssetServer>,
+    sprites: &Res<SpriteAssets>,
     level_definition: &[LevelElementDefinition],
 ) {
     for element in level_definition {
-        spawn_level_element(commands, asset_server, element);
+        spawn_level_element(commands, sprites, element);
     }
 }
 
 fn spawn_level_element(
     commands: &mut Commands,
-    asset_server: &Res<AssetServer>,
+    sprites: &Res<SpriteAssets>,
     element: &LevelElementDefinition,
 ) {
-    let texture_handle = asset_server.load("level/debug_element.png");
+    let texture_handle = sprites.sorcerian.clone();
 
     let transform = Transform {
         translation: Vec3::new(element.position.x, element.position.y, 0.0),
