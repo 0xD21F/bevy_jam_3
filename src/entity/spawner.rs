@@ -122,7 +122,7 @@ fn spawn_system(
                             .trans::<ApproachAndKeepDistance>(
                                 NotTrigger(Near {
                                     target: player,
-                                    range: 500.,
+                                    range: PIXELS_PER_METER * 20.0,
                                 }),
                                 Idle,
                             ),
