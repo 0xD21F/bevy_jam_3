@@ -4,8 +4,6 @@ use bevy_rapier2d::prelude::Collider;
 use crate::{
     animation::Animated,
     behaviour::separation::{separation_system, Separation},
-    player::Player,
-    PIXELS_PER_METER,
 };
 
 use super::{

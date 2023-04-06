@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::Collider;
-use seldom_state::StateMachinePlugin;
 
 use crate::{
     animation::{Animated, SpriteSheetAnimationPlugin},
