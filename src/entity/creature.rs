@@ -102,17 +102,18 @@ pub fn z_ordering_system(
     mut z_sort_query: Query<(&mut Transform, &ZSort)>,
     camera_query: Query<(&GlobalTransform, &Camera)>,
 ) {
+    // TODO: Handle multiple cameras
     let (camera_transform, camera) = camera_query.single();
 
-    for (mut creature_transform, zsort) in z_sort_query.iter_mut() {
-        // Based on the screen space Y position, set the Z position to be in front of or behind other sprites based on the bottom of the sprite
+    for (mut transform, zsort) in z_sort_query.iter_mut() {
+        // Based on the screen space Y position, set the Z position to be in front of or behind other sprites
         let viewport_pos =
-            camera.world_to_viewport(camera_transform, creature_transform.translation);
+            camera.world_to_viewport(camera_transform, transform.translation);
         if let Some(pos) = viewport_pos {
-            creature_transform.translation.z =
+            transform.translation.z =
                 (-((pos.y * 2.0) - zsort.offset_y * 2.0) / 1000.0).min(0.0);
         } else {
-            // creature_transform.translation.z = 0.0;
+            transform.translation.z = 0.0;
         }
     }
 }

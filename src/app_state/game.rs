@@ -1,8 +1,10 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::Collider;
+use seldom_state::StateMachinePlugin;
 
 use crate::{
     animation::{Animated, SpriteSheetAnimationPlugin},
+    behaviour::BehaviourPlugin,
     camera::CameraPlugin,
     entity::{
         creature::{Creature, CreatureBundle, CreaturePlugin},
@@ -25,6 +27,7 @@ impl Plugin for GamePlugin {
             .add_plugin(PlayerPlugin)
             .add_plugin(CreaturePlugin)
             .add_plugin(EnemyPlugin)
+            .add_plugin(BehaviourPlugin)
             .add_plugin(SpawnerPlugin);
 
         app.add_system(setup_level.in_schedule(OnEnter(AppState::InGame)))
@@ -113,9 +116,9 @@ pub fn spawn_spawner(mut commands: Commands, sprites: Res<SpriteAssets>) {
     let _spawner_entity = commands
         .spawn((
             Spawner {
-                timer: Timer::from_seconds(5.0, TimerMode::Repeating),
-                spawn_rate: 10,
-                spawn_count: 50,
+                timer: Timer::from_seconds(0.1, TimerMode::Repeating),
+                spawn_rate: 5,
+                spawn_count: 2500,
             },
             SpriteBundle {
                 texture: sprites.sorcerian.clone(),

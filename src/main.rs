@@ -2,16 +2,14 @@ mod animation;
 mod app_state;
 mod behaviour;
 mod camera;
-mod creature_state;
 mod debug;
 mod entity;
 mod level;
 
-
-use app_state::{*};
+use app_state::*;
 
 use debug::*;
-use entity::{*};
+use entity::*;
 
 use bevy::{prelude::*, window::*};
 

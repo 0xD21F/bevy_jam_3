@@ -11,6 +11,13 @@ bevy_rapier2d = "0.21.0"
 bevy_prototype_lyon = "0.8.0"
 bevy-inspector-egui = "0.18.1"
 bevy_prototype_debug_lines = "0.10"
-bevy_pixel_camera = "0.4"
 bevy_asset_loader = "0.16"
+seldom_state = "0.5"
 rand = "*"
+
+# Enable max optimizations for dependencies, but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 3

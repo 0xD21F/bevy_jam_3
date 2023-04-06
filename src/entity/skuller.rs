@@ -3,10 +3,7 @@ use bevy_rapier2d::prelude::Collider;
 
 use crate::{
     animation::Animated,
-    behaviour::{
-        approach_and_keep_distance::{approach_and_keep_distance, ApproachAndKeepDistance},
-        separation::{separation_system, Separation},
-    },
+    behaviour::separation::{separation_system, Separation},
     player::Player,
     PIXELS_PER_METER,
 };
@@ -20,8 +17,7 @@ pub struct SkullerPlugin;
 
 impl Plugin for SkullerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(separation_system::<Skuller>)
-            .add_system(approach_and_keep_distance::<Player, Skuller>);
+        app.add_system(separation_system::<Skuller>);
     }
 }
 
@@ -34,7 +30,6 @@ pub struct SkullerBundle {
     pub enemy: Enemy,
     pub name: Name,
     pub skuller: Skuller,
-    pub approach_and_keep_distance: ApproachAndKeepDistance,
     pub separation: Separation,
 }
 
@@ -69,10 +64,6 @@ impl SkullerBundle {
             enemy: Enemy,
             skuller: Skuller,
             name: Name::new("Skuller"),
-            approach_and_keep_distance: ApproachAndKeepDistance {
-                inner_distance: PIXELS_PER_METER * 4.0,
-                outer_distance: PIXELS_PER_METER * 5.0,
-            },
             separation: Separation::default(),
         }
     }

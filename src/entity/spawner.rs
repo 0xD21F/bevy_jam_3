@@ -2,14 +2,19 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 use rand::Rng;
+use seldom_state::prelude::{NotTrigger, StateMachine};
 
 use crate::{
     animation::Animated,
     app_state::{loading::SpriteAssets, AppState},
+    behaviour::{
+        states::{approach_and_keep_distance::ApproachAndKeepDistance, wander::Wander, idle::Idle},
+        triggers::Near,
+    },
     PIXELS_PER_METER,
 };
 
-use super::{creature::DontSetFacing, skuller::SkullerBundle};
+use super::{creature::DontSetFacing, skuller::SkullerBundle, player::Player};
 
 pub struct SpawnerPlugin;
 
@@ -33,7 +38,11 @@ fn spawn_system(
     time: Res<Time>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut query: Query<(Entity, &mut Spawner, &Transform)>,
+    player_query: Query<Entity, With<Player>>,
 ) {
+
+    let player = player_query.single();
+
     for (entity, mut spawner, transform) in &mut query.iter_mut() {
         // If there's nothing left to spawn, destroy the spawner
         if spawner.spawn_count == 0 {
@@ -76,7 +85,48 @@ fn spawn_system(
                         },
                         *transform,
                     ))
-                    .insert(DontSetFacing);
+                    .insert(DontSetFacing)
+                    .insert(
+                        // This state machine handles the enemy's transitions
+                        // The initial state is `Idle`
+                        StateMachine::new(Idle)
+                            .trans::<Idle>(
+                                Near {
+                                    target: player,
+                                    range: PIXELS_PER_METER * 20.0,
+                                },
+                                ApproachAndKeepDistance {
+                                    target: player,
+                                    inner_distance: PIXELS_PER_METER * 4.0,
+                                    outer_distance: PIXELS_PER_METER * 6.0,
+                                },
+                            )
+                            .trans::<Idle>(
+                                NotTrigger(Near {
+                                    target: player,
+                                    range: PIXELS_PER_METER * 20.0,
+                                }),
+                                Wander::default(),
+                            )
+                            .trans::<Wander>(
+                                Near {
+                                    target: player,
+                                    range: PIXELS_PER_METER * 20.0,
+                                },
+                                ApproachAndKeepDistance {
+                                    target: player,
+                                    inner_distance: PIXELS_PER_METER * 4.0,
+                                    outer_distance: PIXELS_PER_METER * 6.0,
+                                },
+                            )
+                            .trans::<ApproachAndKeepDistance>(
+                                NotTrigger(Near {
+                                    target: player,
+                                    range: 500.,
+                                }),
+                                Idle,
+                            ),
+                    );
 
                 // Decrement the number of entities left to spawn
                 spawner.spawn_count -= 1;

@@ -55,10 +55,6 @@ fn spawn_level_element(
     ));
 }
 
-// TODO:
-// - Add support for ramps, different types of level element
-// - Add support for level elements with children (ramps....)
-
 pub struct LevelElementDefinition {
     pub position: Vec2,
     pub size: Vec2,

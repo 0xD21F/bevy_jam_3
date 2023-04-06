@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-
 use rand::Rng;
 
 use crate::{entity::creature::Velocity, PIXELS_PER_METER};
@@ -40,7 +39,6 @@ fn separate(position: Vec2, radius: f32, positions: &[Vec2]) -> Option<(Vec2, f3
     let mut rng = rand::thread_rng();
 
     if count == 0 {
-        // if all entities are at the same spot, return a random direction
         steer = Vec2::new(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0)).normalize_or_zero();
     } else {
         steer /= count as f32;
@@ -49,6 +47,7 @@ fn separate(position: Vec2, radius: f32, positions: &[Vec2]) -> Option<(Vec2, f3
     Some((steer, steer.length()))
 }
 
+// TODO: This is O(n^2), look into using a quadtree or something similar. Performance isn't an issue until there are a lot of enemies on screen.
 pub fn separation_system<T: Component>(
     mut enemy_query: Query<(&Separation, &Transform, &mut Velocity, &T)>,
     // mut debug_shapes: ResMut<DebugShapes>,
