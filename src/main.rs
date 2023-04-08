@@ -4,6 +4,7 @@ mod behaviour;
 mod camera;
 mod debug;
 mod entity;
+mod game;
 mod level;
 
 use app_state::*;
@@ -27,8 +28,8 @@ fn main() {
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        resolution: WindowResolution::new(1024., 768.),
-                        title: "Ape Effect".to_string(),
+                        resolution: WindowResolution::new(1920., 1080.),
+                        title: "Mutape".to_string(),
                         ..default()
                     }),
                     ..default()

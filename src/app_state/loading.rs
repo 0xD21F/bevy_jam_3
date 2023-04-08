@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::{AssetCollection, LoadingState, LoadingStateAppExt};
+use bevy_ecs_ldtk::LdtkAsset;
 
 use super::AppState;
 
@@ -11,6 +12,8 @@ impl Plugin for LoadingPlugin {
             LoadingState::new(AppState::Loading).continue_to_state(AppState::MainMenu),
         )
         .add_collection_to_loading_state::<_, SpriteAssets>(AppState::Loading)
+        .add_collection_to_loading_state::<_, CutsceneAssets>(AppState::Loading)
+        .add_collection_to_loading_state::<_, LevelAssets>(AppState::Loading)
         .add_system(loading_setup.in_schedule(OnEnter(AppState::Loading)))
         .add_system(loading_cleanup.in_schedule(OnExit(AppState::Loading)));
     }
@@ -24,7 +27,28 @@ pub struct SpriteAssets {
     pub sorcerian: Handle<Image>,
     #[asset(path = "sprites/skuller.png")]
     pub skuller: Handle<Image>,
+    #[asset(path = "sprites/slimer.png")]
+    pub slimer: Handle<Image>,
+    #[asset(path = "sprites/mutant.png")]
+    pub mutant: Handle<Image>,
 }
+
+#[derive(AssetCollection, Resource)]
+pub struct CutsceneAssets {
+    #[asset(path = "cutscenes/opening1.png")]
+    pub opening1: Handle<Image>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct LevelAssets {
+    #[asset(path = "levels/tiles/tiles.png")]
+    pub tiles: Handle<Image>,
+    #[asset(path = "levels/ldtk/levels.ldtk")]
+    pub ldtk: Handle<LdtkAsset>,
+}
+
+
+
 
 #[derive(Resource)]
 pub struct LoadingUiData {

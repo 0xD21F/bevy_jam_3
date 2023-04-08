@@ -43,6 +43,8 @@ pub fn player_movement_system(
         let right = keyboard_input.any_pressed([KeyCode::D, KeyCode::Right]);
         let up = keyboard_input.any_pressed([KeyCode::W, KeyCode::Up]);
         let down = keyboard_input.any_pressed([KeyCode::S, KeyCode::Down]);
+        let attack = keyboard_input.any_pressed([KeyCode::Z, KeyCode::O]);
+        let dash = keyboard_input.any_pressed([KeyCode::X, KeyCode::P]);
         let quit = keyboard_input.any_pressed([KeyCode::Escape]);
         if quit {
             next_state.set(AppState::MainMenu);
@@ -51,40 +53,20 @@ pub fn player_movement_system(
         let x_axis = -(left as i8) + right as i8;
         let y_axis = -(down as i8) + up as i8;
 
-        // X-axis movement
-        if x_axis != 0 {
-            let acceleration = unit.acceleration * x_axis as f32 * time.delta_seconds();
-            velocity.value.x += acceleration;
+        if x_axis != 0 || y_axis != 0 {
+            let input_vector = Vec2::new(x_axis as f32, y_axis as f32);
+            let input_magnitude = input_vector.length();
+            let normalized_input_vector = input_vector / input_magnitude;
+
+            let acceleration_vector = normalized_input_vector
+                * unit.acceleration
+                * input_magnitude
+                * time.delta_seconds();
+            velocity.value += acceleration_vector;
 
             // Limit maximum speed
             let max_speed = unit.max_speed;
-            velocity.value.x = velocity.value.x.clamp(-max_speed, max_speed);
-        } else {
-            // Apply deceleration when no input is detected
-            let deceleration = unit.deceleration * time.delta_seconds();
-            if velocity.value.x.abs() < deceleration {
-                velocity.value.x = 0.0;
-            } else {
-                velocity.value.x -= deceleration * velocity.value.x.signum();
-            }
-        }
-
-        // Y-axis movement
-        if y_axis != 0 {
-            let acceleration = unit.acceleration * y_axis as f32 * time.delta_seconds();
-            velocity.value.y += acceleration;
-
-            // Limit maximum speed
-            let max_speed = unit.max_speed;
-            velocity.value.y = velocity.value.y.clamp(-max_speed, max_speed);
-        } else {
-            // Apply deceleration when no input is detected
-            let deceleration = unit.deceleration * time.delta_seconds();
-            if velocity.value.y.abs() < deceleration {
-                velocity.value.y = 0.0;
-            } else {
-                velocity.value.y -= deceleration * velocity.value.y.signum();
-            }
+            velocity.value = velocity.value.clamp_length_max(max_speed);
         }
     }
 }

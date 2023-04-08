@@ -4,6 +4,7 @@ use bevy_rapier2d::prelude::Collider;
 use crate::{
     animation::Animated,
     behaviour::separation::{separation_system, Separation},
+    PIXELS_PER_METER,
 };
 
 use super::{
@@ -11,27 +12,27 @@ use super::{
     Enemy, ZSort,
 };
 
-pub struct SkullerPlugin;
+pub struct MutantPlugin;
 
-impl Plugin for SkullerPlugin {
+impl Plugin for MutantPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(separation_system::<Skuller>);
+        app.add_system(separation_system::<Mutant>);
     }
 }
 
 #[derive(Component, Reflect, Default)]
-pub struct Skuller;
+pub struct Mutant;
 
 #[derive(Bundle)]
-pub struct SkullerBundle {
+pub struct MutantBundle {
     pub creature: CreatureBundle,
     pub enemy: Enemy,
     pub name: Name,
-    pub skuller: Skuller,
+    pub mutant: Mutant,
     pub separation: Separation,
 }
 
-impl SkullerBundle {
+impl MutantBundle {
     pub fn new(
         texture_atlas_handle: Handle<TextureAtlas>,
         sprite_size: f32,
@@ -41,8 +42,8 @@ impl SkullerBundle {
         Self {
             creature: CreatureBundle {
                 creature: Creature {
-                    acceleration: 2048.0,
-                    friction: 1024.0,
+                    acceleration: 512.0,
+                    friction: 256.0,
                     max_speed: 128.0,
                     health: 100.0,
                 },
@@ -56,13 +57,17 @@ impl SkullerBundle {
                 collider: Collider::ball(sprite_size / 2.0),
                 velocity: Velocity::default(),
                 zsort: ZSort {
-                    offset_y: -(sprite_size / 2.0),
+                    offset_y: -(sprite_size),
                 },
             },
             enemy: Enemy,
-            skuller: Skuller,
-            name: Name::new("Skuller"),
-            separation: Separation::default(),
+            mutant: Mutant,
+            name: Name::new("Mutant"),
+            separation: Separation {
+                radius: PIXELS_PER_METER * 2.0,
+                separation_force: 512.0,
+                ..default()
+            },
         }
     }
 }

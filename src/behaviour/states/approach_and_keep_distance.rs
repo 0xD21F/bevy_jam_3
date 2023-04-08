@@ -55,21 +55,6 @@ pub fn approach_and_keep_distance(
             }
             let mut new_velocity = velocity.value + change_velocity;
 
-            // apply deceleration
-            if change_velocity == Vec2::ZERO {
-                let deceleration = creature.deceleration * time.delta_seconds();
-
-                let new_normalized_velocity = new_velocity.normalize_or_zero();
-
-                let mut deceleration_velocity = -new_normalized_velocity * deceleration;
-
-                if deceleration_velocity.length() > new_velocity.length() {
-                    deceleration_velocity = -new_velocity;
-                }
-
-                new_velocity += deceleration_velocity;
-            }
-
             // apply max_speed
             let speed = new_velocity.length();
             if speed > creature.max_speed {

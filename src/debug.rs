@@ -12,6 +12,7 @@ use crate::{
         creature::{Creature, Velocity},
         spawner::Spawner,
     },
+    game::level_manager::*,
 };
 
 #[derive(Resource, Default)]
@@ -23,14 +24,16 @@ impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
         if cfg!(debug_assertions) {
             app.add_plugin(WorldInspectorPlugin::new())
-                // .add_plugin(RapierDebugRenderPlugin::default())
-                // .add_plugin(DebugLinesPlugin::default())
+                .add_plugin(RapierDebugRenderPlugin::default())
+                .add_plugin(DebugLinesPlugin::default())
                 .add_plugin(LogDiagnosticsPlugin::default())
                 .add_plugin(FrameTimeDiagnosticsPlugin::default())
                 .register_type::<Creature>()
                 .register_type::<Velocity>()
                 .register_type::<Spawner>()
                 .register_type::<Animated>()
+                // .register_type::<Level>()
+                // .register_type::<LevelManager>()
                 .init_resource::<DebugState>();
         }
     }

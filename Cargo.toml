@@ -12,6 +12,7 @@ bevy_prototype_lyon = "0.8.0"
 bevy-inspector-egui = "0.18.1"
 bevy_prototype_debug_lines = "0.10"
 bevy_asset_loader = "0.16"
+bevy_ecs_ldtk = "0.6"
 seldom_state = "0.5"
 rand = "*"
 

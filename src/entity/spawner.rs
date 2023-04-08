@@ -8,13 +8,15 @@ use crate::{
     animation::Animated,
     app_state::{loading::SpriteAssets, AppState},
     behaviour::{
-        states::{approach_and_keep_distance::ApproachAndKeepDistance, wander::Wander, idle::Idle},
+        states::{approach_and_keep_distance::ApproachAndKeepDistance, idle::Idle, wander::Wander},
         triggers::Near,
     },
     PIXELS_PER_METER,
 };
 
-use super::{creature::DontSetFacing, skuller::SkullerBundle, player::Player};
+use super::{
+    creature::DontSetFacing, player::Player, skuller::SkullerBundle, slimer::SlimerBundle,
+};
 
 pub struct SpawnerPlugin;
 
@@ -25,11 +27,26 @@ impl Plugin for SpawnerPlugin {
 }
 
 // Whenever the timer finishes, spawn_rate entities will be spawned until spawn_count is reached
-#[derive(Component, Reflect, Default)]
+#[derive(Component, Reflect, Default, FromReflect)]
 pub struct Spawner {
     pub timer: Timer,
     pub spawn_rate: usize,
     pub spawn_count: usize,
+    pub enemy_type: EnemyType,
+}
+
+#[derive(Reflect, Default, FromReflect)]
+pub enum EnemyType {
+    #[default]
+    Slimer,
+    Mutant,
+    Goblin,
+    GoblinBrute,
+    Adept,
+    Skuller,
+    LabBoss,
+    TowerBoss,
+    Sorcerian,
 }
 
 fn spawn_system(
@@ -40,7 +57,6 @@ fn spawn_system(
     mut query: Query<(Entity, &mut Spawner, &Transform)>,
     player_query: Query<Entity, With<Player>>,
 ) {
-
     let player = player_query.single();
 
     for (entity, mut spawner, transform) in &mut query.iter_mut() {
@@ -58,79 +74,273 @@ fn spawn_system(
             }
 
             for _ in 0..spawner.spawn_rate {
-                // Spawn the entity
-                let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
-                    sprites.skuller.clone(),
-                    Vec2::new(32.0, 32.0),
-                    8,
-                    1,
-                    None,
-                    None,
-                ));
-                let sprite_size = PIXELS_PER_METER;
-                let mut rng = rand::thread_rng();
-
-                let mut timer = Timer::from_seconds(0.15, TimerMode::Repeating);
-                timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
-
-                let _enemy_entity = commands
-                    .spawn(SkullerBundle::new(
-                        texture_atlas_handle,
-                        sprite_size,
-                        Animated {
-                            timer,
-                            first: 0,
-                            last: 7,
-                            ..default()
-                        },
+                match spawner.enemy_type {
+                    EnemyType::Slimer => spawn_slimer(
+                        &mut commands,
+                        &sprites,
+                        &mut texture_atlases,
                         *transform,
-                    ))
-                    .insert(DontSetFacing)
-                    .insert(
-                        // This state machine handles the enemy's transitions
-                        // The initial state is `Idle`
-                        StateMachine::new(Idle)
-                            .trans::<Idle>(
-                                Near {
-                                    target: player,
-                                    range: PIXELS_PER_METER * 20.0,
-                                },
-                                ApproachAndKeepDistance {
-                                    target: player,
-                                    inner_distance: PIXELS_PER_METER * 4.0,
-                                    outer_distance: PIXELS_PER_METER * 6.0,
-                                },
-                            )
-                            .trans::<Idle>(
-                                NotTrigger(Near {
-                                    target: player,
-                                    range: PIXELS_PER_METER * 20.0,
-                                }),
-                                Wander::default(),
-                            )
-                            .trans::<Wander>(
-                                Near {
-                                    target: player,
-                                    range: PIXELS_PER_METER * 20.0,
-                                },
-                                ApproachAndKeepDistance {
-                                    target: player,
-                                    inner_distance: PIXELS_PER_METER * 4.0,
-                                    outer_distance: PIXELS_PER_METER * 6.0,
-                                },
-                            )
-                            .trans::<ApproachAndKeepDistance>(
-                                NotTrigger(Near {
-                                    target: player,
-                                    range: PIXELS_PER_METER * 20.0,
-                                }),
-                                Idle,
-                            ),
-                    );
+                        player,
+                    ),
+                    EnemyType::Mutant => spawn_mutant(
+                        &mut commands,
+                        &sprites,
+                        &mut texture_atlases,
+                        *transform,
+                        player,
+                    ),
+                    // EnemyType::Goblin => spawn_goblin(&mut commands, &sprites, &mut texture_atlases, *transform),
+                    // EnemyType::GoblinBrute => spawn_goblin_brute(&mut commands, &sprites, &mut texture_atlases, *transform),
+                    // EnemyType::Adept => spawn_adept(&mut commands, &sprites, &mut texture_atlases, *transform),
+                    EnemyType::Skuller => spawn_skuller(
+                        &mut commands,
+                        &sprites,
+                        &mut texture_atlases,
+                        *transform,
+                        player,
+                    ),
+                    // EnemyType::LabBoss => spawn_lab_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
+                    // EnemyType::TowerBoss => spawn_tower_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
+                    // EnemyType::Sorcerian => spawn_sorcerian(&mut commands, &sprites, &mut texture_atlases, *transform),
+                    _ => panic!("Invalid enemy type"),
+                }
 
                 // Decrement the number of entities left to spawn
                 spawner.spawn_count -= 1;
             }
         }
     }
+}
+
+fn spawn_skuller(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.skuller.clone(),
+        Vec2::new(32.0, 32.0),
+        8,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.15, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(SkullerBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 7,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(DontSetFacing)
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target: target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target: target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
+}
+
+fn spawn_slimer(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.slimer.clone(),
+        Vec2::new(32.0, 32.0),
+        2,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.15, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(SlimerBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 1,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(DontSetFacing)
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target: target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target: target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
+}
+
+fn spawn_mutant(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.mutant.clone(),
+        Vec2::new(64.0, 64.0),
+        2,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER * 2.0;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(SkullerBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 1,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target: target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target: target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target: target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
 }

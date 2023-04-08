@@ -8,7 +8,7 @@ use super::ZSort;
 #[derive(Component, Reflect)]
 pub struct Creature {
     pub acceleration: f32,
-    pub deceleration: f32,
+    pub friction: f32,
     pub max_speed: f32,
     pub health: f32,
 }
@@ -17,7 +17,7 @@ impl Default for Creature {
     fn default() -> Self {
         Self {
             acceleration: 128.0,
-            deceleration: 128.0,
+            friction: 128.0,
             max_speed: 128.0,
             health: 128.0,
         }
@@ -53,7 +53,7 @@ impl Default for CreatureBundle {
             creature: Creature::default(),
             animation: Animated::default(),
             sprite: Default::default(),
-            collider: Collider::cuboid(1.0, 1.0),
+            collider: Collider::ball(1.0),
             velocity: Velocity::default(),
             zsort: ZSort::default(),
         }
@@ -67,7 +67,8 @@ pub struct CreaturePlugin;
 
 impl Plugin for CreaturePlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(apply_velocity_system)
+        app.add_system(apply_friction_system)
+            .add_system(apply_velocity_system)
             .add_system(z_ordering_system)
             .add_system(set_sprite_facing_system);
     }
@@ -82,6 +83,22 @@ pub fn apply_velocity_system(time: Res<Time>, mut player_info: Query<(&Velocity,
         if delta == Vec2::ZERO {
             transform.translation.x = transform.translation.x.round();
             transform.translation.y = transform.translation.y.round();
+        }
+    }
+}
+
+pub fn apply_friction_system(time: Res<Time>, mut player_info: Query<(&mut Velocity, &Creature)>) {
+    for (mut velocity, creature) in player_info.iter_mut() {
+        if velocity.value != Vec2::ZERO {
+            let friction = creature.friction * time.delta_seconds();
+            let friction_vector = velocity.value.normalize() * friction;
+
+            let new_velocity = velocity.value - friction_vector;
+            if new_velocity.length() < friction {
+                velocity.value = Vec2::ZERO;
+            } else {
+                velocity.value -= friction_vector;
+            }
         }
     }
 }
@@ -107,11 +124,9 @@ pub fn z_ordering_system(
 
     for (mut transform, zsort) in z_sort_query.iter_mut() {
         // Based on the screen space Y position, set the Z position to be in front of or behind other sprites
-        let viewport_pos =
-            camera.world_to_viewport(camera_transform, transform.translation);
+        let viewport_pos = camera.world_to_viewport(camera_transform, transform.translation);
         if let Some(pos) = viewport_pos {
-            transform.translation.z =
-                (-((pos.y * 2.0) - zsort.offset_y * 2.0) / 1000.0).min(0.0);
+            transform.translation.z = (-((pos.y * 2.0) - zsort.offset_y * 2.0) / 1000.0).min(0.0);
         } else {
             transform.translation.z = 0.0;
         }

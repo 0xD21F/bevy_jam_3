@@ -27,7 +27,6 @@ fn dash_system(
         if dash.cooldown.just_finished() {
             dash.cooldown.pause();
             let distance = (player_position - transform.translation).length();
-            println!("Distance: {}", distance);
 
             if distance <= dash.range {
                 dash.cooldown.unpause();

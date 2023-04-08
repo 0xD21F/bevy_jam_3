@@ -1,4 +1,5 @@
 pub mod creature;
+pub mod mutant;
 pub mod player;
 pub mod skuller;
 pub mod slimer;
@@ -8,13 +9,14 @@ use bevy::{app::PluginGroupBuilder, prelude::*};
 
 use skuller::SkullerPlugin;
 
+use self::{mutant::MutantPlugin, slimer::SlimerPlugin};
+
 pub struct EnemyEntityPlugins;
 
 impl PluginGroup for EnemyEntityPlugins {
     fn build(self) -> PluginGroupBuilder {
-        let mut group = PluginGroupBuilder::start::<Self>();
-        group = group.add(SkullerPlugin);
-        group
+        let group = PluginGroupBuilder::start::<Self>();
+        group.add(SkullerPlugin).add(SlimerPlugin).add(MutantPlugin)
     }
 }
 

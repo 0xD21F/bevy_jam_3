@@ -73,7 +73,7 @@ pub fn main_menu_system(
         match *interaction {
             Interaction::Clicked => {
                 *color = PRESSED_BUTTON.into();
-                next_state.set(AppState::InGame);
+                next_state.set(AppState::OpeningCutscene)
             }
             Interaction::Hovered => {
                 *color = HOVERED_BUTTON.into();
