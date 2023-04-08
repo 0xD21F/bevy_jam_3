@@ -1,38 +1,50 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::Collider;
 
-use crate::{camera::CameraPlugin, animation::{SpriteSheetAnimationPlugin, Animated}, entity::{player::{PlayerPlugin, PlayerBundle, Player}, creature::{CreaturePlugin, CreatureBundle, Creature}, EnemyPlugin, spawner::{SpawnerPlugin, Spawner, EnemyType}, ZSort, Enemy}, behaviour::BehaviourPlugin, app_state::{AppState, loading::SpriteAssets}, PIXELS_PER_METER, level::LevelElement};
+use crate::{
+    animation::{Animated, SpriteSheetAnimationPlugin},
+    app_state::{loading::SpriteAssets, AppState},
+    behaviour::BehaviourPlugin,
+    camera::CameraPlugin,
+    entity::{
+        creature::{Creature, CreatureBundle, CreaturePlugin},
+        player::{Player, PlayerBundle, PlayerPlugin},
+        spawner::{EnemyType, Spawner, SpawnerPlugin},
+        Enemy, EnemyPlugin, ZSort,
+    },
+    PIXELS_PER_METER,
+};
 
-// use self::level_manager::LevelManagerPlugin;
+use self::{level_manager::LevelManagerPlugin, opening_cutscene::OpeningCutscenePlugin};
 
 pub mod level_manager;
+pub mod opening_cutscene;
 
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app
-            .add_state::<GameState>()
+        app.add_state::<GameState>()
+            .add_plugin(OpeningCutscenePlugin)
             .add_plugin(CameraPlugin)
             .add_plugin(SpriteSheetAnimationPlugin)
             .add_plugin(PlayerPlugin)
             .add_plugin(CreaturePlugin)
             .add_plugin(EnemyPlugin)
             .add_plugin(BehaviourPlugin)
-            .add_plugin(SpawnerPlugin);
-            // .add_plugin(LevelManagerPlugin);
+            .add_plugin(SpawnerPlugin)
+            .add_plugin(LevelManagerPlugin);
 
-        app
-            .add_system(spawn_player.in_schedule(OnEnter(AppState::InGame)))
-            .add_system(spawn_spawner.in_schedule(OnEnter(AppState::InGame)))
-            .add_system(game_cleanup.in_schedule(OnExit(AppState::InGame)));
+        app.add_system(spawn_player.in_schedule(OnEnter(GameState::InLevel)));
     }
 }
-
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameState {
     #[default]
+    Exited,
+    OpeningCutscene,
+    SetupLevelManager,
     SetupLevel,
     InLevel,
     MutationSelection,
@@ -78,71 +90,4 @@ pub fn spawn_player(
         },
         ..default()
     });
-}
-
-pub fn spawn_spawner(mut commands: Commands, sprites: Res<SpriteAssets>) {
-    let _spawner_entity = commands
-        .spawn((
-            Spawner {
-                timer: Timer::from_seconds(1.0, TimerMode::Repeating),
-                spawn_rate: 3,
-                spawn_count: 3,
-                enemy_type: EnemyType::Slimer,
-            },
-            SpriteBundle {
-                texture: sprites.sorcerian.clone(),
-                ..default()
-            },
-        ))
-        .insert(Name::new("Spawner"))
-        .insert(ZSort::default());
-
-    let _spawner_entity = commands
-        .spawn((
-            Spawner {
-                timer: Timer::from_seconds(1.0, TimerMode::Repeating),
-                spawn_rate: 3,
-                spawn_count: 3,
-                enemy_type: EnemyType::Mutant,
-            },
-            SpriteBundle {
-                texture: sprites.sorcerian.clone(),
-                ..default()
-            },
-        ))
-        .insert(Name::new("Spawner"))
-        .insert(ZSort::default());
-
-    let _spawner_entity = commands
-        .spawn((
-            Spawner {
-                timer: Timer::from_seconds(1.0, TimerMode::Repeating),
-                spawn_rate: 3,
-                spawn_count: 3,
-                enemy_type: EnemyType::Skuller,
-            },
-            SpriteBundle {
-                texture: sprites.sorcerian.clone(),
-                ..default()
-            },
-        ))
-        .insert(Name::new("Spawner"))
-        .insert(ZSort::default());
-}
-
-pub fn game_cleanup(
-    mut commands: Commands,
-    spawner_query: Query<Entity, With<Spawner>>,
-    player_query: Query<Entity, With<Player>>,
-    enemy_query: Query<Entity, With<Enemy>>,
-) {
-    for entity in spawner_query.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
-    for entity in player_query.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
-    for entity in enemy_query.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
 }

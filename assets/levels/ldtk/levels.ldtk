@@ -11,7 +11,7 @@
 	"iid": "96948b40-c640-11ed-8f0c-b7613cdde676",
 	"jsonVersion": "1.2.5",
 	"appBuildId": 464870,
-	"nextUid": 31,
+	"nextUid": 33,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "Free",
@@ -91,6 +91,34 @@
 			"autoRuleGroups": [],
 			"autoSourceLayerDefUid": null,
 			"tilesetDefUid": 1,
+			"tilePivotX": 0,
+			"tilePivotY": 0
+		},
+		{
+			"__type": "IntGrid",
+			"identifier": "IntGrid",
+			"type": "IntGrid",
+			"uid": 32,
+			"doc": null,
+			"gridSize": 64,
+			"guideGridWid": 0,
+			"guideGridHei": 0,
+			"displayOpacity": 1,
+			"inactiveOpacity": 1,
+			"hideInList": false,
+			"hideFieldsWhenInactive": false,
+			"canSelectWhenInactive": true,
+			"pxOffsetX": 0,
+			"pxOffsetY": 0,
+			"parallaxFactorX": 0,
+			"parallaxFactorY": 0,
+			"parallaxScaling": true,
+			"requiredTags": [],
+			"excludedTags": [],
+			"intGridValues": [{ "value": 1, "identifier": "solid", "color": "#000000" }],
+			"autoRuleGroups": [],
+			"autoSourceLayerDefUid": null,
+			"tilesetDefUid": null,
 			"tilePivotX": 0,
 			"tilePivotY": 0
 		}
@@ -314,40 +342,37 @@
 	], "tilesets": [
 		{
 			"__cWid": 1,
-			"__cHei": 17,
-			"identifier": "LevelTiles",
+			"__cHei": 19,
+			"identifier": "Tiles",
 			"uid": 1,
 			"relPath": "../tiles/tiles.png",
 			"embedAtlas": null,
 			"pxWid": 64,
-			"pxHei": 1088,
+			"pxHei": 1216,
 			"tileGridSize": 64,
 			"spacing": 0,
 			"padding": 0,
 			"tags": [],
-			"tagsSourceEnumUid": 20,
-			"enumTags": [{ "enumValueId": "NonPassable", "tileIds": [6,7,10,12] }],
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
 			"customData": [],
 			"savedSelections": [],
 			"cachedPixelData": {
-				"opaqueTiles": "11111111111111111",
-				"averageColors": "f854f854f854f853f854f854f777f666f878f888f878faddf7aaf656f555f767f79a"
+				"opaqueTiles": "1111111111111111100",
+				"averageColors": "f854f854f854f853f854f854f777f666f878f888f878faddf7aaf656f555f767f79a6a0d60d5"
 			}
 		}
-	], "enums": [
-		{ "identifier": "TileProperties", "uid": 20, "values": [{ "id": "NonPassable", "tileId": null, "color": 12470831, "__tileSrcRect": null }], "iconTilesetUid": 1, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
-		{ "identifier": "EnemyType", "uid": 23, "values": [
-			{ "id": "Slimer", "tileId": null, "color": 12470831, "__tileSrcRect": null },
-			{ "id": "Mutant", "tileId": null, "color": 14120515, "__tileSrcRect": null },
-			{ "id": "Goblin", "tileId": null, "color": 15389866, "__tileSrcRect": null },
-			{ "id": "GoblinBrute", "tileId": null, "color": 14984818, "__tileSrcRect": null },
-			{ "id": "Adept", "tileId": null, "color": 7552569, "__tileSrcRect": null },
-			{ "id": "Skuller", "tileId": null, "color": 4073265, "__tileSrcRect": null },
-			{ "id": "LabBoss", "tileId": null, "color": 16690740, "__tileSrcRect": null },
-			{ "id": "TowerBoss", "tileId": null, "color": 16705377, "__tileSrcRect": null },
-			{ "id": "Sorcerian", "tileId": null, "color": 6539085, "__tileSrcRect": null }
-		], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }
-	], "externalEnums": [], "levelFields": [] },
+	], "enums": [{ "identifier": "EnemyType", "uid": 23, "values": [
+		{ "id": "Slimer", "tileId": null, "color": 12470831, "__tileSrcRect": null },
+		{ "id": "Mutant", "tileId": null, "color": 14120515, "__tileSrcRect": null },
+		{ "id": "Goblin", "tileId": null, "color": 15389866, "__tileSrcRect": null },
+		{ "id": "GoblinBrute", "tileId": null, "color": 14984818, "__tileSrcRect": null },
+		{ "id": "Adept", "tileId": null, "color": 7552569, "__tileSrcRect": null },
+		{ "id": "Skuller", "tileId": null, "color": 4073265, "__tileSrcRect": null },
+		{ "id": "LabBoss", "tileId": null, "color": 16690740, "__tileSrcRect": null },
+		{ "id": "TowerBoss", "tileId": null, "color": 16705377, "__tileSrcRect": null },
+		{ "id": "Sorcerian", "tileId": null, "color": 6539085, "__tileSrcRect": null }
+	], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
 			"identifier": "Level_0",
@@ -438,9 +463,9 @@
 								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
 								{ "__identifier": "spawn_rate", "__value": 5, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
 								{ "__identifier": "spawn_count", "__value": 10, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
-								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
 									"id": "V_String",
-									"params": ["Slimer"]
+									"params": ["Mutant"]
 								}] }
 							]
 						},
@@ -460,9 +485,9 @@
 								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
 								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
 								{ "__identifier": "spawn_count", "__value": 8, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [8] }] },
-								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
 									"id": "V_String",
-									"params": ["Mutant"]
+									"params": ["Slimer"]
 								}] }
 							]
 						}
@@ -701,6 +726,38 @@
 						{ "px": [1088,640], "src": [0,320], "f": 0, "t": 5, "d": [207] },
 						{ "px": [1152,640], "src": [0,256], "f": 0, "t": 4, "d": [208] }
 					],
+					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee71460-c640-11ed-b0f3-ff04d4190cb2",
+					"levelId": 0,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 4096285,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
 					"entityInstances": []
 				}
 			],
@@ -1015,6 +1072,38 @@
 						{ "px": [1152,640], "src": [0,256], "f": 0, "t": 4, "d": [208] }
 					],
 					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee78990-c640-11ed-b0f3-498c5e673c13",
+					"levelId": 7,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 5750245,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "9694d960-c640-11ed-8f0c-e7d44b2edc93", "dir": "w" }, { "levelIid": "9ea7d690-c640-11ed-8f0c-097167b9f5c8", "dir": "e" }, { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "s" } ]
@@ -1327,6 +1416,38 @@
 						{ "px": [1088,640], "src": [0,320], "f": 0, "t": 5, "d": [207] },
 						{ "px": [1152,640], "src": [0,320], "f": 0, "t": 5, "d": [208] }
 					],
+					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee7b0a0-c640-11ed-b0f3-6de0568a5ab8",
+					"levelId": 8,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 9599448,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
 					"entityInstances": []
 				}
 			],
@@ -1641,6 +1762,38 @@
 						{ "px": [1152,640], "src": [0,512], "f": 0, "t": 8, "d": [208] }
 					],
 					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee7d7b0-c640-11ed-b0f3-63387804f670",
+					"levelId": 10,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 3885364,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "9694d960-c640-11ed-8f0c-e7d44b2edc93", "dir": "n" }, { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "e" }, { "levelIid": "12a30010-c640-11ed-8f0c-01c835a16552", "dir": "s" } ]
@@ -1953,6 +2106,38 @@
 						{ "px": [1088,640], "src": [0,576], "f": 0, "t": 9, "d": [207] },
 						{ "px": [1152,640], "src": [0,576], "f": 0, "t": 9, "d": [208] }
 					],
+					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee7fec0-c640-11ed-b0f3-53d5ed541ff6",
+					"levelId": 11,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 476705,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
 					"entityInstances": []
 				}
 			],
@@ -2267,6 +2452,38 @@
 						{ "px": [1152,640], "src": [0,576], "f": 0, "t": 9, "d": [208] }
 					],
 					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee825d0-c640-11ed-b0f3-eb554d117c19",
+					"levelId": 12,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 6409875,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "9ea7d690-c640-11ed-8f0c-097167b9f5c8", "dir": "n" }, { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "w" }, { "levelIid": "308e7460-c640-11ed-8f0c-95f3c4285726", "dir": "s" } ]
@@ -2565,6 +2782,38 @@
 						{ "px": [1088,640], "src": [0,704], "f": 0, "t": 11, "d": [207] },
 						{ "px": [1152,640], "src": [0,704], "f": 0, "t": 11, "d": [208] }
 					],
+					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee84ce0-c640-11ed-b0f3-334174344f46",
+					"levelId": 13,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 289860,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
 					"entityInstances": []
 				}
 			],
@@ -2879,6 +3128,38 @@
 						{ "px": [1152,640], "src": [0,704], "f": 0, "t": 11, "d": [208] }
 					],
 					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee873f0-c640-11ed-b0f3-b312f3e2c283",
+					"levelId": 14,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 5846552,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "n" }, { "levelIid": "12a30010-c640-11ed-8f0c-01c835a16552", "dir": "w" }, { "levelIid": "308e7460-c640-11ed-8f0c-95f3c4285726", "dir": "e" } ]
@@ -3191,6 +3472,38 @@
 						{ "px": [1088,640], "src": [0,704], "f": 0, "t": 11, "d": [207] },
 						{ "px": [1152,640], "src": [0,704], "f": 0, "t": 11, "d": [208] }
 					],
+					"entityInstances": []
+				},
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee89b00-c640-11ed-b0f3-439456cb54ab",
+					"levelId": 15,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 5439364,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
 					"entityInstances": []
 				}
 			],

@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{time::Duration, str::FromStr};
 
 use bevy::prelude::*;
 use rand::Rng;
@@ -27,7 +27,7 @@ impl Plugin for SpawnerPlugin {
 }
 
 // Whenever the timer finishes, spawn_rate entities will be spawned until spawn_count is reached
-#[derive(Component, Reflect, Default, FromReflect)]
+#[derive(Component, Reflect, Default, FromReflect, Clone, Debug)]
 pub struct Spawner {
     pub timer: Timer,
     pub spawn_rate: usize,
@@ -35,7 +35,7 @@ pub struct Spawner {
     pub enemy_type: EnemyType,
 }
 
-#[derive(Reflect, Default, FromReflect)]
+#[derive(Reflect, Default, FromReflect, Clone, Debug)]
 pub enum EnemyType {
     #[default]
     Slimer,
@@ -49,6 +49,25 @@ pub enum EnemyType {
     Sorcerian,
 }
 
+impl FromStr for EnemyType {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<EnemyType, Self::Err> {
+        match input {
+            "Slimer" => Ok(EnemyType::Slimer),
+            "Mutant" => Ok(EnemyType::Mutant),
+            "Goblin" => Ok(EnemyType::Goblin),
+            "GoblinBrute" => Ok(EnemyType::GoblinBrute),
+            "Adept" => Ok(EnemyType::Adept),
+            "Skuller" => Ok(EnemyType::Skuller),
+            "LabBoss" => Ok(EnemyType::LabBoss),
+            "TowerBoss" => Ok(EnemyType::TowerBoss),
+            "Sorcerian" => Ok(EnemyType::Sorcerian),
+            _      => Err(()),
+        }
+    }
+}
+
 fn spawn_system(
     mut commands: Commands,
     sprites: Res<SpriteAssets>,
@@ -57,56 +76,57 @@ fn spawn_system(
     mut query: Query<(Entity, &mut Spawner, &Transform)>,
     player_query: Query<Entity, With<Player>>,
 ) {
-    let player = player_query.single();
-
-    for (entity, mut spawner, transform) in &mut query.iter_mut() {
-        // If there's nothing left to spawn, destroy the spawner
-        if spawner.spawn_count == 0 {
-            commands.entity(entity).despawn();
-            return;
-        }
-
-        spawner.timer.tick(time.delta());
-        if spawner.timer.just_finished() {
-            // If the spawn rate is greater than the number of entities left to spawn, set the spawn rate to the number of entities left to spawn
-            if spawner.spawn_rate > spawner.spawn_count {
-                spawner.spawn_rate = spawner.spawn_count;
+    let player = player_query.get_single();
+    if let Ok(player) = player {
+        for (entity, mut spawner, transform) in &mut query.iter_mut() {
+            // If there's nothing left to spawn, destroy the spawner
+            if spawner.spawn_count == 0 {
+                commands.entity(entity).despawn();
+                return;
             }
-
-            for _ in 0..spawner.spawn_rate {
-                match spawner.enemy_type {
-                    EnemyType::Slimer => spawn_slimer(
-                        &mut commands,
-                        &sprites,
-                        &mut texture_atlases,
-                        *transform,
-                        player,
-                    ),
-                    EnemyType::Mutant => spawn_mutant(
-                        &mut commands,
-                        &sprites,
-                        &mut texture_atlases,
-                        *transform,
-                        player,
-                    ),
-                    // EnemyType::Goblin => spawn_goblin(&mut commands, &sprites, &mut texture_atlases, *transform),
-                    // EnemyType::GoblinBrute => spawn_goblin_brute(&mut commands, &sprites, &mut texture_atlases, *transform),
-                    // EnemyType::Adept => spawn_adept(&mut commands, &sprites, &mut texture_atlases, *transform),
-                    EnemyType::Skuller => spawn_skuller(
-                        &mut commands,
-                        &sprites,
-                        &mut texture_atlases,
-                        *transform,
-                        player,
-                    ),
-                    // EnemyType::LabBoss => spawn_lab_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
-                    // EnemyType::TowerBoss => spawn_tower_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
-                    // EnemyType::Sorcerian => spawn_sorcerian(&mut commands, &sprites, &mut texture_atlases, *transform),
-                    _ => panic!("Invalid enemy type"),
+    
+            spawner.timer.tick(time.delta());
+            if spawner.timer.just_finished() {
+                // If the spawn rate is greater than the number of entities left to spawn, set the spawn rate to the number of entities left to spawn
+                if spawner.spawn_rate > spawner.spawn_count {
+                    spawner.spawn_rate = spawner.spawn_count;
                 }
-
-                // Decrement the number of entities left to spawn
-                spawner.spawn_count -= 1;
+    
+                for _ in 0..spawner.spawn_rate {
+                    match spawner.enemy_type {
+                        EnemyType::Slimer => spawn_slimer(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
+                        EnemyType::Mutant => spawn_mutant(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
+                        // EnemyType::Goblin => spawn_goblin(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        // EnemyType::GoblinBrute => spawn_goblin_brute(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        // EnemyType::Adept => spawn_adept(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        EnemyType::Skuller => spawn_skuller(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
+                        // EnemyType::LabBoss => spawn_lab_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        // EnemyType::TowerBoss => spawn_tower_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        // EnemyType::Sorcerian => spawn_sorcerian(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        _ => panic!("Invalid enemy type"),
+                    }
+    
+                    // Decrement the number of entities left to spawn
+                    spawner.spawn_count -= 1;
+                }
             }
         }
     }

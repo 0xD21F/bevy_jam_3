@@ -5,10 +5,10 @@ mod camera;
 mod debug;
 mod entity;
 mod game;
-mod level;
 
 use app_state::*;
 
+use bevy_ecs_ldtk::LdtkPlugin;
 use debug::*;
 use entity::*;
 
@@ -37,9 +37,10 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_plugin(DebugPlugin)
-        .add_plugin(AppStatePlugin)
+        .add_plugin(LdtkPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(
             PIXELS_PER_METER,
         ))
+        .add_plugin(AppStatePlugin)
         .run();
 }

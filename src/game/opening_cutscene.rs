@@ -1,14 +1,16 @@
-use bevy::{input::keyboard, prelude::*};
+use bevy::prelude::*;
 
-use super::{loading::CutsceneAssets, AppState};
+use crate::app_state::loading::CutsceneAssets;
+
+use super::GameState;
 
 pub struct OpeningCutscenePlugin;
 
 impl Plugin for OpeningCutscenePlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app.add_system(opening_cutscene_setup.in_schedule(OnEnter(AppState::OpeningCutscene)))
-            .add_system(opening_cutscene_system.in_set(OnUpdate(AppState::OpeningCutscene)))
-            .add_system(opening_cutscene_cleanup.in_schedule(OnExit(AppState::OpeningCutscene)));
+        app.add_system(opening_cutscene_setup.in_schedule(OnEnter(GameState::OpeningCutscene)))
+            .add_system(opening_cutscene_system.in_set(OnUpdate(GameState::OpeningCutscene)))
+            .add_system(opening_cutscene_cleanup.in_schedule(OnExit(GameState::OpeningCutscene)));
     }
 }
 
@@ -91,14 +93,14 @@ pub fn opening_cutscene_setup(
 }
 
 pub fn opening_cutscene_system(
-    mut next_state: ResMut<NextState<AppState>>,
+    mut next_state: ResMut<NextState<GameState>>,
     keyboard_input: Res<Input<KeyCode>>,
     mut cutscene_image_node_query: Query<&mut Style, With<OpeningCutsceneImageNode>>,
     mut cutscene_data: ResMut<OpeningCutsceneData>,
     time: Res<Time>,
 ) {
     if keyboard_input.any_pressed([KeyCode::Space]) {
-        next_state.set(AppState::InGame);
+        next_state.set(GameState::SetupLevelManager);
     }
 
     for mut cutscene_image_node_style in cutscene_image_node_query.iter_mut() {
@@ -108,7 +110,7 @@ pub fn opening_cutscene_system(
             } else if value >= 0.0 {
                 cutscene_data.cutscene_timer.tick(time.delta());
                 if cutscene_data.cutscene_timer.just_finished() {
-                    next_state.set(AppState::InGame);
+                    next_state.set(GameState::SetupLevelManager);
                 }
             }
         } else {

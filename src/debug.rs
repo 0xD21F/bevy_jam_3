@@ -32,8 +32,7 @@ impl Plugin for DebugPlugin {
                 .register_type::<Velocity>()
                 .register_type::<Spawner>()
                 .register_type::<Animated>()
-                // .register_type::<Level>()
-                // .register_type::<LevelManager>()
+                .register_type::<LevelManager>()
                 .init_resource::<DebugState>();
         }
     }

@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::{entity::{spawner::Spawner, player::Player, Enemy}, game::GameState};
+
 use super::AppState;
 
 pub struct MainMenuPlugin;
@@ -73,7 +75,7 @@ pub fn main_menu_system(
         match *interaction {
             Interaction::Clicked => {
                 *color = PRESSED_BUTTON.into();
-                next_state.set(AppState::OpeningCutscene)
+                next_state.set(AppState::InGame)
             }
             Interaction::Hovered => {
                 *color = HOVERED_BUTTON.into();
@@ -88,3 +90,4 @@ pub fn main_menu_system(
 pub fn main_menu_cleanup(mut commands: Commands, menu_data: Res<MenuUiData>) {
     commands.entity(menu_data.button_entity).despawn_recursive();
 }
+

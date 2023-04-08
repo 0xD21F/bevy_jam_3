@@ -2,6 +2,8 @@ use bevy::prelude::*;
 use bevy_asset_loader::prelude::{AssetCollection, LoadingState, LoadingStateAppExt};
 use bevy_ecs_ldtk::LdtkAsset;
 
+use crate::game::GameState;
+
 use super::AppState;
 
 pub struct LoadingPlugin;
@@ -46,9 +48,6 @@ pub struct LevelAssets {
     #[asset(path = "levels/ldtk/levels.ldtk")]
     pub ldtk: Handle<LdtkAsset>,
 }
-
-
-
 
 #[derive(Resource)]
 pub struct LoadingUiData {
