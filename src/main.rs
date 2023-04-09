@@ -9,6 +9,7 @@ mod game;
 use app_state::*;
 
 use bevy_ecs_ldtk::LdtkPlugin;
+use bevy_kira_audio::AudioPlugin;
 use bevy_mod_ui_texture_atlas_image::UiAtlasImagePlugin;
 use debug::*;
 use entity::*;
@@ -40,6 +41,7 @@ fn main() {
         .add_plugin(DebugPlugin)
         .add_plugin(LdtkPlugin)
         .add_plugin(UiAtlasImagePlugin)
+        .add_plugin(AudioPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(
             PIXELS_PER_METER,
         ))

@@ -1,10 +1,19 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::{AssetCollection, LoadingState, LoadingStateAppExt};
 use bevy_ecs_ldtk::LdtkAsset;
+use bevy_kira_audio::{AudioApp, AudioSource};
 
 use super::AppState;
 
 pub struct LoadingPlugin;
+
+// Our type for the custom audio channel
+#[derive(Resource)]
+pub struct Background;
+
+// Our type for the custom audio channel
+#[derive(Resource)]
+pub struct SoundEffects;
 
 impl Plugin for LoadingPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
@@ -16,6 +25,8 @@ impl Plugin for LoadingPlugin {
         .add_collection_to_loading_state::<_, LevelAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, MusicAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, UiAssets>(AppState::Loading)
+        .add_audio_channel::<Background>()
+        .add_audio_channel::<SoundEffects>()
         .add_system(loading_setup.in_schedule(OnEnter(AppState::Loading)))
         .add_system(loading_cleanup.in_schedule(OnExit(AppState::Loading)));
     }
@@ -79,6 +90,22 @@ pub struct LevelAssets {
 pub struct MusicAssets {
     #[asset(path = "music/title.ogg")]
     pub title: Handle<AudioSource>,
+    #[asset(path = "music/crystal.ogg")]
+    pub crystal: Handle<AudioSource>,
+    #[asset(path = "music/ending.ogg")]
+    pub ending: Handle<AudioSource>,
+    #[asset(path = "music/labs.ogg")]
+    pub labs: Handle<AudioSource>,
+    #[asset(path = "music/labsboss.ogg")]
+    pub labsboss: Handle<AudioSource>,
+    #[asset(path = "music/mutate.ogg")]
+    pub mutate: Handle<AudioSource>,
+    #[asset(path = "music/sorcerianboss.ogg")]
+    pub sorcerianboss: Handle<AudioSource>,
+    #[asset(path = "music/tower.ogg")]
+    pub tower: Handle<AudioSource>,
+    #[asset(path = "music/towerboss.ogg")]
+    pub towerboss: Handle<AudioSource>,
 }
 
 #[derive(Resource)]

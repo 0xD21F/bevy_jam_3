@@ -6,12 +6,14 @@ use bevy_ecs_ldtk::{
     EntityInstance, IntGridCell, LdtkEntity, LdtkIntCell, LdtkSettings, LdtkWorldBundle,
     LevelSelection,
 };
+use bevy_kira_audio::AudioChannel;
+use bevy_kira_audio::AudioControl;
 use bevy_rapier2d::prelude::Collider;
 use rand::Rng;
 
 use crate::{
     app_state::{
-        loading::{LevelAssets, SpriteAssets},
+        loading::{Background, LevelAssets, MusicAssets, SpriteAssets},
         AppState,
     },
     camera::{camera_clamp_to_current_level, camera_movement_system},
@@ -176,14 +178,13 @@ pub fn level_enemies_remaining_check(
 #[derive(Resource, Reflect, Default)]
 pub struct LevelManager {
     pub current_level: usize,
-    pub remaining_enemies: usize,
 }
 
-pub fn level_manager_setup(mut commands: Commands, mut next_state: ResMut<NextState<GameState>>) {
-    commands.insert_resource(LevelManager {
-        current_level: 0,
-        remaining_enemies: 0,
-    });
+pub fn level_manager_setup(
+    mut commands: Commands,
+    mut next_state: ResMut<NextState<GameState>>,
+) {
+    commands.insert_resource(LevelManager { current_level: 0 });
     next_state.set(GameState::SetupLevel);
 }
 
@@ -197,7 +198,35 @@ pub fn level_setup(
     mut level_manager: ResMut<LevelManager>,
     level_assets: Res<LevelAssets>,
     mut next_state: ResMut<NextState<GameState>>,
+    background: Res<AudioChannel<Background>>,
+    music_assets: Res<MusicAssets>,
 ) {
+    if(level_manager.current_level == 0 || level_manager.current_level == 1) {
+        background.stop();
+        background.play(music_assets.labs.clone());
+    }
+    if(level_manager.current_level == 2) {
+        background.stop();
+        background.play(music_assets.labsboss.clone());
+    }
+    if(level_manager.current_level == 3 || level_manager.current_level == 4) {
+        background.stop();
+        background.play(music_assets.tower.clone());
+    }
+    if(level_manager.current_level == 5) {
+        background.stop();
+        background.play(music_assets.towerboss.clone());
+    }
+    if(level_manager.current_level == 6 || level_manager.current_level == 7) {
+        background.stop();
+        background.play(music_assets.crystal.clone());
+    }
+    if(level_manager.current_level == 8) {
+        background.stop();
+        background.play(music_assets.sorcerianboss.clone());
+    }
+
+
     // Increment the current_level
     commands.insert_resource(LevelSelection::Index(level_manager.current_level));
     level_manager.current_level += 1;

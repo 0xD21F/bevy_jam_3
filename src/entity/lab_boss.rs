@@ -45,7 +45,7 @@ impl LabBossBundle {
                     acceleration: 1000.0,
                     friction: 500.0,
                     max_speed: 150.0,
-                    health: 100.0,
+                    health: 10000.0,
                 },
                 animation: animation.clone(),
                 sprite: SpriteSheetBundle {

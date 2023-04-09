@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_mod_ui_texture_atlas_image::{UiAtlasImage, AtlasImageBundle};
+use bevy_mod_ui_texture_atlas_image::{AtlasImageBundle, UiAtlasImage};
 
 use crate::app_state::{loading::UiAssets, AppState};
 
@@ -33,14 +33,7 @@ impl Plugin for UiPlugin {
     }
 }
 
-fn ui_setup(
-    mut commands: Commands,
-    ui_assets: Res<UiAssets>,
-    mutation_manager: Res<MutationManager>,
-) {
-    // This is a handle to the Mutation icons
-    ui_assets.mutation_icons.clone();
-
+fn ui_setup(mut commands: Commands, mutation_manager: Res<MutationManager>) {
     let ui_entity = commands
         .spawn(NodeBundle {
             style: Style {
@@ -94,7 +87,6 @@ fn ui_system(
     let image = ui_assets.mutation_icons.clone();
     let texture_atlas = TextureAtlas::from_grid(image.clone(), 32. * Vec2::ONE, 17, 1, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
-
 
     let container = ui_state.ui_root_node;
 

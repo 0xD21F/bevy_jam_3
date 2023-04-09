@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.10"
+bevy = { version = "0.10", default-features = false }
 bevy_rapier2d = "0.21.0"
 bevy_prototype_lyon = "0.8.0"
 bevy-inspector-egui = "0.18.1"
@@ -14,9 +14,39 @@ bevy_prototype_debug_lines = "0.10"
 bevy_asset_loader = "0.16"
 bevy_ecs_ldtk = { version = "0.6", features = ["atlas"] }
 bevy_mod_ui_texture_atlas_image = "0.4.1"
+bevy_kira_audio = "0.15"
 leafwing-input-manager = "0.9.1"
 seldom_state = { version = "0.5", features = ["leafwing_input"]}
 rand = "*"
+
+[features]
+dev = [
+    "bevy/bevy_dylib",
+]
+
+# Bevy defaults minus audio and some other not needed things
+# see https://github.com/bevyengine/bevy/blob/main/Cargo.toml#L31-L54
+default = [
+    "bevy/animation",
+    "bevy/bevy_asset",
+    "bevy/bevy_scene",
+    "bevy/bevy_winit",
+    "bevy/bevy_core_pipeline",
+    "bevy/bevy_pbr",
+    "bevy/bevy_gltf",
+    "bevy/bevy_render",
+    "bevy/bevy_sprite",
+    "bevy/bevy_text",
+    "bevy/bevy_ui",
+    "bevy/png",
+    "bevy/hdr",
+    "bevy/zstd",
+    "bevy/x11",
+    "bevy/ktx2",
+    "bevy/filesystem_watcher",
+    "bevy/tonemapping_luts"
+]
+
 
 # Enable max optimizations for dependencies, but not for our code:
 [profile.dev.package."*"]

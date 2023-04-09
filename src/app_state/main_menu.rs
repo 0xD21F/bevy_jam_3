@@ -1,12 +1,18 @@
 use bevy::prelude::*;
+use bevy_kira_audio::AudioChannel;
 
-use super::{loading::UiAssets, AppState};
+use super::{
+    loading::{Background, MusicAssets, UiAssets},
+    AppState,
+};
+use bevy_kira_audio::*;
 
 pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_system(main_menu_setup.in_schedule(OnEnter(AppState::MainMenu)))
+            .add_system(main_menu_music.in_schedule(OnEnter(AppState::MainMenu)))
             .add_system(main_menu_system.in_set(OnUpdate(AppState::MainMenu)))
             .add_system(main_menu_cleanup.in_schedule(OnExit(AppState::MainMenu)))
             .add_system(main_menu_bob_start.in_set(OnUpdate(AppState::MainMenu)));
@@ -123,4 +129,9 @@ pub fn main_menu_bob_start(time: Res<Time>, mut query: Query<(&PressSpaceMarker,
             ..default()
         }
     }
+}
+
+fn main_menu_music(background: Res<AudioChannel<Background>>, music_assets: Res<MusicAssets>) {
+    background.stop();
+    background.play(music_assets.title.clone()).looped();
 }
