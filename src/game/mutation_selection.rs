@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::app_state::loading::{CutsceneAssets, UiAssets};
+use crate::app_state::loading::{UiAssets};
 
 use super::GameState;
 

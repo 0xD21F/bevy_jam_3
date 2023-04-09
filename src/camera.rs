@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{LdtkLevel, LevelSelection};
 
-use crate::{game::level_manager::LevelManager, player::*};
+use crate::{player::*};
 
 pub struct CameraPlugin;
 
@@ -40,7 +40,7 @@ pub fn camera_clamp_to_current_level(
         (&Transform, &Handle<LdtkLevel>),
         (Without<OrthographicProjection>, Without<Player>),
     >,
-    level_selection: Res<LevelSelection>,
+    _level_selection: Res<LevelSelection>,
     ldtk_levels: Res<Assets<LdtkLevel>>,
 ) {
     let (orthographic_projection, mut camera_transform) = camera_query.single_mut();

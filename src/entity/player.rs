@@ -444,7 +444,7 @@ fn player_damage_system(
     mut enemy_hitbox_query: Query<(Entity, &Transform, &mut Creature, &Collider), With<Enemy>>,
     mut player_hurtbox_query: Query<(Entity, &Transform, &Collider, &PlayerHurtboxDamage)>,
 ) {
-    for (enemy_hitbox_entity, enemy_transform, mut enemy_creature, _enemy_collider) in
+    for (enemy_hitbox_entity, enemy_transform, _enemy_creature, _enemy_collider) in
         enemy_hitbox_query.iter_mut()
     {
         for (player_hurtbox_entity, player_transform, _player_collider, player_hurtbox_damage) in

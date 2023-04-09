@@ -64,7 +64,7 @@ impl SorcerianBundle {
                 hitbox: Hitbox,
             },
             enemy: Enemy,
-            Sorcerian: Sorcerian,
+            Sorcerian,
             name: Name::new("Sorcerian"),
             separation: Separation {
                 radius: PIXELS_PER_METER * 1.0,

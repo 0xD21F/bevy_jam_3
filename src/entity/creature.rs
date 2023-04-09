@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_ecs_ldtk::{LdtkLevel, LevelSelection};
+use bevy_ecs_ldtk::{LdtkLevel};
 use bevy_rapier2d::prelude::*;
 
 use crate::{animation::Animated, game::GameState};
@@ -133,10 +133,10 @@ pub struct FacePlayer;
 
 pub fn set_sprite_facing_system(
     mut query: Query<(&mut TextureAtlasSprite, &Velocity, &Transform, Option<&FacePlayer>), Without<DontSetFacing>>,
-    mut player_query: Query<(&Transform), With<Player>>,
+    player_query: Query<&Transform, With<Player>>,
 ) {
     for (mut sprite, velocity, transform, face_player) in query.iter_mut() {
-        if let Some(face_player) = face_player {
+        if let Some(_face_player) = face_player {
             if let Ok(player_transform) = player_query.get_single() {
                 // Flip the sprite to face the player
                 let player_pos = player_transform.translation;
@@ -149,12 +149,10 @@ pub fn set_sprite_facing_system(
                 }
             }
         } 
-        else {
-            if velocity.value.x > 0.0 {
-                sprite.flip_x = false;
-            } else if velocity.value.x < 0.0 {
-                sprite.flip_x = true;
-            }
+        else if velocity.value.x > 0.0 {
+            sprite.flip_x = false;
+        } else if velocity.value.x < 0.0 {
+            sprite.flip_x = true;
         }
     }
 }
@@ -178,11 +176,11 @@ pub fn z_ordering_system(
 }
 
 pub fn creature_clamp_to_current_level(
-    mut creature_query: Query<(&mut Transform), With<Creature>>,
+    mut creature_query: Query<&mut Transform, With<Creature>>,
     level_query: Query<(&Transform, &Handle<LdtkLevel>), Without<Creature>>,
     ldtk_levels: Res<Assets<LdtkLevel>>,
 ) {
-    for (mut transform) in creature_query.iter_mut() {
+    for mut transform in creature_query.iter_mut() {
         for (level_transform, level_handle) in level_query.iter() {
             if let Some(ldtk_level) = ldtk_levels.get(level_handle) {
                 let level = &ldtk_level.level;

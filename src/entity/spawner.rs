@@ -2,7 +2,7 @@ use std::{str::FromStr, time::Duration};
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::ActiveCollisionTypes;
-use bevy_rapier2d::prelude::RigidBody;
+
 use rand::Rng;
 use seldom_state::prelude::{NotTrigger, StateMachine};
 

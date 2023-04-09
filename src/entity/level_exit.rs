@@ -1,25 +1,21 @@
-use std::str::FromStr;
+
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{
-    prelude::{FieldValue, LdtkEntityAppExt, LdtkIntCellAppExt},
-    EntityInstance, IntGridCell, LdtkEntity, LdtkIntCell, LdtkSettings, LdtkWorldBundle,
-    LevelSelection,
+    prelude::{FieldValue, LdtkEntityAppExt},
+    EntityInstance, LdtkEntity,
 };
 use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider, RapierContext};
 
 use crate::{
-    app_state::{loading::LevelAssets, AppState},
-    camera::{camera_clamp_to_current_level, camera_movement_system},
-    entity::spawner::{EnemyType, Spawner},
     game::{
-        level_manager::{LevelManager, LevelObject},
+        level_manager::{LevelObject},
         GameState,
     },
     PIXELS_PER_METER,
 };
 
-use super::{level_start::LevelStart, player::Player};
+use super::{player::Player};
 
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct LevelExitEntityBundle {
@@ -56,7 +52,7 @@ fn find_field_value<'a>(
 impl From<&EntityInstance> for LevelExitBundle {
     fn from(entity_instance: &EntityInstance) -> LevelExitBundle {
         // Helper closure to get field value and simplify error handling
-        let get_field_value = |field_identifier: &str| {
+        let _get_field_value = |field_identifier: &str| {
             find_field_value(entity_instance, field_identifier)
                 .ok_or_else(|| format!("Missing field: {}", field_identifier))
         };

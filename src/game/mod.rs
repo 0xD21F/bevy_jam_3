@@ -9,7 +9,7 @@ use crate::{
 
 use self::{
     level_manager::LevelManagerPlugin,
-    mutation_selection::{MutationSelectionData, MutationSelectionPlugin},
+    mutation_selection::{MutationSelectionPlugin},
     opening_cutscene::OpeningCutscenePlugin,
 };
 

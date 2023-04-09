@@ -228,7 +228,7 @@ pub fn portal_sprite(
     query: Query<(Entity, &Spawner), Without<Sprite>>,
     sprite_assets: Res<SpriteAssets>,
 ) {
-    for (entity, spawner) in query.iter() {
+    for (entity, _spawner) in query.iter() {
 
     // Randomly choose portal sprite between 1 and 2
     let portal_sprite = match rand::thread_rng().gen_range(0..2) {

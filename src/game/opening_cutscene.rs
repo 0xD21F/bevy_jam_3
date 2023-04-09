@@ -96,7 +96,7 @@ pub fn opening_cutscene_setup(
 }
 
 pub fn opening_cutscene_system(
-    mut commands: Commands,
+    _commands: Commands,
     mut next_state: ResMut<NextState<GameState>>,
     keyboard_input: Res<Input<KeyCode>>,
     mut cutscene_image_node_query: Query<&mut Style, With<OpeningCutsceneImageNode>>,
@@ -122,7 +122,7 @@ pub fn opening_cutscene_system(
         }
     }
 
-    if (cutscene_finished_panning) {
+    if cutscene_finished_panning {
         cutscene_data.cutscene_timer_1.tick(time.delta());
         if cutscene_data.cutscene_timer_1.finished() {
             if let Ok(mut ui_image) = cutscene_image.get_single_mut() {
