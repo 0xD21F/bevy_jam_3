@@ -10,7 +10,10 @@ use bevy_rapier2d::prelude::Collider;
 use rand::Rng;
 
 use crate::{
-    app_state::{loading::{LevelAssets, SpriteAssets}, AppState},
+    app_state::{
+        loading::{LevelAssets, SpriteAssets},
+        AppState,
+    },
     camera::{camera_clamp_to_current_level, camera_movement_system},
     entity::{
         spawner::{spawn_system, EnemyType, Spawner},
@@ -229,25 +232,17 @@ pub fn portal_sprite(
     sprite_assets: Res<SpriteAssets>,
 ) {
     for (entity, _spawner) in query.iter() {
-
-    // Randomly choose portal sprite between 1 and 2
-    let portal_sprite = match rand::thread_rng().gen_range(0..2) {
-        0 => sprite_assets.portal1.clone(),
-        1 => sprite_assets.portal2.clone(),
-        _ => sprite_assets.portal1.clone(),
-    };
-    commands
-        .entity(entity)
-        .insert(
-            (
-                Sprite {
-                    ..default()
-                },
-                portal_sprite,
-                Visibility::default(),
-                ComputedVisibility::default(),
-            )
-        );
-
+        // Randomly choose portal sprite between 1 and 2
+        let portal_sprite = match rand::thread_rng().gen_range(0..2) {
+            0 => sprite_assets.portal1.clone(),
+            1 => sprite_assets.portal2.clone(),
+            _ => sprite_assets.portal1.clone(),
+        };
+        commands.entity(entity).insert((
+            Sprite { ..default() },
+            portal_sprite,
+            Visibility::default(),
+            ComputedVisibility::default(),
+        ));
     }
 }

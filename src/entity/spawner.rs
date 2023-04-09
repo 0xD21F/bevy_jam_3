@@ -149,7 +149,13 @@ pub fn spawn_system(
                             *transform,
                             player,
                         ),
-                        EnemyType::Sorcerian => spawn_sorcerian(&mut commands, &sprites, &mut texture_atlases, *transform, player),
+                        EnemyType::Sorcerian => spawn_sorcerian(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
                         _ => panic!("Invalid enemy type"),
                     }
 
@@ -592,7 +598,6 @@ fn spawn_adept(
         ))
         .insert(ActiveCollisionTypes::STATIC_STATIC)
         .insert(FacePlayer)
-
         .insert(
             // This state machine handles the enemy's transitions
             // The initial state is `Idle`
@@ -672,7 +677,6 @@ fn spawn_lab_boss(
         ))
         .insert(ActiveCollisionTypes::STATIC_STATIC)
         .insert(FacePlayer)
-
         .insert(
             // This state machine handles the enemy's transitions
             // The initial state is `Idle`
@@ -752,7 +756,6 @@ fn spawn_sorcerian(
         ))
         .insert(ActiveCollisionTypes::STATIC_STATIC)
         .insert(FacePlayer)
-
         .insert(
             // This state machine handles the enemy's transitions
             // The initial state is `Idle`

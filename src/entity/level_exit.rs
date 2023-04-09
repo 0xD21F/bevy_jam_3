@@ -1,5 +1,3 @@
-
-
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{
     prelude::{FieldValue, LdtkEntityAppExt},
@@ -8,14 +6,11 @@ use bevy_ecs_ldtk::{
 use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider, RapierContext};
 
 use crate::{
-    game::{
-        level_manager::{LevelObject},
-        GameState,
-    },
+    game::{level_manager::LevelObject, GameState},
     PIXELS_PER_METER,
 };
 
-use super::{player::Player};
+use super::player::Player;
 
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct LevelExitEntityBundle {

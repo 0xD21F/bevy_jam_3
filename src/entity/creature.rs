@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_ecs_ldtk::{LdtkLevel};
+use bevy_ecs_ldtk::LdtkLevel;
 use bevy_rapier2d::prelude::*;
 
 use crate::{animation::Animated, game::GameState};
@@ -132,7 +132,15 @@ pub fn apply_friction_system(time: Res<Time>, mut player_info: Query<(&mut Veloc
 pub struct FacePlayer;
 
 pub fn set_sprite_facing_system(
-    mut query: Query<(&mut TextureAtlasSprite, &Velocity, &Transform, Option<&FacePlayer>), Without<DontSetFacing>>,
+    mut query: Query<
+        (
+            &mut TextureAtlasSprite,
+            &Velocity,
+            &Transform,
+            Option<&FacePlayer>,
+        ),
+        Without<DontSetFacing>,
+    >,
     player_query: Query<&Transform, With<Player>>,
 ) {
     for (mut sprite, velocity, transform, face_player) in query.iter_mut() {
@@ -148,8 +156,7 @@ pub fn set_sprite_facing_system(
                     sprite.flip_x = true;
                 }
             }
-        } 
-        else if velocity.value.x > 0.0 {
+        } else if velocity.value.x > 0.0 {
             sprite.flip_x = false;
         } else if velocity.value.x < 0.0 {
             sprite.flip_x = true;

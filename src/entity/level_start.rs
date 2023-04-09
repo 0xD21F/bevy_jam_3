@@ -1,15 +1,10 @@
-
-
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{
     prelude::{FieldValue, LdtkEntityAppExt},
     EntityInstance, LdtkEntity,
 };
 
-
-use crate::{
-    game::{level_manager::LevelObject, GameState},
-};
+use crate::game::{level_manager::LevelObject, GameState};
 
 use super::player::Player;
 

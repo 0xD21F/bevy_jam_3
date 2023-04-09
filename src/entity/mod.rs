@@ -8,8 +8,8 @@ pub mod mutant;
 pub mod player;
 pub mod skuller;
 pub mod slimer;
-pub mod spawner;
 pub mod sorcerian;
+pub mod spawner;
 
 use bevy::{app::PluginGroupBuilder, prelude::*};
 
@@ -17,7 +17,8 @@ use skuller::SkullerPlugin;
 
 use self::{
     adept::AdeptPlugin, goblin::GoblinPlugin, lab_boss::LabBossPlugin, level_exit::LevelExitPlugin,
-    level_start::LevelStartPlugin, mutant::MutantPlugin, slimer::SlimerPlugin, sorcerian::SorcerianPlugin,
+    level_start::LevelStartPlugin, mutant::MutantPlugin, slimer::SlimerPlugin,
+    sorcerian::SorcerianPlugin,
 };
 
 pub struct EnemyEntityPlugins;

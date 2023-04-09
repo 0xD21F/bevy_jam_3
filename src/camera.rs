@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{LdtkLevel, LevelSelection};
 
-use crate::{player::*};
+use crate::player::*;
 
 pub struct CameraPlugin;
 

@@ -6,7 +6,7 @@ mod debug;
 mod entity;
 mod game;
 
-use app_state::{*};
+use app_state::*;
 
 use bevy_ecs_ldtk::LdtkPlugin;
 use debug::*;

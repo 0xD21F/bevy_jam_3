@@ -45,7 +45,6 @@ pub struct SpriteAssets {
     pub portal2: Handle<Image>,
 }
 
-
 #[derive(AssetCollection, Resource)]
 pub struct CutsceneAssets {
     #[asset(path = "cutscenes/opening1.png")]
