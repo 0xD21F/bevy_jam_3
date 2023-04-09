@@ -10,6 +10,7 @@ use crate::{
     animation::Animated,
     entity::{
         creature::{Creature, Velocity},
+        player::Player,
         spawner::Spawner,
     },
     game::level_manager::*,
@@ -33,6 +34,7 @@ impl Plugin for DebugPlugin {
                 .register_type::<Spawner>()
                 .register_type::<Animated>()
                 .register_type::<LevelManager>()
+                .register_type::<Player>()
                 .init_resource::<DebugState>();
         }
     }

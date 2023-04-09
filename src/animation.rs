@@ -20,7 +20,7 @@ fn animate_sprite(time: Res<Time>, mut query: Query<(&mut Animated, &mut Texture
     for (mut animation, mut sprite) in &mut query {
         animation.timer.tick(time.delta());
         if animation.timer.just_finished() {
-            sprite.index = if sprite.index == animation.last {
+            sprite.index = if sprite.index >= animation.last {
                 animation.first
             } else {
                 sprite.index + 1

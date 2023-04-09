@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use seldom_state::prelude::*;
 
+use crate::entity::{creature::Velocity, player::Player};
+
 pub struct BehaviourTriggerPlugin;
 
 impl Plugin for BehaviourTriggerPlugin {

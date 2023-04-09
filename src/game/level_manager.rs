@@ -1,10 +1,19 @@
 use std::str::FromStr;
 
 use bevy::prelude::*;
-use bevy_ecs_ldtk::{LdtkWorldBundle, LevelSelection, LdtkSettings, LevelBackground, LdtkIntCell, IntGridCell, prelude::{LdtkIntCellAppExt, LdtkEntityAppExt, FieldValue}, LdtkEntity, EntityInstance};
+use bevy_ecs_ldtk::{
+    prelude::{FieldValue, LdtkEntityAppExt, LdtkIntCellAppExt},
+    EntityInstance, IntGridCell, LdtkEntity, LdtkIntCell, LdtkSettings, LdtkWorldBundle,
+    LevelBackground, LevelSelection,
+};
 use bevy_rapier2d::prelude::{Collider, LockedAxes};
 
-use crate::{app_state::{loading::LevelAssets, AppState}, PIXELS_PER_METER, entity::spawner::{Spawner, EnemyType}, camera::{camera_clamp_to_current_level, camera_movement_system}};
+use crate::{
+    app_state::{loading::LevelAssets, AppState},
+    camera::{camera_clamp_to_current_level, camera_movement_system},
+    entity::spawner::{EnemyType, Spawner},
+    PIXELS_PER_METER,
+};
 
 use super::GameState;
 
@@ -12,7 +21,7 @@ use super::GameState;
 pub struct NonPassable {
     #[from_int_grid_cell]
     #[bundle]
-    pub wall_collider: WallColliderBundle
+    pub wall_collider: WallColliderBundle,
 }
 
 #[derive(Clone, Debug, Default, Bundle, LdtkIntCell)]
@@ -63,9 +72,8 @@ impl From<&EntityInstance> for SpawnerBundle {
     fn from(entity_instance: &EntityInstance) -> SpawnerBundle {
         // Helper closure to get field value and simplify error handling
         let get_field_value = |field_identifier: &str| {
-            find_field_value(entity_instance, field_identifier).ok_or_else(|| {
-                format!("Missing field: {}", field_identifier)
-            })
+            find_field_value(entity_instance, field_identifier)
+                .ok_or_else(|| format!("Missing field: {}", field_identifier))
         };
 
         // Get field values or return default SpawnerBundle on error
@@ -75,17 +83,17 @@ impl From<&EntityInstance> for SpawnerBundle {
             get_field_value("spawn_count"),
             get_field_value("enemy_type"),
         ) {
-            (Ok(FieldValue::Float(timer)),
-             Ok(FieldValue::Int(spawn_rate)),
-             Ok(FieldValue::Int(spawn_count)),
-             Ok(FieldValue::Enum(enemy_type))) => {
-                (
-                    Timer::from_seconds(timer.unwrap(), TimerMode::Repeating),
-                    spawn_rate.unwrap() as usize,
-                    spawn_count.unwrap() as usize,
-                    enemy_type.as_ref().unwrap().as_str(),
-                )
-            }
+            (
+                Ok(FieldValue::Float(timer)),
+                Ok(FieldValue::Int(spawn_rate)),
+                Ok(FieldValue::Int(spawn_count)),
+                Ok(FieldValue::Enum(enemy_type)),
+            ) => (
+                Timer::from_seconds(timer.unwrap(), TimerMode::Repeating),
+                spawn_rate.unwrap() as usize,
+                spawn_count.unwrap() as usize,
+                enemy_type.as_ref().unwrap().as_str(),
+            ),
             _ => {
                 // Default spawner if something messed up. Spawn 10 slimes.
                 return SpawnerBundle {
@@ -95,7 +103,7 @@ impl From<&EntityInstance> for SpawnerBundle {
                         spawn_count: 10,
                         enemy_type: EnemyType::Slimer,
                     },
-                }
+                };
             }
         };
 
@@ -117,19 +125,19 @@ pub struct LevelManagerPlugin;
 
 impl Plugin for LevelManagerPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app    
-            .insert_resource(LdtkSettings {
-                ..default()
-            })
+        app.insert_resource(LdtkSettings { ..default() })
             .register_ldtk_int_cell::<NonPassable>(1)
             .register_ldtk_entity::<SpawnerEntityBundle>("Spawner");
 
-        app
-            .add_system(level_manager_setup.in_schedule(OnEnter(GameState::SetupLevelManager)))
+        app.add_system(level_manager_setup.in_schedule(OnEnter(GameState::SetupLevelManager)))
             .add_system(level_manager_cleanup.in_schedule(OnExit(AppState::InGame)))
             .add_system(level_setup.in_schedule(OnEnter(GameState::SetupLevel)))
             .add_system(level_cleanup.in_schedule(OnExit(GameState::InLevel)))
-            .add_system(camera_clamp_to_current_level.in_set(OnUpdate(GameState::InLevel)).after(camera_movement_system));
+            .add_system(
+                camera_clamp_to_current_level
+                    .in_set(OnUpdate(GameState::InLevel))
+                    .after(camera_movement_system),
+            );
     }
 }
 
@@ -139,7 +147,7 @@ pub struct LevelManager {
 }
 
 pub fn level_manager_setup(mut commands: Commands, mut next_state: ResMut<NextState<GameState>>) {
-    commands.insert_resource(LevelManager{ current_level: 0 });
+    commands.insert_resource(LevelManager { current_level: 0 });
     next_state.set(GameState::SetupLevel);
 }
 
@@ -152,24 +160,23 @@ pub fn level_setup(
     mut state: ResMut<State<GameState>>,
     mut level_manager: ResMut<LevelManager>,
     level_assets: Res<LevelAssets>,
-    mut next_state: ResMut<NextState<GameState>>
+    mut next_state: ResMut<NextState<GameState>>,
 ) {
     // Increment the current_level
     commands.insert_resource(LevelSelection::Index(level_manager.current_level));
     level_manager.current_level += 1;
 
     // Spawn the level
-    commands.spawn(LdtkWorldBundle {
-        ldtk_handle: level_assets.ldtk.clone(),
-        // Seems like the foreground layer spawns at a slightly positive Z-level, making it invisible to the default 2d camera.
-        // Forcing it to be a negative Z-level fixes this.
-        transform: Transform::from_xyz(0.0, 0.0, -999.0),
-        ..Default::default()
-    })
-    .insert(Name::new("Level"))
-    .insert(LevelObject);
-
-
+    commands
+        .spawn(LdtkWorldBundle {
+            ldtk_handle: level_assets.ldtk.clone(),
+            // Seems like the foreground layer spawns at a slightly positive Z-level, making it invisible to the default 2d camera.
+            // Forcing it to be a negative Z-level fixes this.
+            transform: Transform::from_xyz(0.0, 0.0, -999.0),
+            ..Default::default()
+        })
+        .insert(Name::new("Level"))
+        .insert(LevelObject);
 
     // for tile in level.tiles {
     //     // Spawn tile sprites
@@ -194,6 +201,3 @@ pub fn level_cleanup(mut commands: Commands, query: Query<Entity, &LevelObject>)
         commands.entity(entity).despawn_recursive();
     }
 }
-
-
-

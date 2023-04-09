@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::Collider;
+use bevy_rapier2d::prelude::{Collider, Sensor};
 
 use crate::{
     animation::Animated,
@@ -7,7 +7,7 @@ use crate::{
 };
 
 use super::{
-    creature::{Creature, CreatureBundle, Velocity},
+    creature::{Creature, CreatureBundle, Hitbox, Velocity},
     Enemy, ZSort,
 };
 
@@ -58,6 +58,8 @@ impl SkullerBundle {
                 zsort: ZSort {
                     offset_y: -(sprite_size / 2.0),
                 },
+                sensor: Sensor,
+                hitbox: Hitbox,
             },
             enemy: Enemy,
             skuller: Skuller,

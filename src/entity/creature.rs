@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::animation::Animated;
 
-use super::ZSort;
+use super::{player::PlayerHurtboxDamage, ZSort};
 
 #[derive(Component, Reflect)]
 pub struct Creature {
@@ -45,6 +45,8 @@ pub struct CreatureBundle {
     pub collider: Collider,
     pub velocity: Velocity,
     pub zsort: ZSort,
+    pub sensor: Sensor,
+    pub hitbox: Hitbox,
 }
 
 impl Default for CreatureBundle {
@@ -54,11 +56,16 @@ impl Default for CreatureBundle {
             animation: Animated::default(),
             sprite: Default::default(),
             collider: Collider::ball(1.0),
+            sensor: Sensor::default(),
+            hitbox: Hitbox,
             velocity: Velocity::default(),
             zsort: ZSort::default(),
         }
     }
 }
+
+#[derive(Component, Reflect)]
+pub struct Hitbox;
 
 #[derive(Component, Reflect)]
 pub struct DontSetFacing;

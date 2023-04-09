@@ -1,4 +1,4 @@
-use std::{time::Duration, str::FromStr};
+use std::{str::FromStr, time::Duration};
 
 use bevy::prelude::*;
 use rand::Rng;
@@ -63,7 +63,7 @@ impl FromStr for EnemyType {
             "LabBoss" => Ok(EnemyType::LabBoss),
             "TowerBoss" => Ok(EnemyType::TowerBoss),
             "Sorcerian" => Ok(EnemyType::Sorcerian),
-            _      => Err(()),
+            _ => Err(()),
         }
     }
 }
@@ -84,14 +84,14 @@ fn spawn_system(
                 commands.entity(entity).despawn();
                 return;
             }
-    
+
             spawner.timer.tick(time.delta());
             if spawner.timer.just_finished() {
                 // If the spawn rate is greater than the number of entities left to spawn, set the spawn rate to the number of entities left to spawn
                 if spawner.spawn_rate > spawner.spawn_count {
                     spawner.spawn_rate = spawner.spawn_count;
                 }
-    
+
                 for _ in 0..spawner.spawn_rate {
                     match spawner.enemy_type {
                         EnemyType::Slimer => spawn_slimer(
@@ -123,7 +123,7 @@ fn spawn_system(
                         // EnemyType::Sorcerian => spawn_sorcerian(&mut commands, &sprites, &mut texture_atlases, *transform),
                         _ => panic!("Invalid enemy type"),
                     }
-    
+
                     // Decrement the number of entities left to spawn
                     spawner.spawn_count -= 1;
                 }

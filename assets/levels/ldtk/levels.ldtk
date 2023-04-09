@@ -490,6 +490,50 @@
 									"params": ["Slimer"]
 								}] }
 							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [10,11],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "f5bf9560-c640-11ed-80b3-75e1eca7db25",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [320,352],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [] },
+								{ "__identifier": "spawn_rate", "__value": 5, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
+								{ "__identifier": "spawn_count", "__value": 50, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [50] }] },
+								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Mutant"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [16,13],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "fcd4c910-c640-11ed-80b3-215a80717414",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [512,416],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 0.5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [0.5] }] },
+								{ "__identifier": "spawn_rate", "__value": 10, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "spawn_count", "__value": 100, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [100] }] },
+								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Skuller"]
+								}] }
+							]
 						}
 					]
 				},

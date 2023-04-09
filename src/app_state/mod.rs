@@ -2,9 +2,7 @@ use bevy::prelude::*;
 
 use crate::game::GameState;
 
-use self::{
-    game::GameStatePlugin, loading::LoadingPlugin, main_menu::MainMenuPlugin,
-};
+use self::{game::GameStatePlugin, loading::LoadingPlugin, main_menu::MainMenuPlugin};
 
 pub mod game;
 pub mod loading;

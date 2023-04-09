@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{entity::{spawner::Spawner, player::Player, Enemy}, game::GameState};
+use crate::{
+    entity::{player::Player, spawner::Spawner, Enemy},
+    game::GameState,
+};
 
 use super::AppState;
 
@@ -90,4 +93,3 @@ pub fn main_menu_system(
 pub fn main_menu_cleanup(mut commands: Commands, menu_data: Res<MenuUiData>) {
     commands.entity(menu_data.button_entity).despawn_recursive();
 }
-

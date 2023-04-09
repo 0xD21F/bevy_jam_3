@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{game::{GamePlugin, GameState}, entity::{spawner::Spawner, player::Player, Enemy}};
+use crate::{
+    entity::{player::Player, spawner::Spawner, Enemy},
+    game::{GamePlugin, GameState},
+};
 
 use super::AppState;
 
@@ -8,16 +11,13 @@ pub struct GameStatePlugin;
 
 impl Plugin for GameStatePlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app
-            .add_system(game_init.in_schedule(OnEnter(AppState::InGame)))
+        app.add_system(game_init.in_schedule(OnEnter(AppState::InGame)))
             .add_system(game_teardown.in_schedule(OnExit(AppState::InGame)))
             .add_plugin(GamePlugin);
     }
 }
 
-pub fn game_init(
-    mut next_state: ResMut<NextState<GameState>>,
-) {
+pub fn game_init(mut next_state: ResMut<NextState<GameState>>) {
     next_state.set(GameState::OpeningCutscene);
 }
 
