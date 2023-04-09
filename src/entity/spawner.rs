@@ -156,7 +156,6 @@ pub fn spawn_system(
                             *transform,
                             player,
                         ),
-                        _ => panic!("Invalid enemy type"),
                     }
 
                     // Decrement the number of entities left to spawn

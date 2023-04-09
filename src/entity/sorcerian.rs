@@ -28,7 +28,7 @@ pub struct SorcerianBundle {
     pub creature: CreatureBundle,
     pub enemy: Enemy,
     pub name: Name,
-    pub Sorcerian: Sorcerian,
+    pub sorcerian: Sorcerian,
     pub separation: Separation,
 }
 
@@ -63,7 +63,7 @@ impl SorcerianBundle {
                 hitbox: Hitbox,
             },
             enemy: Enemy,
-            Sorcerian,
+            sorcerian: Sorcerian,
             name: Name::new("Sorcerian"),
             separation: Separation {
                 radius: PIXELS_PER_METER * 1.0,
