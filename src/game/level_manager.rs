@@ -3,10 +3,9 @@ use std::str::FromStr;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{
     prelude::{FieldValue, LdtkEntityAppExt, LdtkIntCellAppExt},
-    EntityInstance, IntGridCell, LdtkEntity, LdtkIntCell, LdtkSettings, LdtkWorldBundle,
-    LevelBackground, LevelSelection,
+    EntityInstance, IntGridCell, LdtkEntity, LdtkIntCell, LdtkSettings, LdtkWorldBundle, LevelSelection,
 };
-use bevy_rapier2d::prelude::{Collider, LockedAxes};
+use bevy_rapier2d::prelude::{Collider};
 
 use crate::{
     app_state::{loading::LevelAssets, AppState},
@@ -30,17 +29,17 @@ pub struct WallColliderBundle {
 }
 
 impl From<IntGridCell> for WallColliderBundle {
-    fn from(int_grid_cell: IntGridCell) -> WallColliderBundle {
+    fn from(_int_grid_cell: IntGridCell) -> WallColliderBundle {
         // Solid Wall
-        if int_grid_cell.value == 1 {
+        // if int_grid_cell.value == 1 {
             WallColliderBundle {
                 collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
             }
-        } else {
-            WallColliderBundle {
-                collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
-            }
-        }
+        // } else {
+            // WallColliderBundle {
+                // collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
+            // }
+        // }
     }
 }
 
@@ -157,7 +156,7 @@ pub fn level_manager_cleanup(mut commands: Commands) {
 
 pub fn level_setup(
     mut commands: Commands,
-    mut state: ResMut<State<GameState>>,
+    _state: ResMut<State<GameState>>,
     mut level_manager: ResMut<LevelManager>,
     level_assets: Res<LevelAssets>,
     mut next_state: ResMut<NextState<GameState>>,

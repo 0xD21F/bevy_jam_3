@@ -15,7 +15,7 @@ use crate::{
 };
 
 use super::{
-    creature::DontSetFacing, player::Player, skuller::SkullerBundle, slimer::SlimerBundle,
+    creature::DontSetFacing, player::Player, skuller::SkullerBundle, slimer::SlimerBundle, mutant::MutantBundle,
 };
 
 pub struct SpawnerPlugin;
@@ -173,36 +173,36 @@ fn spawn_skuller(
             StateMachine::new(Idle)
                 .trans::<Idle>(
                     Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     },
                     ApproachAndKeepDistance {
-                        target: target,
+                        target,
                         inner_distance: PIXELS_PER_METER * 4.0,
                         outer_distance: PIXELS_PER_METER * 6.0,
                     },
                 )
                 .trans::<Idle>(
                     NotTrigger(Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Wander::default(),
                 )
                 .trans::<Wander>(
                     Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     },
                     ApproachAndKeepDistance {
-                        target: target,
+                        target,
                         inner_distance: PIXELS_PER_METER * 4.0,
                         outer_distance: PIXELS_PER_METER * 6.0,
                     },
                 )
                 .trans::<ApproachAndKeepDistance>(
                     NotTrigger(Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Idle,
@@ -251,36 +251,36 @@ fn spawn_slimer(
             StateMachine::new(Idle)
                 .trans::<Idle>(
                     Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     },
                     ApproachAndKeepDistance {
-                        target: target,
+                        target,
                         inner_distance: PIXELS_PER_METER * 4.0,
                         outer_distance: PIXELS_PER_METER * 6.0,
                     },
                 )
                 .trans::<Idle>(
                     NotTrigger(Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Wander::default(),
                 )
                 .trans::<Wander>(
                     Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     },
                     ApproachAndKeepDistance {
-                        target: target,
+                        target,
                         inner_distance: PIXELS_PER_METER * 4.0,
                         outer_distance: PIXELS_PER_METER * 6.0,
                     },
                 )
                 .trans::<ApproachAndKeepDistance>(
                     NotTrigger(Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Idle,
@@ -311,7 +311,7 @@ fn spawn_mutant(
     timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
 
     let _enemy_entity = commands
-        .spawn(SkullerBundle::new(
+        .spawn(MutantBundle::new(
             texture_atlas_handle,
             sprite_size,
             Animated {
@@ -328,36 +328,36 @@ fn spawn_mutant(
             StateMachine::new(Idle)
                 .trans::<Idle>(
                     Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     },
                     ApproachAndKeepDistance {
-                        target: target,
+                        target,
                         inner_distance: PIXELS_PER_METER * 4.0,
                         outer_distance: PIXELS_PER_METER * 6.0,
                     },
                 )
                 .trans::<Idle>(
                     NotTrigger(Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Wander::default(),
                 )
                 .trans::<Wander>(
                     Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     },
                     ApproachAndKeepDistance {
-                        target: target,
+                        target,
                         inner_distance: PIXELS_PER_METER * 4.0,
                         outer_distance: PIXELS_PER_METER * 6.0,
                     },
                 )
                 .trans::<ApproachAndKeepDistance>(
                     NotTrigger(Near {
-                        target: target,
+                        target,
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Idle,

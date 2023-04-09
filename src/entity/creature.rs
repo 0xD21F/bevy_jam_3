@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::animation::Animated;
 
-use super::{player::PlayerHurtboxDamage, ZSort};
+use super::{ZSort};
 
 #[derive(Component, Reflect)]
 pub struct Creature {

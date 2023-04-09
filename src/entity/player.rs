@@ -1,14 +1,11 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::{Collider, RapierContext, RigidBody, Sensor};
 use leafwing_input_manager::{
-    axislike::{DualAxisData, VirtualAxis},
-    orientation::Rotation,
-    prelude::{ActionState, DualAxis, InputManagerPlugin, InputMap, SingleAxis, VirtualDPad},
+    prelude::{ActionState, InputManagerPlugin, InputMap, VirtualDPad},
     Actionlike, InputManagerBundle,
 };
 use seldom_state::prelude::{
-    AxisPairTrigger, InputTriggerPlugin, JustPressedTrigger, JustReleasedTrigger, NotTrigger,
-    PressedTrigger, ReleasedTrigger, StateMachine, ValueTrigger,
+    InputTriggerPlugin,
 };
 
 use crate::{
@@ -163,8 +160,8 @@ pub fn player_attacking_state_system(
     }
 }
 pub fn player_attacking_behavior_system(
-    time: Res<Time>,
-    mut player_info: Query<(Entity, &Player, &Attacking, &mut Transform, &mut Collider)>,
+    _time: Res<Time>,
+    _player_info: Query<(Entity, &Player, &Attacking, &mut Transform, &mut Collider)>,
 ) {
 }
 
@@ -178,9 +175,9 @@ fn player_animation_system(
         &mut Collider,
         &mut TextureAtlasSprite,
     )>,
-    mut commands: Commands,
+    _commands: Commands,
 ) {
-    for (entity, mut player, mut animated, mut collider, mut texture_atlas_sprite) in
+    for (entity, mut player, mut animated, mut collider, _texture_atlas_sprite) in
         player_info.iter_mut()
     {
         let is_rolling = rolling_query.get(entity).is_ok();
@@ -272,7 +269,7 @@ pub fn player_movement_system(
         }
 
         let is_rolling = rolling_query.get(entity).is_ok();
-        if (!is_rolling) {
+        if !is_rolling {
             let axis_pair = action_state.axis_pair(PlayerAction::Move);
 
             let axis_pair = match axis_pair {
@@ -303,7 +300,7 @@ pub fn player_rolling_state_system(
     mut commands: Commands,
     hurtbox_query: Query<Entity, With<PlayerHurtboxDamage>>,
 ) {
-    for (entity, mut player, velocity, action_state) in player_info.iter_mut() {
+    for (entity, mut player, _velocity, action_state) in player_info.iter_mut() {
         let is_rolling = rolling_query.get(entity).is_ok();
         let is_immune = immune_query.get(entity).is_ok();
         let is_attacking = attacking_query.get(entity).is_ok();
@@ -447,8 +444,8 @@ fn player_damage_system(
     mut enemy_hitbox_query: Query<(Entity, &mut Creature, &Collider), With<Enemy>>,
     mut player_hurtbox_query: Query<(Entity, &Collider, &PlayerHurtboxDamage)>,
 ) {
-    for (enemy_hitbox_entity, mut enemy_creature, enemy_collider) in enemy_hitbox_query.iter_mut() {
-        for (player_hurtbox_entity, player_collider, player_hurtbox_damage) in
+    for (enemy_hitbox_entity, mut enemy_creature, _enemy_collider) in enemy_hitbox_query.iter_mut() {
+        for (player_hurtbox_entity, _player_collider, player_hurtbox_damage) in
             player_hurtbox_query.iter_mut()
         {
             if rapier_context.intersection_pair(player_hurtbox_entity, enemy_hitbox_entity)

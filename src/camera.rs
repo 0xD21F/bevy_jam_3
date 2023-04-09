@@ -42,14 +42,13 @@ pub fn camera_clamp_to_current_level(
     >,
     level_selection: Res<LevelSelection>,
     ldtk_levels: Res<Assets<LdtkLevel>>,
-    level_manager: Res<LevelManager>,
 ) {
     let (orthographic_projection, mut camera_transform) = camera_query.single_mut();
 
     for (level_transform, level_handle) in level_query.iter() {
         if let Some(ldtk_level) = ldtk_levels.get(level_handle) {
             let level = &ldtk_level.level;
-            if level_selection.is_match(&level_manager.current_level, level) {
+            if level_selection.is_match(&(level.uid as usize), level) {
                 let half_width =
                     (orthographic_projection.area.width() * camera_transform.scale.x) / 2.0;
                 let half_height =
