@@ -29,7 +29,7 @@ pub struct PressSpaceMarker;
 
 pub fn main_menu_setup(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    _asset_server: Res<AssetServer>,
     ui_assets: Res<UiAssets>,
 ) {
     // root node
@@ -124,8 +124,8 @@ pub fn main_menu_bob_start(time: Res<Time>, mut query: Query<(&PressSpaceMarker,
         let y = amplitude_y * (elapsed_time * frequency_y).cos();
 
         style.position = UiRect {
-            top: Val::Px(y as f32),
-            left: Val::Px(x as f32),
+            top: Val::Px(y),
+            left: Val::Px(x),
             ..default()
         }
     }

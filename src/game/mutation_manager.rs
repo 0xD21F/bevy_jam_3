@@ -2,8 +2,6 @@ use bevy::prelude::*;
 
 use crate::app_state::AppState;
 
-use super::GameState;
-
 pub struct MutationManagerPlugin;
 
 impl Plugin for MutationManagerPlugin {
@@ -120,8 +118,8 @@ impl Mutation {
     }
 }
 
-pub fn mutation_manager_setup(mut commands: Commands) {}
+pub fn mutation_manager_setup(_commands: Commands) {}
 
-fn mutation_manager_cleanup(mut commands: Commands, mut mutation_manager: ResMut<MutationManager>) {
+fn mutation_manager_cleanup(_commands: Commands, mut mutation_manager: ResMut<MutationManager>) {
     mutation_manager.player_mutations.clear();
 }

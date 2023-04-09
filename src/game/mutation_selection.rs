@@ -1,9 +1,9 @@
+use crate::app_state::loading::{Background, MusicAssets, UiAssets};
 use bevy::prelude::*;
 use bevy_kira_audio::AudioChannel;
+use bevy_kira_audio::AudioControl;
 use bevy_mod_ui_texture_atlas_image::{AtlasImageBundle, UiAtlasImage};
 use rand::seq::SliceRandom;
-use bevy_kira_audio::AudioControl;
-use crate::app_state::loading::{UiAssets, MusicAssets, Background};
 
 use super::{
     mutation_manager::{Mutation, MutationManager, MutationType},
@@ -44,16 +44,10 @@ pub fn mutation_selection_setup(
     music_assets: Res<MusicAssets>,
 ) {
     background.stop();
-    background.play(music_assets.mutate.clone());
+    background.play(music_assets.mutate.clone()).looped();
     let mutation_icon_image = ui_assets.mutation_icons.clone();
-    let mutation_icon_texture_atlas = TextureAtlas::from_grid(
-        mutation_icon_image.clone(),
-        16. * Vec2::ONE,
-        17,
-        1,
-        None,
-        None,
-    );
+    let mutation_icon_texture_atlas =
+        TextureAtlas::from_grid(mutation_icon_image, 16. * Vec2::ONE, 17, 1, None, None);
     let mutation_icon_texture_atlas_handle = texture_atlases.add(mutation_icon_texture_atlas);
 
     // Generate 3 unique random mutations that the player hasn't acquired
@@ -116,7 +110,7 @@ pub fn mutation_selection_setup(
             &mut commands,
             &button_positions[i],
             mutation_icon_texture_atlas_handle.clone(),
-            mutation.icon_index as usize,
+            mutation.icon_index,
         );
         button_entities.push(button_entity);
     }
@@ -218,7 +212,7 @@ pub fn sine_wave_movement_ui_system(
         style.position.top = Val::Px(
             sine_wave_movement.initial_position_top
                 + sine_wave_movement.amplitude
-                    * (elapsed_time as f32 * sine_wave_movement.frequency).sin(),
+                    * (elapsed_time * sine_wave_movement.frequency).sin(),
         );
     }
 }

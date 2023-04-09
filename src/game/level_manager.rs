@@ -180,10 +180,7 @@ pub struct LevelManager {
     pub current_level: usize,
 }
 
-pub fn level_manager_setup(
-    mut commands: Commands,
-    mut next_state: ResMut<NextState<GameState>>,
-) {
+pub fn level_manager_setup(mut commands: Commands, mut next_state: ResMut<NextState<GameState>>) {
     commands.insert_resource(LevelManager { current_level: 0 });
     next_state.set(GameState::SetupLevel);
 }
@@ -201,31 +198,30 @@ pub fn level_setup(
     background: Res<AudioChannel<Background>>,
     music_assets: Res<MusicAssets>,
 ) {
-    if(level_manager.current_level == 0 || level_manager.current_level == 1) {
+    if level_manager.current_level == 0 || level_manager.current_level == 1 {
         background.stop();
-        background.play(music_assets.labs.clone());
+        background.play(music_assets.labs.clone()).looped();
     }
-    if(level_manager.current_level == 2) {
+    if level_manager.current_level == 2 {
         background.stop();
-        background.play(music_assets.labsboss.clone());
+        background.play(music_assets.labsboss.clone()).looped();
     }
-    if(level_manager.current_level == 3 || level_manager.current_level == 4) {
+    if level_manager.current_level == 3 || level_manager.current_level == 4 {
         background.stop();
-        background.play(music_assets.tower.clone());
+        background.play(music_assets.tower.clone()).looped();
     }
-    if(level_manager.current_level == 5) {
+    if level_manager.current_level == 5 {
         background.stop();
-        background.play(music_assets.towerboss.clone());
+        background.play(music_assets.towerboss.clone()).looped();
     }
-    if(level_manager.current_level == 6 || level_manager.current_level == 7) {
+    if level_manager.current_level == 6 || level_manager.current_level == 7 {
         background.stop();
-        background.play(music_assets.crystal.clone());
+        background.play(music_assets.crystal.clone()).looped();
     }
-    if(level_manager.current_level == 8) {
+    if level_manager.current_level == 8 {
         background.stop();
-        background.play(music_assets.sorcerianboss.clone());
+        background.play(music_assets.sorcerianboss.clone()).looped();
     }
-
 
     // Increment the current_level
     commands.insert_resource(LevelSelection::Index(level_manager.current_level));
