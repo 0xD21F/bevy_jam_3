@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::AppState;
+use super::{loading::UiAssets, AppState};
 
 pub struct MainMenuPlugin;
 
@@ -8,83 +8,119 @@ impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_system(main_menu_setup.in_schedule(OnEnter(AppState::MainMenu)))
             .add_system(main_menu_system.in_set(OnUpdate(AppState::MainMenu)))
-            .add_system(main_menu_cleanup.in_schedule(OnExit(AppState::MainMenu)));
+            .add_system(main_menu_cleanup.in_schedule(OnExit(AppState::MainMenu)))
+            .add_system(main_menu_bob_start.in_set(OnUpdate(AppState::MainMenu)));
     }
 }
 
 #[derive(Resource)]
 pub struct MenuUiData {
-    pub button_entity: Entity,
+    pub ui_entity: Entity,
 }
 
-const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
-const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
+#[derive(Default, Component)]
+pub struct PressSpaceMarker;
 
-pub fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let button_entity = commands
+pub fn main_menu_setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    ui_assets: Res<UiAssets>,
+) {
+    // root node
+    let ui_entity = commands
         .spawn(NodeBundle {
             style: Style {
-                // center button
-                size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
-                justify_content: JustifyContent::Center,
-                align_items: AlignItems::Center,
+                size: Size::width(Val::Percent(100.0)),
+                justify_content: JustifyContent::SpaceBetween,
                 ..default()
             },
             ..default()
         })
         .with_children(|parent| {
             parent
-                .spawn(ButtonBundle {
+                .spawn(NodeBundle {
                     style: Style {
-                        size: Size::new(Val::Px(150.0), Val::Px(65.0)),
-                        // horizontally center child text
-                        justify_content: JustifyContent::Center,
-                        // vertically center child text
-                        align_items: AlignItems::Center,
+                        position_type: PositionType::Absolute,
+                        justify_content: JustifyContent::End,
+                        align_items: AlignItems::FlexStart,
                         ..default()
                     },
-                    background_color: NORMAL_BUTTON.into(),
                     ..default()
                 })
                 .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Play",
-                        TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                            font_size: 40.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
+                    parent.spawn(ImageBundle {
+                        style: Style {
+                            size: Size::height(Val::Px(1080.0)),
+                            ..default()
                         },
-                    ));
+                        image: UiImage {
+                            texture: ui_assets.title.clone(),
+                            ..default()
+                        },
+                        ..default()
+                    });
+                });
+        })
+        .with_children(|parent| {
+            parent
+                .spawn(NodeBundle {
+                    style: Style {
+                        position_type: PositionType::Absolute,
+                        justify_content: JustifyContent::End,
+                        align_items: AlignItems::FlexStart,
+                        ..default()
+                    },
+                    ..default()
+                })
+                .insert(PressSpaceMarker)
+                .with_children(|parent| {
+                    parent.spawn(ImageBundle {
+                        style: Style {
+                            size: Size::height(Val::Px(1080.0)),
+                            ..default()
+                        },
+                        image: UiImage {
+                            texture: ui_assets.space.clone(),
+                            ..default()
+                        },
+                        ..default()
+                    });
                 });
         })
         .id();
-    commands.insert_resource(MenuUiData { button_entity });
+    commands.insert_resource(MenuUiData { ui_entity });
 }
 
 pub fn main_menu_system(
     mut next_state: ResMut<NextState<AppState>>,
-    mut interaction_query: Query<
-        (&Interaction, &mut BackgroundColor),
-        (Changed<Interaction>, With<Button>),
-    >,
+    keyboard_input: Res<Input<KeyCode>>,
 ) {
-    for (interaction, mut color) in &mut interaction_query {
-        match *interaction {
-            Interaction::Clicked => {
-                *color = PRESSED_BUTTON.into();
-                next_state.set(AppState::InGame)
-            }
-            Interaction::Hovered => {
-                *color = HOVERED_BUTTON.into();
-            }
-            Interaction::None => {
-                *color = NORMAL_BUTTON.into();
-            }
-        }
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        next_state.set(AppState::InGame);
     }
 }
 
 pub fn main_menu_cleanup(mut commands: Commands, menu_data: Res<MenuUiData>) {
-    commands.entity(menu_data.button_entity).despawn_recursive();
+    commands.entity(menu_data.ui_entity).despawn_recursive();
+}
+
+// Bob the "Main Menu" text
+pub fn main_menu_bob_start(time: Res<Time>, mut query: Query<(&PressSpaceMarker, &mut Style)>) {
+    // I should have used sprites....
+    let elapsed_time = time.elapsed_seconds();
+    let amplitude_x = 50.0;
+    let amplitude_y = 25.0;
+    let frequency_x = 1.0;
+    let frequency_y = 1.5;
+
+    for (_, mut style) in query.iter_mut() {
+        let x = amplitude_x * (elapsed_time * frequency_x).sin();
+        let y = amplitude_y * (elapsed_time * frequency_y).cos();
+
+        style.position = UiRect {
+            top: Val::Px(y as f32),
+            left: Val::Px(x as f32),
+            ..default()
+        }
+    }
 }

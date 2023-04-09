@@ -59,6 +59,12 @@ pub struct CutsceneAssets {
 pub struct UiAssets {
     #[asset(path = "ui/mutating.png")]
     pub mutating: Handle<Image>,
+    #[asset(path = "ui/title.png")]
+    pub title: Handle<Image>,
+    #[asset(path = "ui/space.png")]
+    pub space: Handle<Image>,
+    #[asset(path = "ui/mutation_icons.png")]
+    pub mutation_icons: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

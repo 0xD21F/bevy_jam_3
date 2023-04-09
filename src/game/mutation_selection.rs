@@ -1,8 +1,12 @@
 use bevy::prelude::*;
+use rand::seq::SliceRandom;
 
 use crate::app_state::loading::UiAssets;
 
-use super::GameState;
+use super::{
+    mutation_manager::{Mutation, MutationManager, MutationType},
+    GameState,
+};
 
 pub struct MutationSelectionPlugin;
 
@@ -18,8 +22,9 @@ impl Plugin for MutationSelectionPlugin {
 
 #[derive(Resource)]
 pub struct MutationSelectionData {
-    pub ui_entity: Entity,
-    pub buttons_entity: Entity,
+    pub bg_container: Entity,
+    pub buttons_container: Entity,
+    pub offered_mutations: Vec<(Entity, MutationType)>,
 }
 
 #[derive(Component)]
@@ -33,9 +38,20 @@ pub fn mutation_selection_setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     ui_assets: Res<UiAssets>,
+    mutation_manager: Res<MutationManager>,
 ) {
-    // root node
-    let ui_entity = commands
+    // Generate 3 unique random mutations that the player hasn't acquired
+    let mut rng = rand::thread_rng();
+    let mut available_mutations: Vec<Mutation> = mutation_manager.unselected_mutations();
+    available_mutations.shuffle(&mut rng);
+
+    let offered_mutations = available_mutations
+        .into_iter()
+        .take(3)
+        .collect::<Vec<Mutation>>();
+
+    // BG image
+    let bg_container = commands
         .spawn(NodeBundle {
             style: Style {
                 size: Size::width(Val::Percent(100.0)),
@@ -45,22 +61,6 @@ pub fn mutation_selection_setup(
             ..default()
         })
         .with_children(|parent| {
-            // text
-            parent.spawn((
-                TextBundle::from_section(
-                    "Press space to skip",
-                    TextStyle {
-                        font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                        font_size: 30.0,
-                        color: Color::WHITE,
-                    },
-                )
-                .with_style(Style {
-                    margin: UiRect::all(Val::Px(5.0)),
-                    ..default()
-                }),
-                Label,
-            ));
             parent
                 .spawn(NodeBundle {
                     style: Style {
@@ -87,7 +87,9 @@ pub fn mutation_selection_setup(
         })
         .id();
 
-    let buttons_entity = commands
+    let mut button_entities = Vec::new();
+    // Buttons
+    let buttons_container = commands
         .spawn(NodeBundle {
             style: Style {
                 // center button
@@ -98,97 +100,122 @@ pub fn mutation_selection_setup(
             ..default()
         })
         .with_children(|parent| {
-            parent
-                .spawn(ButtonBundle {
-                    style: Style {
-                        size: Size::new(Val::Px(256.0), Val::Px(256.0)),
-                        position_type: PositionType::Absolute,
-                        position: UiRect {
-                            left: Val::Px(225.0),
-                            top: Val::Px(310.0),
+            button_entities.push(
+                parent
+                    .spawn(ButtonBundle {
+                        style: Style {
+                            size: Size::new(Val::Px(256.0), Val::Px(256.0)),
+                            position_type: PositionType::Absolute,
+                            position: UiRect {
+                                left: Val::Px(225.0),
+                                top: Val::Px(310.0),
+                                ..default()
+                            },
                             ..default()
                         },
                         ..default()
-                    },
-                    ..default()
-                })
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Mutation 1",
-                        TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                            font_size: 40.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
-                        },
-                    ));
-                });
-            parent
-                .spawn(ButtonBundle {
-                    style: Style {
-                        size: Size::new(Val::Px(256.0), Val::Px(256.0)),
-                        position_type: PositionType::Absolute,
-                        position: UiRect {
-                            left: Val::Px(1270.0),
-                            top: Val::Px(70.0),
+                    })
+                    .with_children(|parent| {
+                        parent.spawn(TextBundle::from_section(
+                            "Mutation 1",
+                            TextStyle {
+                                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                                font_size: 40.0,
+                                color: Color::rgb(0.9, 0.9, 0.9),
+                            },
+                        ));
+                    })
+                    .id(),
+            );
+            button_entities.push(
+                parent
+                    .spawn(ButtonBundle {
+                        style: Style {
+                            size: Size::new(Val::Px(256.0), Val::Px(256.0)),
+                            position_type: PositionType::Absolute,
+                            position: UiRect {
+                                left: Val::Px(1270.0),
+                                top: Val::Px(70.0),
+                                ..default()
+                            },
                             ..default()
                         },
                         ..default()
-                    },
-                    ..default()
-                })
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Mutation 2",
-                        TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                            font_size: 40.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
-                        },
-                    ));
-                });
-            parent
-                .spawn(ButtonBundle {
-                    style: Style {
-                        size: Size::new(Val::Px(256.0), Val::Px(256.0)),
-                        position_type: PositionType::Absolute,
-                        position: UiRect {
-                            left: Val::Px(1570.0),
-                            top: Val::Px(520.0),
+                    })
+                    .with_children(|parent| {
+                        parent.spawn(TextBundle::from_section(
+                            "Mutation 2",
+                            TextStyle {
+                                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                                font_size: 40.0,
+                                color: Color::rgb(0.9, 0.9, 0.9),
+                            },
+                        ));
+                    })
+                    .id(),
+            );
+            button_entities.push(
+                parent
+                    .spawn(ButtonBundle {
+                        style: Style {
+                            size: Size::new(Val::Px(256.0), Val::Px(256.0)),
+                            position_type: PositionType::Absolute,
+                            position: UiRect {
+                                left: Val::Px(1570.0),
+                                top: Val::Px(520.0),
+                                ..default()
+                            },
                             ..default()
                         },
                         ..default()
-                    },
-                    ..default()
-                })
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Mutation 3",
-                        TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                            font_size: 40.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
-                        },
-                    ));
-                });
+                    })
+                    .with_children(|parent| {
+                        parent.spawn(TextBundle::from_section(
+                            "Mutation 3",
+                            TextStyle {
+                                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                                font_size: 40.0,
+                                color: Color::rgb(0.9, 0.9, 0.9),
+                            },
+                        ));
+                    })
+                    .id(),
+            );
         })
         .id();
+
+    // Update the MutationSelectionData resource
     commands.insert_resource(MutationSelectionData {
-        ui_entity,
-        buttons_entity,
+        bg_container,
+        buttons_container,
+        offered_mutations: offered_mutations
+            .into_iter()
+            .enumerate()
+            .map(|(i, mutation)| (button_entities[i], mutation.mutation_type))
+            .collect(),
     });
 }
 
 pub fn mutation_selection_system(
     mut next_state: ResMut<NextState<GameState>>,
     mut interaction_query: Query<
-        (&Interaction, &mut BackgroundColor),
+        (&Interaction, &mut BackgroundColor, Entity),
         (Changed<Interaction>, With<Button>),
     >,
+    menu_data: Res<MutationSelectionData>,
+    mut mutation_manager: ResMut<MutationManager>,
 ) {
-    for (interaction, mut color) in &mut interaction_query {
+    for (interaction, mut color, entity) in &mut interaction_query {
         match *interaction {
             Interaction::Clicked => {
                 *color = PRESSED_BUTTON.into();
+                if let Some((_, mutation_type)) = menu_data
+                    .offered_mutations
+                    .iter()
+                    .find(|(e, _)| *e == entity)
+                {
+                    mutation_manager.add_mutation(*mutation_type);
+                }
                 next_state.set(GameState::SetupLevel)
             }
             Interaction::Hovered => {
@@ -202,8 +229,8 @@ pub fn mutation_selection_system(
 }
 
 pub fn mutation_selection_cleanup(mut commands: Commands, menu_data: Res<MutationSelectionData>) {
-    commands.entity(menu_data.ui_entity).despawn_recursive();
+    commands.entity(menu_data.bg_container).despawn_recursive();
     commands
-        .entity(menu_data.buttons_entity)
+        .entity(menu_data.buttons_container)
         .despawn_recursive();
 }

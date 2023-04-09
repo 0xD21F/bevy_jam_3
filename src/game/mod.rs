@@ -8,13 +8,16 @@ use crate::{
 };
 
 use self::{
-    level_manager::LevelManagerPlugin, mutation_selection::MutationSelectionPlugin,
-    opening_cutscene::OpeningCutscenePlugin,
+    level_manager::LevelManagerPlugin, mutation_manager::MutationManagerPlugin,
+    mutation_selection::MutationSelectionPlugin, opening_cutscene::OpeningCutscenePlugin,
+    ui::UiPlugin,
 };
 
 pub mod level_manager;
+pub mod mutation_manager;
 pub mod mutation_selection;
 pub mod opening_cutscene;
+pub mod ui;
 
 pub struct GamePlugin;
 
@@ -30,7 +33,9 @@ impl Plugin for GamePlugin {
             .add_plugin(BehaviourPlugin)
             .add_plugin(SpawnerPlugin)
             .add_plugin(LevelManagerPlugin)
-            .add_plugin(MutationSelectionPlugin);
+            .add_plugin(MutationManagerPlugin)
+            .add_plugin(MutationSelectionPlugin)
+            .add_plugin(UiPlugin);
     }
 }
 

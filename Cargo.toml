@@ -13,6 +13,7 @@ bevy-inspector-egui = "0.18.1"
 bevy_prototype_debug_lines = "0.10"
 bevy_asset_loader = "0.16"
 bevy_ecs_ldtk = { version = "0.6", features = ["atlas"] }
+bevy_mod_ui_texture_atlas_image = "0.4.1"
 leafwing-input-manager = "0.9.1"
 seldom_state = { version = "0.5", features = ["leafwing_input"]}
 rand = "*"

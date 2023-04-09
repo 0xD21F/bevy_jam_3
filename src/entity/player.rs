@@ -262,6 +262,7 @@ pub fn player_movement_system(
     rolling_query: Query<&Rolling>,
 ) {
     for (entity, creature, mut velocity, action_state) in player_info.iter_mut() {
+        // TODO: Move this literally anywhere else
         let quit = keyboard_input.any_pressed([KeyCode::Escape]);
         if quit {
             next_state.set(AppState::MainMenu);

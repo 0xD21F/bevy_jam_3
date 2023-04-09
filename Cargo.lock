@@ -748,6 +748,7 @@ dependencies = [
  "bevy-inspector-egui",
  "bevy_asset_loader",
  "bevy_ecs_ldtk",
+ "bevy_mod_ui_texture_atlas_image",
  "bevy_prototype_debug_lines",
  "bevy_prototype_lyon",
  "bevy_rapier2d",
@@ -800,6 +801,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39106bc2ee21fce9496d2e15e0ba7925dff63e3eae10f7c1fc0094b56ad9f2bb"
 dependencies = [
  "glam",
+]
+
+[[package]]
+name = "bevy_mod_ui_texture_atlas_image"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a4d4769432f35f8aa97dff82916681eeabc957e3c32a575d70a3372d22c12d6"
+dependencies = [
+ "bevy",
 ]
 
 [[package]]
