@@ -9,6 +9,7 @@ use seldom_state::prelude::InputTriggerPlugin;
 use crate::{
     animation::Animated,
     app_state::{loading::SpriteAssets, AppState},
+    entity::creature::DealDamage,
     PIXELS_PER_METER,
 };
 
@@ -135,7 +136,7 @@ pub fn player_attacking_state_system(
                             sensor: Sensor,
                             ..default()
                         },
-                        RigidBody::Dynamic,
+                        RigidBody::Fixed,
                     ));
                 });
             player.attack_cooldown.reset();
@@ -401,6 +402,7 @@ pub fn spawn_player(
                 sprite: SpriteSheetBundle {
                     texture_atlas: texture_atlas_handle,
                     sprite: TextureAtlasSprite::new(animation.first),
+                    transform: Transform::from_xyz(300.0, 200.0, 0.0),
                     ..default()
                 },
                 animation,
@@ -439,22 +441,27 @@ pub fn spawn_player(
 fn player_damage_system(
     rapier_context: Res<RapierContext>,
     mut commands: Commands,
-    mut enemy_hitbox_query: Query<(Entity, &mut Creature, &Collider), With<Enemy>>,
-    mut player_hurtbox_query: Query<(Entity, &Collider, &PlayerHurtboxDamage)>,
+    mut enemy_hitbox_query: Query<(Entity, &Transform, &mut Creature, &Collider), With<Enemy>>,
+    mut player_hurtbox_query: Query<(Entity, &Transform, &Collider, &PlayerHurtboxDamage)>,
 ) {
-    for (enemy_hitbox_entity, mut enemy_creature, _enemy_collider) in enemy_hitbox_query.iter_mut()
+    for (enemy_hitbox_entity, enemy_transform, mut enemy_creature, _enemy_collider) in
+        enemy_hitbox_query.iter_mut()
     {
-        for (player_hurtbox_entity, _player_collider, player_hurtbox_damage) in
+        for (player_hurtbox_entity, player_transform, _player_collider, player_hurtbox_damage) in
             player_hurtbox_query.iter_mut()
         {
             if rapier_context.intersection_pair(player_hurtbox_entity, enemy_hitbox_entity)
                 == Some(true)
             {
                 println!("Player hit enemy for {} damage", player_hurtbox_damage.0);
-                enemy_creature.health -= player_hurtbox_damage.0 as f32;
-                if enemy_creature.health <= 0.0 {
-                    commands.entity(enemy_hitbox_entity).despawn_recursive();
-                }
+                // Get direction to knock enemy back
+                commands.entity(enemy_hitbox_entity).insert(DealDamage {
+                    amount: player_hurtbox_damage.0 as f32,
+                    knockback_direction: (enemy_transform.translation.truncate()
+                        - player_transform.translation.truncate())
+                    .normalize_or_zero(),
+                    knockback_force: 100.0,
+                });
             }
         }
     }

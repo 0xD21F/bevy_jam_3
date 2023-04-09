@@ -16,8 +16,10 @@ impl Plugin for OpeningCutscenePlugin {
 
 #[derive(Resource)]
 pub struct OpeningCutsceneData {
-    pub cutscene_image: Entity,
-    pub cutscene_timer: Timer,
+    pub cutscene_image_node: Entity,
+    pub cutscene_timer_1: Timer,
+    pub cutscene_timer_2: Timer,
+    pub cutscene_timer_3: Timer,
 }
 
 #[derive(Component)]
@@ -29,7 +31,7 @@ pub fn opening_cutscene_setup(
     cutscene_assets: Res<CutsceneAssets>,
 ) {
     // root node
-    let cutscene_image = commands
+    let cutscene_image_node = commands
         .spawn(NodeBundle {
             style: Style {
                 size: Size::width(Val::Percent(100.0)),
@@ -71,7 +73,6 @@ pub fn opening_cutscene_setup(
                 })
                 .insert(OpeningCutsceneImageNode)
                 .with_children(|parent| {
-                    // bevy logo (image)
                     parent.spawn(ImageBundle {
                         style: Style {
                             size: Size::height(Val::Px(1080.0)),
@@ -87,40 +88,67 @@ pub fn opening_cutscene_setup(
         })
         .id();
     commands.insert_resource(OpeningCutsceneData {
-        cutscene_image,
-        cutscene_timer: Timer::from_seconds(10.0, TimerMode::Once),
+        cutscene_image_node,
+        cutscene_timer_1: Timer::from_seconds(2.0, TimerMode::Once),
+        cutscene_timer_2: Timer::from_seconds(5.0, TimerMode::Once),
+        cutscene_timer_3: Timer::from_seconds(9.0, TimerMode::Once),
     });
 }
 
 pub fn opening_cutscene_system(
+    mut commands: Commands,
     mut next_state: ResMut<NextState<GameState>>,
     keyboard_input: Res<Input<KeyCode>>,
     mut cutscene_image_node_query: Query<&mut Style, With<OpeningCutsceneImageNode>>,
     mut cutscene_data: ResMut<OpeningCutsceneData>,
+    mut cutscene_image: Query<&mut UiImage>,
+    cutscene_assets: Res<CutsceneAssets>,
     time: Res<Time>,
 ) {
     if keyboard_input.any_pressed([KeyCode::Space]) {
         next_state.set(GameState::SetupLevelManager);
     }
 
+    let mut cutscene_finished_panning = false;
     for mut cutscene_image_node_style in cutscene_image_node_query.iter_mut() {
         if let Val::Px(value) = cutscene_image_node_style.position.left {
             if value < 0.0 {
                 cutscene_image_node_style.position.left = Val::Px(value + 1.0);
-            } else if value >= 0.0 {
-                cutscene_data.cutscene_timer.tick(time.delta());
-                if cutscene_data.cutscene_timer.just_finished() {
-                    next_state.set(GameState::SetupLevelManager);
-                }
+            } else {
+                cutscene_finished_panning = true;
             }
         } else {
             panic!("Expected right position to be in pixels");
+        }
+    }
+
+    if (cutscene_finished_panning) {
+        cutscene_data.cutscene_timer_1.tick(time.delta());
+        if cutscene_data.cutscene_timer_1.finished() {
+            if let Ok(mut ui_image) = cutscene_image.get_single_mut() {
+                ui_image.texture = cutscene_assets.opening2.clone();
+            }
+        }
+
+        cutscene_data.cutscene_timer_2.tick(time.delta());
+        if cutscene_data.cutscene_timer_1.finished() && cutscene_data.cutscene_timer_2.finished() {
+            if let Ok(mut ui_image) = cutscene_image.get_single_mut() {
+                ui_image.texture = cutscene_assets.opening3.clone();
+            }
+        }
+
+        cutscene_data.cutscene_timer_3.tick(time.delta());
+        if cutscene_data.cutscene_timer_1.finished()
+            && cutscene_data.cutscene_timer_2.finished()
+            && cutscene_data.cutscene_timer_3.finished()
+        {
+            next_state.set(GameState::SetupLevelManager);
         }
     }
 }
 
 pub fn opening_cutscene_cleanup(mut commands: Commands, cutscene_data: Res<OpeningCutsceneData>) {
     commands
-        .entity(cutscene_data.cutscene_image)
+        .entity(cutscene_data.cutscene_image_node)
         .despawn_recursive();
 }

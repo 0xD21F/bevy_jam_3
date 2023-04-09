@@ -1,4 +1,3 @@
-
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::{Collider, Sensor};
 
@@ -13,27 +12,27 @@ use super::{
     Enemy, ZSort,
 };
 
-pub struct SorcerianPlugin;
+pub struct LabBossPlugin;
 
-impl Plugin for SorcerianPlugin {
+impl Plugin for LabBossPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(separation_system::<Sorcerian>);
+        app.add_system(separation_system::<LabBoss>);
     }
 }
 
 #[derive(Component, Reflect, Default)]
-pub struct Sorcerian;
+pub struct LabBoss;
 
 #[derive(Bundle)]
-pub struct SorcerianBundle {
+pub struct LabBossBundle {
     pub creature: CreatureBundle,
     pub enemy: Enemy,
     pub name: Name,
-    pub Sorcerian: Sorcerian,
+    pub lab_boss: LabBoss,
     pub separation: Separation,
 }
 
-impl SorcerianBundle {
+impl LabBossBundle {
     pub fn new(
         texture_atlas_handle: Handle<TextureAtlas>,
         sprite_size: f32,
@@ -55,7 +54,7 @@ impl SorcerianBundle {
                     transform,
                     ..default()
                 },
-                collider: Collider::ball(sprite_size / 2.0),
+                collider: Collider::cuboid(sprite_size / 2.0, sprite_size / 1.5),
                 velocity: Velocity::default(),
                 zsort: ZSort {
                     offset_y: -(sprite_size / 2.0),
@@ -64,8 +63,8 @@ impl SorcerianBundle {
                 hitbox: Hitbox,
             },
             enemy: Enemy,
-            Sorcerian: Sorcerian,
-            name: Name::new("Sorcerian"),
+            lab_boss: LabBoss,
+            name: Name::new("LabBoss"),
             separation: Separation {
                 radius: PIXELS_PER_METER * 1.0,
                 separation_force: 1000.0,

@@ -15,6 +15,7 @@ impl Plugin for LoadingPlugin {
         .add_collection_to_loading_state::<_, CutsceneAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, LevelAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, MusicAssets>(AppState::Loading)
+        .add_collection_to_loading_state::<_, UiAssets>(AppState::Loading)
         .add_system(loading_setup.in_schedule(OnEnter(AppState::Loading)))
         .add_system(loading_cleanup.in_schedule(OnExit(AppState::Loading)));
     }
@@ -32,12 +33,33 @@ pub struct SpriteAssets {
     pub slimer: Handle<Image>,
     #[asset(path = "sprites/mutant.png")]
     pub mutant: Handle<Image>,
+    #[asset(path = "sprites/goblin.png")]
+    pub goblin: Handle<Image>,
+    #[asset(path = "sprites/adept.png")]
+    pub adept: Handle<Image>,
+    #[asset(path = "sprites/lab_boss.png")]
+    pub lab_boss: Handle<Image>,
+    #[asset(path = "sprites/portal1.png")]
+    pub portal1: Handle<Image>,
+    #[asset(path = "sprites/portal2.png")]
+    pub portal2: Handle<Image>,
 }
+
 
 #[derive(AssetCollection, Resource)]
 pub struct CutsceneAssets {
     #[asset(path = "cutscenes/opening1.png")]
     pub opening1: Handle<Image>,
+    #[asset(path = "cutscenes/opening2.png")]
+    pub opening2: Handle<Image>,
+    #[asset(path = "cutscenes/opening3.png")]
+    pub opening3: Handle<Image>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct UiAssets {
+    #[asset(path = "ui/mutating.png")]
+    pub mutating: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

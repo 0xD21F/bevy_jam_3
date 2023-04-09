@@ -7,11 +7,15 @@ use bevy_ecs_ldtk::{
     LevelSelection,
 };
 use bevy_rapier2d::prelude::Collider;
+use rand::Rng;
 
 use crate::{
-    app_state::{loading::LevelAssets, AppState},
+    app_state::{loading::{LevelAssets, SpriteAssets}, AppState},
     camera::{camera_clamp_to_current_level, camera_movement_system},
-    entity::spawner::{EnemyType, Spawner},
+    entity::{
+        spawner::{spawn_system, EnemyType, Spawner},
+        Enemy,
+    },
     PIXELS_PER_METER,
 };
 
@@ -31,16 +35,9 @@ pub struct WallColliderBundle {
 
 impl From<IntGridCell> for WallColliderBundle {
     fn from(_int_grid_cell: IntGridCell) -> WallColliderBundle {
-        // Solid Wall
-        // if int_grid_cell.value == 1 {
         WallColliderBundle {
             collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
         }
-        // } else {
-        // WallColliderBundle {
-        // collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
-        // }
-        // }
     }
 }
 
@@ -118,7 +115,7 @@ impl From<&EntityInstance> for SpawnerBundle {
     }
 }
 
-#[derive(Component)]
+#[derive(Component, Default, Clone, Debug)]
 pub struct LevelObject; // Marker component for entities related to the current level
 
 pub struct LevelManagerPlugin;
@@ -132,22 +129,58 @@ impl Plugin for LevelManagerPlugin {
         app.add_system(level_manager_setup.in_schedule(OnEnter(GameState::SetupLevelManager)))
             .add_system(level_manager_cleanup.in_schedule(OnExit(AppState::InGame)))
             .add_system(level_setup.in_schedule(OnEnter(GameState::SetupLevel)))
-            .add_system(level_cleanup.in_schedule(OnExit(GameState::InLevel)))
+            .add_system(level_cleanup.in_schedule(OnExit(GameState::LevelComplete)))
+            .add_system(
+                level_enemies_remaining_check
+                    .in_set(OnUpdate(GameState::InLevel))
+                    .before(spawn_system),
+            )
             .add_system(
                 camera_clamp_to_current_level
                     .in_set(OnUpdate(GameState::InLevel))
                     .after(camera_movement_system),
-            );
+            )
+            .add_system(
+                camera_clamp_to_current_level
+                    .in_set(OnUpdate(GameState::LevelComplete))
+                    .after(camera_movement_system),
+            )
+            .add_system(portal_sprite.in_set(OnUpdate(GameState::InLevel)));
+    }
+}
+
+pub fn level_enemies_remaining_check(
+    mut next_state: ResMut<NextState<GameState>>,
+    spawner_query: Query<&Spawner>,
+    enemy_query: Query<Entity, With<Enemy>>,
+) {
+    // Calculate the total number of enemies remaining
+    let remaining_spawns: u32 = spawner_query
+        .iter()
+        .map(|spawner| spawner.spawn_count as u32)
+        .sum();
+    let spawned_enemies: u32 = enemy_query.iter().count() as u32;
+    let total_enemies = remaining_spawns + spawned_enemies;
+
+    println!("Total enemies: {}", total_enemies);
+
+    // Check if all enemies are killed and the level is complete
+    if total_enemies == 0 {
+        next_state.set(GameState::LevelComplete);
     }
 }
 
 #[derive(Resource, Reflect, Default)]
 pub struct LevelManager {
     pub current_level: usize,
+    pub remaining_enemies: usize,
 }
 
 pub fn level_manager_setup(mut commands: Commands, mut next_state: ResMut<NextState<GameState>>) {
-    commands.insert_resource(LevelManager { current_level: 0 });
+    commands.insert_resource(LevelManager {
+        current_level: 0,
+        remaining_enemies: 0,
+    });
     next_state.set(GameState::SetupLevel);
 }
 
@@ -172,26 +205,12 @@ pub fn level_setup(
             ldtk_handle: level_assets.ldtk.clone(),
             // Seems like the foreground layer spawns at a slightly positive Z-level, making it invisible to the default 2d camera.
             // Forcing it to be a negative Z-level fixes this.
-            transform: Transform::from_xyz(0.0, 0.0, -999.0),
+            transform: Transform::from_xyz(0.0, 0.0, -900.0),
             ..Default::default()
         })
         .insert(Name::new("Level"))
         .insert(LevelObject);
 
-    // for tile in level.tiles {
-    //     // Spawn tile sprites
-    //     spawn_tile_sprite(commands, &tile, level_assets.tiles.clone());
-
-    //     // Spawn NonPassable hitboxes if needed
-    //     if let TileProperties::NonPassable = tile.properties {
-    //         spawn_tile_hitbox(commands, &tile);
-    //     }
-    // }
-
-    // // Spawn LevelStart, LevelExit, and Spawner entities
-    // spawn_level_start(commands, level.level_start);
-    // spawn_level_exit(commands, level.level_exit);
-    // spawn_spawners(commands, level.spawners);
     next_state.set(GameState::InLevel);
 }
 
@@ -199,5 +218,36 @@ pub fn level_cleanup(mut commands: Commands, query: Query<Entity, &LevelObject>)
     // Remove all entities related to the current level
     for entity in query.iter() {
         commands.entity(entity).despawn_recursive();
+    }
+}
+
+// Add a portal spritebundle to entities with the Spawner component
+
+pub fn portal_sprite(
+    mut commands: Commands,
+    query: Query<(Entity, &Spawner), Without<Sprite>>,
+    sprite_assets: Res<SpriteAssets>,
+) {
+    for (entity, spawner) in query.iter() {
+
+    // Randomly choose portal sprite between 1 and 2
+    let portal_sprite = match rand::thread_rng().gen_range(0..2) {
+        0 => sprite_assets.portal1.clone(),
+        1 => sprite_assets.portal2.clone(),
+        _ => sprite_assets.portal1.clone(),
+    };
+    commands
+        .entity(entity)
+        .insert(
+            (
+                Sprite {
+                    ..default()
+                },
+                portal_sprite,
+                Visibility::default(),
+                ComputedVisibility::default(),
+            )
+        );
+
     }
 }

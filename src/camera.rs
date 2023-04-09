@@ -48,43 +48,41 @@ pub fn camera_clamp_to_current_level(
     for (level_transform, level_handle) in level_query.iter() {
         if let Some(ldtk_level) = ldtk_levels.get(level_handle) {
             let level = &ldtk_level.level;
-            if level_selection.is_match(&(level.uid as usize), level) {
-                let half_width =
-                    (orthographic_projection.area.width() * camera_transform.scale.x) / 2.0;
-                let half_height =
-                    (orthographic_projection.area.height() * camera_transform.scale.y) / 2.0;
+            let half_width =
+                (orthographic_projection.area.width() * camera_transform.scale.x) / 2.0;
+            let half_height =
+                (orthographic_projection.area.height() * camera_transform.scale.y) / 2.0;
 
-                let level_min = Vec2::new(
-                    level_transform.translation.x + half_width,
-                    level_transform.translation.y + half_height,
-                );
-                let level_max = Vec2::new(
-                    level_transform.translation.x + level.px_wid as f32 - half_width,
-                    level_transform.translation.y + level.px_hei as f32 - half_height,
-                );
+            let level_min = Vec2::new(
+                level_transform.translation.x + half_width,
+                level_transform.translation.y + half_height,
+            );
+            let level_max = Vec2::new(
+                level_transform.translation.x + level.px_wid as f32 - half_width,
+                level_transform.translation.y + level.px_hei as f32 - half_height,
+            );
 
-                // Clamp the camera's position independently for each axis
-                if level_min.x <= level_max.x {
-                    camera_transform.translation.x = camera_transform
-                        .translation
-                        .x
-                        .clamp(level_min.x, level_max.x);
-                } else {
-                    // Set the camera's x position to the center of the level
-                    camera_transform.translation.x =
-                        level_transform.translation.x + level.px_wid as f32 / 2.0;
-                }
+            // Clamp the camera's position independently for each axis
+            if level_min.x <= level_max.x {
+                camera_transform.translation.x = camera_transform
+                    .translation
+                    .x
+                    .clamp(level_min.x, level_max.x);
+            } else {
+                // Set the camera's x position to the center of the level
+                camera_transform.translation.x =
+                    level_transform.translation.x + level.px_wid as f32 / 2.0;
+            }
 
-                if level_min.y <= level_max.y {
-                    camera_transform.translation.y = camera_transform
-                        .translation
-                        .y
-                        .clamp(level_min.y, level_max.y);
-                } else {
-                    // Set the camera's y position to the center of the level
-                    camera_transform.translation.y =
-                        level_transform.translation.y + level.px_hei as f32 / 2.0;
-                }
+            if level_min.y <= level_max.y {
+                camera_transform.translation.y = camera_transform
+                    .translation
+                    .y
+                    .clamp(level_min.y, level_max.y);
+            } else {
+                // Set the camera's y position to the center of the level
+                camera_transform.translation.y =
+                    level_transform.translation.y + level.px_hei as f32 / 2.0;
             }
         }
     }

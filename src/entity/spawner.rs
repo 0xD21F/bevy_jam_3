@@ -1,6 +1,8 @@
 use std::{str::FromStr, time::Duration};
 
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::ActiveCollisionTypes;
+use bevy_rapier2d::prelude::RigidBody;
 use rand::Rng;
 use seldom_state::prelude::{NotTrigger, StateMachine};
 
@@ -14,6 +16,11 @@ use crate::{
     PIXELS_PER_METER,
 };
 
+use super::adept::AdeptBundle;
+use super::creature::FacePlayer;
+use super::goblin::GoblinBundle;
+use super::lab_boss::LabBossBundle;
+use super::sorcerian::SorcerianBundle;
 use super::{
     creature::DontSetFacing, mutant::MutantBundle, player::Player, skuller::SkullerBundle,
     slimer::SlimerBundle,
@@ -46,7 +53,6 @@ pub enum EnemyType {
     Adept,
     Skuller,
     LabBoss,
-    TowerBoss,
     Sorcerian,
 }
 
@@ -62,14 +68,13 @@ impl FromStr for EnemyType {
             "Adept" => Ok(EnemyType::Adept),
             "Skuller" => Ok(EnemyType::Skuller),
             "LabBoss" => Ok(EnemyType::LabBoss),
-            "TowerBoss" => Ok(EnemyType::TowerBoss),
             "Sorcerian" => Ok(EnemyType::Sorcerian),
             _ => Err(()),
         }
     }
 }
 
-fn spawn_system(
+pub fn spawn_system(
     mut commands: Commands,
     sprites: Res<SpriteAssets>,
     time: Res<Time>,
@@ -109,9 +114,27 @@ fn spawn_system(
                             *transform,
                             player,
                         ),
-                        // EnemyType::Goblin => spawn_goblin(&mut commands, &sprites, &mut texture_atlases, *transform),
-                        // EnemyType::GoblinBrute => spawn_goblin_brute(&mut commands, &sprites, &mut texture_atlases, *transform),
-                        // EnemyType::Adept => spawn_adept(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        EnemyType::Goblin => spawn_goblin(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
+                        EnemyType::GoblinBrute => spawn_goblin_brute(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
+                        EnemyType::Adept => spawn_adept(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
                         EnemyType::Skuller => spawn_skuller(
                             &mut commands,
                             &sprites,
@@ -119,9 +142,14 @@ fn spawn_system(
                             *transform,
                             player,
                         ),
-                        // EnemyType::LabBoss => spawn_lab_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
-                        // EnemyType::TowerBoss => spawn_tower_boss(&mut commands, &sprites, &mut texture_atlases, *transform),
-                        // EnemyType::Sorcerian => spawn_sorcerian(&mut commands, &sprites, &mut texture_atlases, *transform),
+                        EnemyType::LabBoss => spawn_lab_boss(
+                            &mut commands,
+                            &sprites,
+                            &mut texture_atlases,
+                            *transform,
+                            player,
+                        ),
+                        EnemyType::Sorcerian => spawn_sorcerian(&mut commands, &sprites, &mut texture_atlases, *transform, player),
                         _ => panic!("Invalid enemy type"),
                     }
 
@@ -168,6 +196,7 @@ fn spawn_skuller(
             transform,
         ))
         .insert(DontSetFacing)
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
         .insert(
             // This state machine handles the enemy's transitions
             // The initial state is `Idle`
@@ -246,6 +275,7 @@ fn spawn_slimer(
             transform,
         ))
         .insert(DontSetFacing)
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
         .insert(
             // This state machine handles the enemy's transitions
             // The initial state is `Idle`
@@ -323,6 +353,406 @@ fn spawn_mutant(
             },
             transform,
         ))
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
+        .insert(FacePlayer)
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
+}
+
+fn spawn_goblin(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.goblin.clone(),
+        Vec2::new(64.0, 64.0),
+        3,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER * 2.0;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(GoblinBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 0,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
+        .insert(FacePlayer)
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
+}
+
+fn spawn_goblin_brute(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.goblin.clone(),
+        Vec2::new(64.0, 64.0),
+        3,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER * 3.0;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(GoblinBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 0,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
+        .insert(FacePlayer)
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
+}
+
+fn spawn_adept(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.adept.clone(),
+        Vec2::new(64.0, 64.0),
+        1,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER * 2.0;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(AdeptBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 0,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
+        .insert(FacePlayer)
+
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
+}
+
+fn spawn_lab_boss(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.lab_boss.clone(),
+        Vec2::new(128.0, 128.0),
+        3,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER * 2.0;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(LabBossBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 2,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
+        .insert(FacePlayer)
+
+        .insert(
+            // This state machine handles the enemy's transitions
+            // The initial state is `Idle`
+            StateMachine::new(Idle)
+                .trans::<Idle>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<Idle>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Wander::default(),
+                )
+                .trans::<Wander>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 20.0,
+                    }),
+                    Idle,
+                ),
+        );
+}
+
+fn spawn_sorcerian(
+    commands: &mut Commands,
+    sprites: &SpriteAssets,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    transform: Transform,
+    target: Entity,
+) {
+    // Spawn the entity
+    let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+        sprites.sorcerian.clone(),
+        Vec2::new(64.0, 64.0),
+        2,
+        1,
+        None,
+        None,
+    ));
+    let sprite_size = PIXELS_PER_METER * 2.0;
+    let mut rng = rand::thread_rng();
+
+    let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
+    timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let _enemy_entity = commands
+        .spawn(SorcerianBundle::new(
+            texture_atlas_handle,
+            sprite_size,
+            Animated {
+                timer,
+                first: 0,
+                last: 1,
+                ..default()
+            },
+            transform,
+        ))
+        .insert(ActiveCollisionTypes::STATIC_STATIC)
+        .insert(FacePlayer)
+
         .insert(
             // This state machine handles the enemy's transitions
             // The initial state is `Idle`

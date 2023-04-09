@@ -1,4 +1,3 @@
-
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::{Collider, Sensor};
 
@@ -13,27 +12,27 @@ use super::{
     Enemy, ZSort,
 };
 
-pub struct SorcerianPlugin;
+pub struct AdeptPlugin;
 
-impl Plugin for SorcerianPlugin {
+impl Plugin for AdeptPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(separation_system::<Sorcerian>);
+        app.add_system(separation_system::<Adept>);
     }
 }
 
 #[derive(Component, Reflect, Default)]
-pub struct Sorcerian;
+pub struct Adept;
 
 #[derive(Bundle)]
-pub struct SorcerianBundle {
+pub struct AdeptBundle {
     pub creature: CreatureBundle,
     pub enemy: Enemy,
     pub name: Name,
-    pub Sorcerian: Sorcerian,
+    pub adept: Adept,
     pub separation: Separation,
 }
 
-impl SorcerianBundle {
+impl AdeptBundle {
     pub fn new(
         texture_atlas_handle: Handle<TextureAtlas>,
         sprite_size: f32,
@@ -64,8 +63,8 @@ impl SorcerianBundle {
                 hitbox: Hitbox,
             },
             enemy: Enemy,
-            Sorcerian: Sorcerian,
-            name: Name::new("Sorcerian"),
+            adept: Adept,
+            name: Name::new("Adept"),
             separation: Separation {
                 radius: PIXELS_PER_METER * 1.0,
                 separation_force: 1000.0,

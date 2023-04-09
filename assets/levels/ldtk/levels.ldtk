@@ -39,6 +39,34 @@
 	"flags": [],
 	"defs": { "layers": [
 		{
+			"__type": "IntGrid",
+			"identifier": "IntGrid",
+			"type": "IntGrid",
+			"uid": 32,
+			"doc": null,
+			"gridSize": 64,
+			"guideGridWid": 0,
+			"guideGridHei": 0,
+			"displayOpacity": 1,
+			"inactiveOpacity": 1,
+			"hideInList": false,
+			"hideFieldsWhenInactive": false,
+			"canSelectWhenInactive": true,
+			"pxOffsetX": 0,
+			"pxOffsetY": 0,
+			"parallaxFactorX": 0,
+			"parallaxFactorY": 0,
+			"parallaxScaling": true,
+			"requiredTags": [],
+			"excludedTags": [],
+			"intGridValues": [{ "value": 1, "identifier": "solid", "color": "#000000" }],
+			"autoRuleGroups": [],
+			"autoSourceLayerDefUid": null,
+			"tilesetDefUid": null,
+			"tilePivotX": 0,
+			"tilePivotY": 0
+		},
+		{
 			"__type": "Entities",
 			"identifier": "Entities",
 			"type": "Entities",
@@ -91,34 +119,6 @@
 			"autoRuleGroups": [],
 			"autoSourceLayerDefUid": null,
 			"tilesetDefUid": 1,
-			"tilePivotX": 0,
-			"tilePivotY": 0
-		},
-		{
-			"__type": "IntGrid",
-			"identifier": "IntGrid",
-			"type": "IntGrid",
-			"uid": 32,
-			"doc": null,
-			"gridSize": 64,
-			"guideGridWid": 0,
-			"guideGridHei": 0,
-			"displayOpacity": 1,
-			"inactiveOpacity": 1,
-			"hideInList": false,
-			"hideFieldsWhenInactive": false,
-			"canSelectWhenInactive": true,
-			"pxOffsetX": 0,
-			"pxOffsetY": 0,
-			"parallaxFactorX": 0,
-			"parallaxFactorY": 0,
-			"parallaxScaling": true,
-			"requiredTags": [],
-			"excludedTags": [],
-			"intGridValues": [{ "value": 1, "identifier": "solid", "color": "#000000" }],
-			"autoRuleGroups": [],
-			"autoSourceLayerDefUid": null,
-			"tilesetDefUid": null,
 			"tilePivotX": 0,
 			"tilePivotY": 0
 		}
@@ -396,6 +396,38 @@
 			"fieldInstances": [],
 			"layerInstances": [
 				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee71460-c640-11ed-b0f3-ff04d4190cb2",
+					"levelId": 0,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 4096285,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
+				{
 					"__identifier": "Entities",
 					"__type": "Entities",
 					"__cWid": 38,
@@ -449,42 +481,20 @@
 						},
 						{
 							"__identifier": "Spawner",
-							"__grid": [32,6],
+							"__grid": [4,5],
 							"__pivot": [0,0],
 							"__tags": ["spawner"],
 							"__tile": null,
 							"__smartColor": "#EAD4AA",
-							"iid": "4f4a8150-c640-11ed-b5ab-87ad14d2f152",
+							"iid": "e9b1fa40-c640-11ed-80b3-693cf1f4920f",
 							"width": 16,
 							"height": 16,
 							"defUid": 22,
-							"px": [1024,192],
+							"px": [128,160],
 							"fieldInstances": [
-								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
-								{ "__identifier": "spawn_rate", "__value": 5, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
-								{ "__identifier": "spawn_count", "__value": 10, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
-								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Mutant"]
-								}] }
-							]
-						},
-						{
-							"__identifier": "Spawner",
-							"__grid": [5,6],
-							"__pivot": [0,0],
-							"__tags": ["spawner"],
-							"__tile": null,
-							"__smartColor": "#EAD4AA",
-							"iid": "73da1800-c640-11ed-b5ab-cfc5bbb654f0",
-							"width": 16,
-							"height": 16,
-							"defUid": 22,
-							"px": [160,192],
-							"fieldInstances": [
-								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
-								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
-								{ "__identifier": "spawn_count", "__value": 8, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [8] }] },
+								{ "__identifier": "timer", "__value": 3, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [3] }] },
+								{ "__identifier": "spawn_rate", "__value": 3, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
+								{ "__identifier": "spawn_count", "__value": 9, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [9] }] },
 								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["Slimer"]
@@ -493,20 +503,42 @@
 						},
 						{
 							"__identifier": "Spawner",
-							"__grid": [10,11],
+							"__grid": [33,5],
 							"__pivot": [0,0],
 							"__tags": ["spawner"],
 							"__tile": null,
 							"__smartColor": "#EAD4AA",
-							"iid": "f5bf9560-c640-11ed-80b3-75e1eca7db25",
+							"iid": "f178cab0-c640-11ed-80b3-192419cda550",
 							"width": 16,
 							"height": 16,
 							"defUid": 22,
-							"px": [320,352],
+							"px": [1056,160],
 							"fieldInstances": [
-								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [] },
-								{ "__identifier": "spawn_rate", "__value": 5, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
-								{ "__identifier": "spawn_count", "__value": 50, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [50] }] },
+								{ "__identifier": "timer", "__value": 3, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [3] }] },
+								{ "__identifier": "spawn_rate", "__value": 3, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
+								{ "__identifier": "spawn_count", "__value": 9, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [9] }] },
+								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Slimer"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [16,10],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "f6100610-c640-11ed-80b3-616c15f5b5ad",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [512,320],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
 								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["Mutant"]
@@ -515,23 +547,23 @@
 						},
 						{
 							"__identifier": "Spawner",
-							"__grid": [16,13],
+							"__grid": [22,10],
 							"__pivot": [0,0],
 							"__tags": ["spawner"],
 							"__tile": null,
 							"__smartColor": "#EAD4AA",
-							"iid": "fcd4c910-c640-11ed-80b3-215a80717414",
+							"iid": "0059d7e0-c640-11ed-80b3-d344c4be74a3",
 							"width": 16,
 							"height": 16,
 							"defUid": 22,
-							"px": [512,416],
+							"px": [704,320],
 							"fieldInstances": [
-								{ "__identifier": "timer", "__value": 0.5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [0.5] }] },
-								{ "__identifier": "spawn_rate", "__value": 10, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
-								{ "__identifier": "spawn_count", "__value": 100, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [100] }] },
-								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
+								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
 									"id": "V_String",
-									"params": ["Skuller"]
+									"params": ["Mutant"]
 								}] }
 							]
 						}
@@ -771,38 +803,6 @@
 						{ "px": [1152,640], "src": [0,256], "f": 0, "t": 4, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee71460-c640-11ed-b0f3-ff04d4190cb2",
-					"levelId": 0,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 4096285,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "8cd68740-c640-11ed-8f0c-15e5852d6add", "dir": "e" }, { "levelIid": "b7b8c4f0-c640-11ed-8f0c-a7535c6f4080", "dir": "s" } ]
@@ -828,6 +828,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee78990-c640-11ed-b0f3-498c5e673c13",
+					"levelId": 7,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 5750245,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -879,6 +911,72 @@
 							"defUid": 16,
 							"px": [576,0],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [19,9],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "1e7fe430-c640-11ed-80b3-bfbc0a1552d2",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [608,288],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 0.5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [0.5] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 10, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Slimer"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [30,9],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "2f9e8550-c640-11ed-80b3-15e7b5d2cabe",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [960,288],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 3, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [3] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 6, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [6] }] },
+								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Mutant"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [6,9],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "35003ca0-c640-11ed-80b3-230faa377951",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [192,288],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 3, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [3] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 6, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [6] }] },
+								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Mutant"]
+								}] }
+							]
 						}
 					]
 				},
@@ -1116,38 +1214,6 @@
 						{ "px": [1152,640], "src": [0,256], "f": 0, "t": 4, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee78990-c640-11ed-b0f3-498c5e673c13",
-					"levelId": 7,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 5750245,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "9694d960-c640-11ed-8f0c-e7d44b2edc93", "dir": "w" }, { "levelIid": "9ea7d690-c640-11ed-8f0c-097167b9f5c8", "dir": "e" }, { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "s" } ]
@@ -1173,6 +1239,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee7b0a0-c640-11ed-b0f3-6de0568a5ab8",
+					"levelId": 8,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 9599448,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -1224,6 +1322,72 @@
 							"defUid": 16,
 							"px": [576,0],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [19,9],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "42d3d170-c640-11ed-80b3-3dce2d65b473",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [608,288],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 10, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
+								{ "__identifier": "spawn_rate", "__value": 10, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "spawn_count", "__value": 20, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [20] }] },
+								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Slimer"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [0,2],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "4e961270-c640-11ed-80b3-3dd6292f236d",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [0,64],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 5, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
+								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Skuller"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [37,2],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "554669d0-c640-11ed-80b3-5fdfec66e574",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [1184,64],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 5, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
+								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Skuller"]
+								}] }
+							]
 						}
 					]
 				},
@@ -1461,38 +1625,6 @@
 						{ "px": [1152,640], "src": [0,320], "f": 0, "t": 5, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee7b0a0-c640-11ed-b0f3-6de0568a5ab8",
-					"levelId": 8,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 9599448,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "8cd68740-c640-11ed-8f0c-15e5852d6add", "dir": "w" }, { "levelIid": "fce115a0-c640-11ed-8f0c-0f22d62c6fa8", "dir": "s" } ]
@@ -1518,6 +1650,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee7d7b0-c640-11ed-b0f3-63387804f670",
+					"levelId": 10,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 3885364,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -1569,6 +1733,72 @@
 							"defUid": 16,
 							"px": [576,0],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [9,8],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "5ec4fc60-c640-11ed-80b3-1732fdcec255",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [288,256],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [27,8],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "63690900-c640-11ed-80b3-a1278b438a6d",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [864,256],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [19,3],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "67ce8600-c640-11ed-80b3-c3f7c799ffe7",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [608,96],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 1, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "enemy_type", "__value": "Adept", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Adept"]
+								}] }
+							]
 						}
 					]
 				},
@@ -1806,38 +2036,6 @@
 						{ "px": [1152,640], "src": [0,512], "f": 0, "t": 8, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee7d7b0-c640-11ed-b0f3-63387804f670",
-					"levelId": 10,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 3885364,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "9694d960-c640-11ed-8f0c-e7d44b2edc93", "dir": "n" }, { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "e" }, { "levelIid": "12a30010-c640-11ed-8f0c-01c835a16552", "dir": "s" } ]
@@ -1863,6 +2061,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee7fec0-c640-11ed-b0f3-53d5ed541ff6",
+					"levelId": 11,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 476705,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -1914,6 +2144,94 @@
 							"defUid": 16,
 							"px": [576,0],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [7,7],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "70d06e80-c640-11ed-80b3-d798464ea20f",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [224,224],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 16, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [16] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [29,7],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "76324ce0-c640-11ed-80b3-ed3bd9212f97",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [928,224],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 16, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [16] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [35,19],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "7f17d3c0-c640-11ed-80b3-f5abef4ac88f",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [1120,608],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 10, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Skuller"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [2,20],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "a1106be0-c640-11ed-80b3-0fd16f60f119",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [64,640],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 10, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Skuller"]
+								}] }
+							]
 						}
 					]
 				},
@@ -2151,38 +2469,6 @@
 						{ "px": [1152,640], "src": [0,576], "f": 0, "t": 9, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee7fec0-c640-11ed-b0f3-53d5ed541ff6",
-					"levelId": 11,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 476705,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "8cd68740-c640-11ed-8f0c-15e5852d6add", "dir": "n" }, { "levelIid": "b7b8c4f0-c640-11ed-8f0c-a7535c6f4080", "dir": "w" }, { "levelIid": "fce115a0-c640-11ed-8f0c-0f22d62c6fa8", "dir": "e" }, { "levelIid": "2ee1d5d0-c640-11ed-8f0c-9319c5a8f4c1", "dir": "s" } ]
@@ -2208,6 +2494,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee825d0-c640-11ed-b0f3-eb554d117c19",
+					"levelId": 12,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 6409875,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -2259,6 +2577,72 @@
 							"defUid": 16,
 							"px": [576,0],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [19,3],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "a868c310-c640-11ed-80b3-5725bca1006f",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [608,96],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 15, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [15] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 1, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "enemy_type", "__value": "LabBoss", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["LabBoss"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [13,8],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "af5ab750-c640-11ed-80b3-2916dbd17279",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [416,256],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 3, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [24,8],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "b3f52700-c640-11ed-80b3-c3fd0026c624",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [768,256],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 3, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
 						}
 					]
 				},
@@ -2496,38 +2880,6 @@
 						{ "px": [1152,640], "src": [0,576], "f": 0, "t": 9, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee825d0-c640-11ed-b0f3-eb554d117c19",
-					"levelId": 12,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 6409875,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "9ea7d690-c640-11ed-8f0c-097167b9f5c8", "dir": "n" }, { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "w" }, { "levelIid": "308e7460-c640-11ed-8f0c-95f3c4285726", "dir": "s" } ]
@@ -2553,6 +2905,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee84ce0-c640-11ed-b0f3-334174344f46",
+					"levelId": 13,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 289860,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -2590,6 +2974,130 @@
 							"defUid": 18,
 							"px": [576,640],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "LevelExit",
+							"__grid": [18,0],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#BE4A2F",
+							"iid": "bddc1850-c640-11ed-80b3-95e18c5a570b",
+							"width": 64,
+							"height": 64,
+							"defUid": 16,
+							"px": [576,0],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [1,3],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "c0e9a670-c640-11ed-80b3-331ea6243f90",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [32,96],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 30, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [30] }] },
+								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Skuller"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [36,3],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "c8a887a0-c640-11ed-80b3-8d206afccc2c",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [1152,96],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 30, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [30] }] },
+								{ "__identifier": "enemy_type", "__value": "Skuller", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Skuller"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [19,5],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "d1f18b40-c640-11ed-80b3-e5c82adf1e1a",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [608,160],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 2, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [2] }] },
+								{ "__identifier": "spawn_rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
+								{ "__identifier": "enemy_type", "__value": "Adept", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Adept"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [8,18],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "de9dde20-c640-11ed-80b3-d5c38e740680",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [256,576],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 1, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [29,18],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "e1e3ba50-c640-11ed-80b3-9ba5ce7b6e41",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [928,576],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [] },
+								{ "__identifier": "spawn_count", "__value": 1, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
 						}
 					]
 				},
@@ -2827,38 +3335,6 @@
 						{ "px": [1152,640], "src": [0,704], "f": 0, "t": 11, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee84ce0-c640-11ed-b0f3-334174344f46",
-					"levelId": 13,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 289860,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "b7b8c4f0-c640-11ed-8f0c-a7535c6f4080", "dir": "n" }, { "levelIid": "2ee1d5d0-c640-11ed-8f0c-9319c5a8f4c1", "dir": "e" } ]
@@ -2884,6 +3360,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee873f0-c640-11ed-b0f3-b312f3e2c283",
+					"levelId": 14,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 5846552,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -2935,6 +3443,72 @@
 							"defUid": 16,
 							"px": [576,0],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [18,4],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "ed60dc00-c640-11ed-80b3-65fc2bdee87c",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [576,128],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 8, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [8] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [19,4],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "ee0f4470-c640-11ed-80b3-1dbebbbf2d75",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [608,128],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
+								{ "__identifier": "enemy_type", "__value": "Adept", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Adept"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [20,4],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "eec57510-c640-11ed-80b3-a7a02bcaf406",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [640,128],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 8, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [8] }] },
+								{ "__identifier": "enemy_type", "__value": "Goblin", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Goblin"]
+								}] }
+							]
 						}
 					]
 				},
@@ -3172,38 +3746,6 @@
 						{ "px": [1152,640], "src": [0,704], "f": 0, "t": 11, "d": [208] }
 					],
 					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee873f0-c640-11ed-b0f3-b312f3e2c283",
-					"levelId": 14,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 5846552,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
-					"entityInstances": []
 				}
 			],
 			"__neighbours": [ { "levelIid": "ec7bb260-c640-11ed-8f0c-5112402e0e90", "dir": "n" }, { "levelIid": "12a30010-c640-11ed-8f0c-01c835a16552", "dir": "w" }, { "levelIid": "308e7460-c640-11ed-8f0c-95f3c4285726", "dir": "e" } ]
@@ -3229,6 +3771,38 @@
 			"externalRelPath": null,
 			"fieldInstances": [],
 			"layerInstances": [
+				{
+					"__identifier": "IntGrid",
+					"__type": "IntGrid",
+					"__cWid": 19,
+					"__cHei": 11,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"iid": "aee89b00-c640-11ed-b0f3-439456cb54ab",
+					"levelId": 15,
+					"layerDefUid": 32,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGridCsv": [
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+					],
+					"autoLayerTiles": [],
+					"seed": 5439364,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": []
+				},
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
@@ -3280,6 +3854,28 @@
 							"defUid": 16,
 							"px": [576,0],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [18,5],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "034ff0f0-c640-11ed-80b3-69c02826df13",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [576,160],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 1, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "enemy_type", "__value": "Sorcerian", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Sorcerian"]
+								}] }
+							]
 						}
 					]
 				},
@@ -3516,38 +4112,6 @@
 						{ "px": [1088,640], "src": [0,704], "f": 0, "t": 11, "d": [207] },
 						{ "px": [1152,640], "src": [0,704], "f": 0, "t": 11, "d": [208] }
 					],
-					"entityInstances": []
-				},
-				{
-					"__identifier": "IntGrid",
-					"__type": "IntGrid",
-					"__cWid": 19,
-					"__cHei": 11,
-					"__gridSize": 64,
-					"__opacity": 1,
-					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
-					"__tilesetDefUid": null,
-					"__tilesetRelPath": null,
-					"iid": "aee89b00-c640-11ed-b0f3-439456cb54ab",
-					"levelId": 15,
-					"layerDefUid": 32,
-					"pxOffsetX": 0,
-					"pxOffsetY": 0,
-					"visible": true,
-					"optionalRules": [],
-					"intGridCsv": [
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-					],
-					"autoLayerTiles": [],
-					"seed": 5439364,
-					"overrideTilesetUid": null,
-					"gridTiles": [],
 					"entityInstances": []
 				}
 			],

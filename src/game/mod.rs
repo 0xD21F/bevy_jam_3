@@ -7,9 +7,14 @@ use crate::{
     entity::{creature::CreaturePlugin, player::PlayerPlugin, spawner::SpawnerPlugin, EnemyPlugin},
 };
 
-use self::{level_manager::LevelManagerPlugin, opening_cutscene::OpeningCutscenePlugin};
+use self::{
+    level_manager::LevelManagerPlugin,
+    mutation_selection::{MutationSelectionData, MutationSelectionPlugin},
+    opening_cutscene::OpeningCutscenePlugin,
+};
 
 pub mod level_manager;
+pub mod mutation_selection;
 pub mod opening_cutscene;
 
 pub struct GamePlugin;
@@ -25,7 +30,8 @@ impl Plugin for GamePlugin {
             .add_plugin(EnemyPlugin)
             .add_plugin(BehaviourPlugin)
             .add_plugin(SpawnerPlugin)
-            .add_plugin(LevelManagerPlugin);
+            .add_plugin(LevelManagerPlugin)
+            .add_plugin(MutationSelectionPlugin);
     }
 }
 
@@ -37,5 +43,6 @@ pub enum GameState {
     SetupLevelManager,
     SetupLevel,
     InLevel,
+    LevelComplete,
     MutationSelection,
 }

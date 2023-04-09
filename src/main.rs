@@ -44,4 +44,3 @@ fn main() {
         .add_plugin(AppStatePlugin)
         .run();
 }
-

@@ -5,7 +5,7 @@ use crate::{
     game::{GamePlugin, GameState},
 };
 
-use super::{AppState, loading::MusicAssets};
+use super::{loading::MusicAssets, AppState};
 
 pub struct GameStatePlugin;
 
