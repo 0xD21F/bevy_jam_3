@@ -3,9 +3,10 @@ use std::str::FromStr;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{
     prelude::{FieldValue, LdtkEntityAppExt, LdtkIntCellAppExt},
-    EntityInstance, IntGridCell, LdtkEntity, LdtkIntCell, LdtkSettings, LdtkWorldBundle, LevelSelection,
+    EntityInstance, IntGridCell, LdtkEntity, LdtkIntCell, LdtkSettings, LdtkWorldBundle,
+    LevelSelection,
 };
-use bevy_rapier2d::prelude::{Collider};
+use bevy_rapier2d::prelude::Collider;
 
 use crate::{
     app_state::{loading::LevelAssets, AppState},
@@ -32,13 +33,13 @@ impl From<IntGridCell> for WallColliderBundle {
     fn from(_int_grid_cell: IntGridCell) -> WallColliderBundle {
         // Solid Wall
         // if int_grid_cell.value == 1 {
-            WallColliderBundle {
-                collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
-            }
+        WallColliderBundle {
+            collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
+        }
         // } else {
-            // WallColliderBundle {
-                // collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
-            // }
+        // WallColliderBundle {
+        // collider: Collider::cuboid(PIXELS_PER_METER * 1.0, PIXELS_PER_METER * 1.0),
+        // }
         // }
     }
 }

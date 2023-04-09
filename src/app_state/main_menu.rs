@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-
-
 use super::AppState;
 
 pub struct MainMenuPlugin;

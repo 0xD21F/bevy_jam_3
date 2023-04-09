@@ -15,7 +15,8 @@ use crate::{
 };
 
 use super::{
-    creature::DontSetFacing, player::Player, skuller::SkullerBundle, slimer::SlimerBundle, mutant::MutantBundle,
+    creature::DontSetFacing, mutant::MutantBundle, player::Player, skuller::SkullerBundle,
+    slimer::SlimerBundle,
 };
 
 pub struct SpawnerPlugin;

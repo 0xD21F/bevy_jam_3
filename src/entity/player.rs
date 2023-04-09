@@ -4,9 +4,7 @@ use leafwing_input_manager::{
     prelude::{ActionState, InputManagerPlugin, InputMap, VirtualDPad},
     Actionlike, InputManagerBundle,
 };
-use seldom_state::prelude::{
-    InputTriggerPlugin,
-};
+use seldom_state::prelude::InputTriggerPlugin;
 
 use crate::{
     animation::Animated,
@@ -444,7 +442,8 @@ fn player_damage_system(
     mut enemy_hitbox_query: Query<(Entity, &mut Creature, &Collider), With<Enemy>>,
     mut player_hurtbox_query: Query<(Entity, &Collider, &PlayerHurtboxDamage)>,
 ) {
-    for (enemy_hitbox_entity, mut enemy_creature, _enemy_collider) in enemy_hitbox_query.iter_mut() {
+    for (enemy_hitbox_entity, mut enemy_creature, _enemy_collider) in enemy_hitbox_query.iter_mut()
+    {
         for (player_hurtbox_entity, _player_collider, player_hurtbox_damage) in
             player_hurtbox_query.iter_mut()
         {

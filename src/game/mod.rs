@@ -1,15 +1,10 @@
 use bevy::prelude::*;
 
-
 use crate::{
-    animation::{SpriteSheetAnimationPlugin},
+    animation::SpriteSheetAnimationPlugin,
     behaviour::BehaviourPlugin,
     camera::CameraPlugin,
-    entity::{
-        creature::{CreaturePlugin},
-        player::{PlayerPlugin},
-        spawner::{SpawnerPlugin}, EnemyPlugin,
-    },
+    entity::{creature::CreaturePlugin, player::PlayerPlugin, spawner::SpawnerPlugin, EnemyPlugin},
 };
 
 use self::{level_manager::LevelManagerPlugin, opening_cutscene::OpeningCutscenePlugin};

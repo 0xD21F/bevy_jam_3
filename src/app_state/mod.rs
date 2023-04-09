@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-
-
 use self::{game::GameStatePlugin, loading::LoadingPlugin, main_menu::MainMenuPlugin};
 
 pub mod game;

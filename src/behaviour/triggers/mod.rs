@@ -1,8 +1,6 @@
 use bevy::prelude::*;
 use seldom_state::prelude::*;
 
-
-
 pub struct BehaviourTriggerPlugin;
 
 impl Plugin for BehaviourTriggerPlugin {

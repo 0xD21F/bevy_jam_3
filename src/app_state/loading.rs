@@ -2,8 +2,6 @@ use bevy::prelude::*;
 use bevy_asset_loader::prelude::{AssetCollection, LoadingState, LoadingStateAppExt};
 use bevy_ecs_ldtk::LdtkAsset;
 
-
-
 use super::AppState;
 
 pub struct LoadingPlugin;
@@ -16,6 +14,7 @@ impl Plugin for LoadingPlugin {
         .add_collection_to_loading_state::<_, SpriteAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, CutsceneAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, LevelAssets>(AppState::Loading)
+        .add_collection_to_loading_state::<_, MusicAssets>(AppState::Loading)
         .add_system(loading_setup.in_schedule(OnEnter(AppState::Loading)))
         .add_system(loading_cleanup.in_schedule(OnExit(AppState::Loading)));
     }
@@ -47,6 +46,12 @@ pub struct LevelAssets {
     pub tiles: Handle<Image>,
     #[asset(path = "levels/ldtk/levels.ldtk")]
     pub ldtk: Handle<LdtkAsset>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct MusicAssets {
+    #[asset(path = "music/title.ogg")]
+    pub title: Handle<AudioSource>,
 }
 
 #[derive(Resource)]
