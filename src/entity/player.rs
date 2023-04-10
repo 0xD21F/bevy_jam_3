@@ -5,15 +5,13 @@ use crate::{
         AppState,
     },
     entity::creature::{Bleed, DealDamage},
-    game::mutation_manager::{self, MutationManager, MutationType},
+    game::mutation_manager::{MutationManager, MutationType},
     PIXELS_PER_METER,
 };
 use bevy::prelude::*;
 use bevy_kira_audio::AudioChannel;
 use bevy_kira_audio::AudioControl;
-use bevy_rapier2d::prelude::{
-    ActiveCollisionTypes, Collider, GravityScale, RapierContext, RigidBody, Sensor,
-};
+use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider, RapierContext, Sensor};
 use leafwing_input_manager::{
     prelude::{ActionState, InputManagerPlugin, InputMap, VirtualDPad},
     Actionlike, InputManagerBundle,
@@ -333,9 +331,9 @@ pub fn player_movement_system(
                 None => continue,
             };
             // accept input if not being knocked back
-            if let None = knockback {
+            if knockback.is_none() {
                 if axis_pair.xy().length() > 0.0 {
-                    if (axis_pair.x() > 0.0) {
+                    if axis_pair.x() > 0.0 {
                         last_facing.facing = Facing::Right;
                     } else {
                         last_facing.facing = Facing::Left;
@@ -356,7 +354,7 @@ pub fn player_movement_system(
                     let mut acceleration_vector =
                         normalized_input_vector * creature.acceleration * time.delta_seconds();
                     if mutation_manager.has_mutation(MutationType::HeavyBones) {
-                        acceleration_vector = acceleration_vector * 0.8;
+                        acceleration_vector *= 0.8;
                     }
                     velocity.value += acceleration_vector;
                 }
@@ -531,7 +529,7 @@ fn player_damage_system(
     mut commands: Commands,
     mut enemy_hitbox_query: Query<(Entity, &Transform, &mut Creature, &Collider), With<Enemy>>,
     mut player_hurtbox_query: Query<(Entity, &GlobalTransform, &Collider, &PlayerHurtboxDamage)>,
-    mut player_query: Query<(Entity), With<Player>>,
+    player_query: Query<Entity, With<Player>>,
     mutation_manager: Res<MutationManager>,
 ) {
     for (enemy_hitbox_entity, enemy_transform, _enemy_creature, _enemy_collider) in
@@ -596,7 +594,7 @@ pub fn player_check_mutation(
     )>,
     mutation_manager: Res<MutationManager>,
 ) {
-    for (player_entity, mut transform, mut player, mut creature, shrink, grow, shrinkgrow) in
+    for (player_entity, mut transform, _player, _creature, shrink, grow, shrinkgrow) in
         player_query.iter_mut()
     {
         if mutation_manager.has_mutation(MutationType::Grow) && grow.is_none() {

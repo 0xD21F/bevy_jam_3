@@ -63,10 +63,8 @@ pub fn approach_and_keep_distance(
 
             // apply max_speed
             let speed = new_velocity.length();
-            if let None = knockback {
-                if speed > creature.max_speed {
-                    new_velocity *= creature.max_speed / speed;
-                }
+            if knockback.is_none() && speed > creature.max_speed {
+                new_velocity *= creature.max_speed / speed;
             }
 
             velocity.value = new_velocity;

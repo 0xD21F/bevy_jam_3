@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy::transform::commands;
+
 use bevy_ecs_ldtk::LdtkLevel;
 use bevy_kira_audio::AudioChannel;
 use bevy_kira_audio::AudioControl;
@@ -174,7 +174,7 @@ pub fn set_sprite_facing_system(
     >,
     player_query: Query<&Transform, With<Player>>,
 ) {
-    for (mut sprite, velocity, transform, face_player) in query.iter_mut() {
+    for (mut sprite, _velocity, transform, face_player) in query.iter_mut() {
         if let Some(_face_player) = face_player {
             if let Ok(player_transform) = player_query.get_single() {
                 // Flip the sprite to face the player
@@ -192,10 +192,10 @@ pub fn set_sprite_facing_system(
 }
 
 pub fn set_player_facing_system(
-    mut query: Query<(&mut TextureAtlasSprite), With<Player>>,
+    mut query: Query<&mut TextureAtlasSprite, With<Player>>,
     last_facing: Res<LastFacing>,
 ) {
-    for (mut sprite) in query.iter_mut() {
+    for mut sprite in query.iter_mut() {
         if let Facing::Right = last_facing.facing {
             sprite.flip_x = false;
         } else if let Facing::Left = last_facing.facing {
@@ -307,7 +307,7 @@ pub fn deal_damage_system(
         Option<&Player>,
         &Transform,
     )>,
-    mut rage_query: Query<&Rage, With<Player>>,
+    rage_query: Query<&Rage, With<Player>>,
     mut next_state: ResMut<NextState<AppState>>,
     sfx: Res<AudioChannel<SoundEffects>>,
     music_assets: Res<SfxAssets>,
@@ -424,7 +424,7 @@ pub fn knockback_system(
     mut query: Query<(Entity, &mut Velocity, &mut Knockback)>,
     time: Res<Time>,
 ) {
-    for (entity, mut velocity, mut knockback) in query.iter_mut() {
+    for (entity, _velocity, mut knockback) in query.iter_mut() {
         if knockback.timer.tick(time.delta()).finished() {
             commands.entity(entity).remove::<Knockback>();
         }
