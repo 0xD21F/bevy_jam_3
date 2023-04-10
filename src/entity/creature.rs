@@ -251,13 +251,15 @@ pub fn creature_clamp_to_current_level(
 }
 
 pub fn damage_invulnerability_system(
-    mut query: Query<(&mut Creature, &mut TextureAtlasSprite)>,
+    mut query: Query<(&mut Creature, &mut TextureAtlasSprite, Option<&ChangeColor>)>,
     time: Res<Time>,
 ) {
-    for (mut creature, mut sprite) in query.iter_mut() {
+    for (mut creature, mut sprite, change_color) in query.iter_mut() {
         creature.damage_invulnerability.tick(time.delta());
         if creature.damage_invulnerability.finished() || creature.health == creature.max_health {
-            sprite.color = Color::default();
+            if let None = change_color {
+                sprite.color = Color::default();
+            }
         } else {
             sprite.color = Color::RED;
         }
@@ -460,7 +462,7 @@ pub fn heal_system(
             heal.ticks -= 1;
             commands.entity(entity).insert(ChangeColor {
                 color: Color::GREEN,
-                timer: Timer::from_seconds(0.1, TimerMode::Once),
+                timer: Timer::from_seconds(0.2, TimerMode::Once),
             });
         }
     }
