@@ -9,7 +9,7 @@ use crate::{
 
 use super::{
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
-    Enemy, ZSort,
+    Enemy, EnemyHurtboxDamage, ZSort,
 };
 
 pub struct SlimerPlugin;
@@ -30,6 +30,7 @@ pub struct SlimerBundle {
     pub name: Name,
     pub slimer: Slimer,
     pub separation: Separation,
+    pub hurtbox: EnemyHurtboxDamage,
 }
 
 impl SlimerBundle {
@@ -45,7 +46,9 @@ impl SlimerBundle {
                     acceleration: 1000.0,
                     friction: 500.0,
                     max_speed: 150.0,
-                    health: 100.0,
+                    health: 25.0,
+                    max_health: 25.0,
+                    damage_invulnerability: Timer::from_seconds(0.2, TimerMode::Once),
                 },
                 animation: animation.clone(),
                 sprite: SpriteSheetBundle {
@@ -62,13 +65,14 @@ impl SlimerBundle {
                 sensor: Sensor,
                 hitbox: Hitbox,
             },
+            hurtbox: EnemyHurtboxDamage(2),
             enemy: Enemy,
             slimer: Slimer,
             name: Name::new("Slimer"),
             separation: Separation {
-                radius: PIXELS_PER_METER * 1.0,
-                separation_force: 1000.0,
-                max_speed_during_separation: Some(1280.0),
+                radius: PIXELS_PER_METER * 3.0,
+                separation_force: 1024.0,
+                max_speed_during_separation: Some(1024.0),
                 max_speed_reset: Some(150.0),
                 ..default()
             },

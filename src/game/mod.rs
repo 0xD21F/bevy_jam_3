@@ -8,11 +8,12 @@ use crate::{
 };
 
 use self::{
-    level_manager::LevelManagerPlugin, mutation_manager::MutationManagerPlugin,
-    mutation_selection::MutationSelectionPlugin, opening_cutscene::OpeningCutscenePlugin,
-    ui::UiPlugin,
+    endgame_cutscene::EndgameCutscenePlugin, level_manager::LevelManagerPlugin,
+    mutation_manager::MutationManagerPlugin, mutation_selection::MutationSelectionPlugin,
+    opening_cutscene::OpeningCutscenePlugin, ui::UiPlugin,
 };
 
+pub mod endgame_cutscene;
 pub mod level_manager;
 pub mod mutation_manager;
 pub mod mutation_selection;
@@ -25,6 +26,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_state::<GameState>()
             .add_plugin(OpeningCutscenePlugin)
+            .add_plugin(EndgameCutscenePlugin)
             .add_plugin(CameraPlugin)
             .add_plugin(SpriteSheetAnimationPlugin)
             .add_plugin(PlayerPlugin)
@@ -49,4 +51,5 @@ pub enum GameState {
     InLevel,
     LevelComplete,
     MutationSelection,
+    EndgameCutscene,
 }

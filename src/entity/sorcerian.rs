@@ -9,7 +9,7 @@ use crate::{
 
 use super::{
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
-    Enemy, ZSort,
+    Enemy, ZSort, EnemyHurtboxDamage,
 };
 
 pub struct SorcerianPlugin;
@@ -29,7 +29,7 @@ pub struct SorcerianBundle {
     pub enemy: Enemy,
     pub name: Name,
     pub sorcerian: Sorcerian,
-    pub separation: Separation,
+    pub hurtbox: EnemyHurtboxDamage,
 }
 
 impl SorcerianBundle {
@@ -45,7 +45,9 @@ impl SorcerianBundle {
                     acceleration: 1000.0,
                     friction: 500.0,
                     max_speed: 150.0,
-                    health: 100.0,
+                    health: 500.0,
+                    max_health: 500.0,
+                    damage_invulnerability: Timer::from_seconds(1.5, TimerMode::Once),
                 },
                 animation: animation.clone(),
                 sprite: SpriteSheetBundle {
@@ -62,16 +64,10 @@ impl SorcerianBundle {
                 sensor: Sensor,
                 hitbox: Hitbox,
             },
+            hurtbox: EnemyHurtboxDamage(12),
             enemy: Enemy,
             sorcerian: Sorcerian,
             name: Name::new("Sorcerian"),
-            separation: Separation {
-                radius: PIXELS_PER_METER * 1.0,
-                separation_force: 1000.0,
-                max_speed_during_separation: Some(1280.0),
-                max_speed_reset: Some(150.0),
-                ..default()
-            },
         }
     }
 }

@@ -24,6 +24,7 @@ impl Plugin for LoadingPlugin {
         .add_collection_to_loading_state::<_, CutsceneAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, LevelAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, MusicAssets>(AppState::Loading)
+        .add_collection_to_loading_state::<_, SfxAssets>(AppState::Loading)
         .add_collection_to_loading_state::<_, UiAssets>(AppState::Loading)
         .add_audio_channel::<Background>()
         .add_audio_channel::<SoundEffects>()
@@ -64,6 +65,12 @@ pub struct CutsceneAssets {
     pub opening2: Handle<Image>,
     #[asset(path = "cutscenes/opening3.png")]
     pub opening3: Handle<Image>,
+    #[asset(path = "cutscenes/ending1.png")]
+    pub ending1: Handle<Image>,
+    #[asset(path = "cutscenes/ending2.png")]
+    pub ending2: Handle<Image>,
+    #[asset(path = "cutscenes/ending3.png")]
+    pub ending3: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -76,6 +83,8 @@ pub struct UiAssets {
     pub space: Handle<Image>,
     #[asset(path = "ui/mutation_icons.png")]
     pub mutation_icons: Handle<Image>,
+    #[asset(path = "ui/portrait.png")]
+    pub portrait: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -106,6 +115,18 @@ pub struct MusicAssets {
     pub tower: Handle<AudioSource>,
     #[asset(path = "music/towerboss.ogg")]
     pub towerboss: Handle<AudioSource>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct SfxAssets {
+    #[asset(path = "sfx/hit.ogg")]
+    pub hit: Handle<AudioSource>,
+    #[asset(path = "sfx/laff1.ogg")]
+    pub laff1: Handle<AudioSource>,
+    #[asset(path = "sfx/laff2.ogg")]
+    pub laff2: Handle<AudioSource>,
+    #[asset(path = "sfx/lariat.ogg")]
+    pub lariat: Handle<AudioSource>,
 }
 
 #[derive(Resource)]

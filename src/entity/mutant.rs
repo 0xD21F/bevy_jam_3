@@ -9,7 +9,7 @@ use crate::{
 
 use super::{
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
-    Enemy, ZSort,
+    Enemy, EnemyHurtboxDamage, ZSort,
 };
 
 pub struct MutantPlugin;
@@ -30,6 +30,7 @@ pub struct MutantBundle {
     pub name: Name,
     pub mutant: Mutant,
     pub separation: Separation,
+    pub hurtbox: EnemyHurtboxDamage,
 }
 
 impl MutantBundle {
@@ -45,7 +46,9 @@ impl MutantBundle {
                     acceleration: 512.0,
                     friction: 256.0,
                     max_speed: 128.0,
-                    health: 100.0,
+                    health: 40.0,
+                    max_health: 40.0,
+                    damage_invulnerability: Timer::from_seconds(0.5, TimerMode::Once),
                 },
                 animation: animation.clone(),
                 sprite: SpriteSheetBundle {
@@ -62,6 +65,7 @@ impl MutantBundle {
                 sensor: Sensor,
                 hitbox: Hitbox,
             },
+            hurtbox: EnemyHurtboxDamage(5),
             enemy: Enemy,
             mutant: Mutant,
             name: Name::new("Mutant"),

@@ -167,8 +167,6 @@ pub fn level_enemies_remaining_check(
     let spawned_enemies: u32 = enemy_query.iter().count() as u32;
     let total_enemies = remaining_spawns + spawned_enemies;
 
-    println!("Total enemies: {}", total_enemies);
-
     // Check if all enemies are killed and the level is complete
     if total_enemies == 0 {
         next_state.set(GameState::LevelComplete);

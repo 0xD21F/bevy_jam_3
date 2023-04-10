@@ -9,7 +9,7 @@ use crate::{
 
 use super::{
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
-    Enemy, ZSort,
+    Enemy, ZSort, EnemyHurtboxDamage,
 };
 
 pub struct GoblinPlugin;
@@ -30,6 +30,7 @@ pub struct GoblinBundle {
     pub name: Name,
     pub goblin: Goblin,
     pub separation: Separation,
+    pub hurtbox: EnemyHurtboxDamage,
 }
 
 impl GoblinBundle {
@@ -45,7 +46,9 @@ impl GoblinBundle {
                     acceleration: 1000.0,
                     friction: 500.0,
                     max_speed: 150.0,
-                    health: 100.0,
+                    health: 80.0,
+                    max_health: 80.0,
+                    damage_invulnerability: Timer::from_seconds(1.5, TimerMode::Once),
                 },
                 animation: animation.clone(),
                 sprite: SpriteSheetBundle {
@@ -62,6 +65,7 @@ impl GoblinBundle {
                 sensor: Sensor,
                 hitbox: Hitbox,
             },
+            hurtbox: EnemyHurtboxDamage(4),
             enemy: Enemy,
             goblin: Goblin,
             name: Name::new("Goblin"),

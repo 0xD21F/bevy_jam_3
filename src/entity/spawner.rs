@@ -335,7 +335,7 @@ fn spawn_mutant(
     let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
         sprites.mutant.clone(),
         Vec2::new(64.0, 64.0),
-        2,
+        4,
         1,
         None,
         None,
@@ -353,7 +353,7 @@ fn spawn_mutant(
             Animated {
                 timer,
                 first: 0,
-                last: 1,
+                last: 2,
                 ..default()
             },
             transform,
@@ -573,7 +573,7 @@ fn spawn_adept(
         sprites.adept.clone(),
         Vec2::new(64.0, 64.0),
         1,
-        1,
+        2,
         None,
         None,
     ));
@@ -590,7 +590,7 @@ fn spawn_adept(
             Animated {
                 timer,
                 first: 0,
-                last: 0,
+                last: 1,
                 ..default()
             },
             transform,

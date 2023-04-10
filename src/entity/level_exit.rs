@@ -6,7 +6,10 @@ use bevy_ecs_ldtk::{
 use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider, RapierContext};
 
 use crate::{
-    game::{level_manager::LevelObject, GameState},
+    game::{
+        level_manager::{LevelManager, LevelObject},
+        GameState,
+    },
     PIXELS_PER_METER,
 };
 
@@ -81,11 +84,21 @@ pub fn level_end_system(
     query: Query<(Entity, &LevelExit, &Collider), Without<Player>>,
     mut player_query: Query<(Entity, &Collider), With<Player>>,
     mut next_state: ResMut<NextState<GameState>>,
+    level_manager: Option<Res<LevelManager>>,
 ) {
+    let level_manager = match level_manager {
+        Some(level_manager) => level_manager,
+        None => return,
+    };
+
     for (player_entity, _) in player_query.iter_mut() {
         for (level_end_entity, _, _) in query.iter() {
             if rapier_context.intersection_pair(player_entity, level_end_entity) == Some(true) {
-                next_state.set(GameState::MutationSelection);
+                if level_manager.current_level == 9 {
+                    next_state.set(GameState::EndgameCutscene);
+                } else {
+                    next_state.set(GameState::MutationSelection);
+                }
             }
         }
     }

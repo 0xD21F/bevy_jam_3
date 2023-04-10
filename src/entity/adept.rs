@@ -46,6 +46,8 @@ impl AdeptBundle {
                     friction: 500.0,
                     max_speed: 150.0,
                     health: 100.0,
+                    max_health: 100.0,
+                    damage_invulnerability: Timer::from_seconds(0.5, TimerMode::Once),
                 },
                 animation: animation.clone(),
                 sprite: SpriteSheetBundle {

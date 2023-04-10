@@ -13,7 +13,7 @@ use crate::{
         player::Player,
         spawner::Spawner,
     },
-    game::level_manager::*,
+    game::level_manager::*, behaviour::separation::Separation,
 };
 
 #[derive(Resource, Default)]
@@ -35,6 +35,7 @@ impl Plugin for DebugPlugin {
                 .register_type::<Animated>()
                 .register_type::<LevelManager>()
                 .register_type::<Player>()
+                .register_type::<Separation>()                
                 .init_resource::<DebugState>();
         }
     }

@@ -82,7 +82,9 @@ pub fn separation_system<T: Component>(
         // Filter and map the positions vector to get the positions of nearby enemies.
         let nearby_positions: Vec<Vec2> = positions
             .iter()
-            .filter(|&other_position| enemy_position.distance(*other_position) < separation.radius)
+            .filter(|&other_position| {
+                *other_position != enemy_position && enemy_position.distance(*other_position) < separation.radius
+            })
             .copied()
             .collect();
 
@@ -94,7 +96,7 @@ pub fn separation_system<T: Component>(
             &nearby_positions,
         ) {
             if let Some(max_speed_during_separation) = separation.max_speed_during_separation {
-                if steer_away > 0.0 {
+                if !nearby_positions.is_empty() { 
                     creature.max_speed = max_speed_during_separation;
                 } else if let Some(max_speed_reset) = separation.max_speed_reset {
                     creature.max_speed = max_speed_reset;

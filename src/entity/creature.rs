@@ -1,8 +1,18 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::LdtkLevel;
+use bevy_kira_audio::AudioChannel;
+use bevy_kira_audio::AudioControl;
 use bevy_rapier2d::prelude::*;
+use rand::Rng;
 
-use crate::{animation::Animated, game::GameState};
+use crate::{
+    animation::Animated,
+    app_state::{
+        loading::{SfxAssets, SoundEffects},
+        AppState,
+    },
+    game::GameState,
+};
 
 use super::{player::Player, ZSort};
 
@@ -12,6 +22,8 @@ pub struct Creature {
     pub friction: f32,
     pub max_speed: f32,
     pub health: f32,
+    pub max_health: f32,
+    pub damage_invulnerability: Timer,
 }
 
 impl Default for Creature {
@@ -21,6 +33,8 @@ impl Default for Creature {
             friction: 128.0,
             max_speed: 128.0,
             health: 128.0,
+            max_health: 128.0,
+            damage_invulnerability: Timer::from_seconds(1.0, TimerMode::Once),
         }
     }
 }
@@ -95,7 +109,9 @@ impl Plugin for CreaturePlugin {
                     .in_set(OnUpdate(GameState::LevelComplete))
                     .after(apply_velocity_system),
             )
-            .add_system(deal_damage_system);
+            .add_system(damage_invulnerability_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(deal_damage_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(bleed_system.in_set(OnUpdate(GameState::InLevel)));
     }
 }
 
@@ -208,17 +224,89 @@ pub fn creature_clamp_to_current_level(
     }
 }
 
+pub fn damage_invulnerability_system(
+    mut query: Query<(&mut Creature, &mut TextureAtlasSprite)>,
+    time: Res<Time>,
+) {
+    for (mut creature, mut sprite) in query.iter_mut() {
+        creature.damage_invulnerability.tick(time.delta());
+        if creature.damage_invulnerability.finished() || creature.health == creature.max_health {
+            sprite.color = Color::default();
+        } else {
+            sprite.color = Color::RED;
+        }
+    }
+}
+
 pub fn deal_damage_system(
     mut commands: Commands,
-    mut query: Query<(Entity, &mut Creature, &mut Velocity, &DealDamage)>,
+    mut query: Query<(
+        Entity,
+        &mut Creature,
+        &mut Velocity,
+        &DealDamage,
+        Option<&Player>,
+    )>,
+    mut next_state: ResMut<NextState<AppState>>,
+    sfx: Res<AudioChannel<SoundEffects>>,
+    music_assets: Res<SfxAssets>,
 ) {
-    for (entity, mut creature, mut velocity, damage) in query.iter_mut() {
-        creature.health -= damage.amount;
-        if creature.health <= 0.0 {
-            commands.entity(entity).despawn_recursive();
-        } else {
-            velocity.value += damage.knockback_direction.normalize() * damage.knockback_force;
+    println!("deal damage system");
+    for (entity, mut creature, mut velocity, damage, player) in query.iter_mut() {
+        if creature.damage_invulnerability.finished() {
+            creature.damage_invulnerability.reset();
+            creature.health -= damage.amount;
+            sfx.play(music_assets.hit.clone()).with_volume(0.5);
+            if creature.health <= 0.0 {
+                // if the entity is the player, end the game
+                if let Some(_player) = player {
+                    let mut rng = rand::thread_rng();
+                    let random: f32 = rng.gen_range(0.0..1.0);
+
+                    if random < 0.5 {
+                        sfx.play(music_assets.laff2.clone());
+                    } else {
+                        sfx.play(music_assets.laff1.clone());
+                    }
+                    next_state.set(AppState::MainMenu);
+                } else {
+                    commands.entity(entity).despawn_recursive();
+                }
+            } else {
+                velocity.value = damage.knockback_direction * damage.knockback_force;
+            }
         }
         commands.entity(entity).remove::<DealDamage>();
     }
 }
+
+#[derive(Component, Reflect)]
+pub struct Bleed{
+    pub damage: f32,
+    pub ticks: u32,
+    pub tick_timer: Timer,
+}
+
+pub fn bleed_system(
+    mut commands: Commands,
+    mut query: Query<(Entity, &Creature, &mut Bleed)>,
+    time: Res<Time>,
+) {
+    for (entity, creature, mut bleed) in query.iter_mut() {
+        if(bleed.ticks <= 0) {
+            commands.entity(entity).remove::<Bleed>();
+            return;
+        }
+        if creature.damage_invulnerability.finished() {
+            if bleed.tick_timer.tick(time.delta()).finished() {
+                commands.entity(entity).insert(DealDamage {
+                    amount: bleed.damage as f32,
+                    knockback_direction: Vec2::ZERO,
+                    knockback_force: 0.0,
+                });
+                bleed.tick_timer.reset();
+                bleed.ticks = bleed.ticks - 1;
+            }
+        }
+    }
+}   

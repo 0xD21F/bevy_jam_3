@@ -1,17 +1,21 @@
+use crate::{
+    animation::Animated,
+    app_state::{
+        loading::{SfxAssets, SoundEffects, SpriteAssets},
+        AppState,
+    },
+    entity::creature::{DealDamage, Bleed},
+    PIXELS_PER_METER, game::mutation_manager::{self, MutationManager, MutationType},
+};
 use bevy::prelude::*;
+use bevy_kira_audio::AudioChannel;
+use bevy_kira_audio::AudioControl;
 use bevy_rapier2d::prelude::{Collider, RapierContext, RigidBody, Sensor};
 use leafwing_input_manager::{
     prelude::{ActionState, InputManagerPlugin, InputMap, VirtualDPad},
     Actionlike, InputManagerBundle,
 };
 use seldom_state::prelude::InputTriggerPlugin;
-
-use crate::{
-    animation::Animated,
-    app_state::{loading::SpriteAssets, AppState},
-    entity::creature::DealDamage,
-    PIXELS_PER_METER,
-};
 
 use super::{
     creature::{Creature, CreatureBundle, Velocity},
@@ -87,13 +91,13 @@ impl Plugin for PlayerPlugin {
         app.add_plugin(InputManagerPlugin::<PlayerAction>::default())
             .add_plugin(InputTriggerPlugin::<PlayerAction>::default())
             .add_system(spawn_player.in_schedule(OnEnter(AppState::InGame)))
-            .add_system(player_movement_system)
-            .add_system(player_rolling_state_system)
-            .add_system(player_rolling_behavior_system)
-            .add_system(player_attacking_state_system)
-            .add_system(player_attacking_behavior_system)
-            .add_system(player_animation_system)
-            .add_system(player_damage_system);
+            .add_system(player_movement_system.in_set(OnUpdate(AppState::InGame)))
+            .add_system(player_rolling_state_system.in_set(OnUpdate(AppState::InGame)))
+            .add_system(player_rolling_behavior_system.in_set(OnUpdate(AppState::InGame)))
+            .add_system(player_attacking_state_system.in_set(OnUpdate(AppState::InGame)))
+            .add_system(player_attacking_behavior_system.in_set(OnUpdate(AppState::InGame)))
+            .add_system(player_animation_system.in_set(OnUpdate(AppState::InGame)))
+            .add_system(player_damage_system.in_set(OnUpdate(AppState::InGame)));
     }
 }
 
@@ -111,6 +115,8 @@ pub fn player_attacking_state_system(
     attacking_query: Query<&Attacking>,
     rolling_query: Query<&Rolling>,
     mut commands: Commands,
+    sfx: Res<AudioChannel<SoundEffects>>,
+    music_assets: Res<SfxAssets>,
 ) {
     for (entity, mut player, action_state) in player_info.iter_mut() {
         let is_rolling = rolling_query.get(entity).is_ok();
@@ -122,6 +128,7 @@ pub fn player_attacking_state_system(
             && action_state.just_pressed(PlayerAction::Attack)
             && !is_rolling
         {
+            sfx.play(music_assets.lariat.clone()).with_volume(0.5);
             commands
                 .entity(entity)
                 .insert(Attacking)
@@ -129,11 +136,12 @@ pub fn player_attacking_state_system(
                     parent.spawn((
                         PlayerHurtbox {
                             collider: Collider::cuboid(
-                                PIXELS_PER_METER * 4.5,
-                                PIXELS_PER_METER * 1.5,
+                                PIXELS_PER_METER * 2.5,
+                                PIXELS_PER_METER * 1.0,
                             ),
                             damage: PlayerHurtboxDamage(20),
                             sensor: Sensor,
+                            transform: Transform::from_xyz(0.0, PIXELS_PER_METER * 0.5, 0.0),
                             ..default()
                         },
                         RigidBody::Fixed,
@@ -439,11 +447,13 @@ pub fn spawn_player(
     ));
 }
 
+// bad name
 fn player_damage_system(
     rapier_context: Res<RapierContext>,
     mut commands: Commands,
     mut enemy_hitbox_query: Query<(Entity, &Transform, &mut Creature, &Collider), With<Enemy>>,
-    mut player_hurtbox_query: Query<(Entity, &Transform, &Collider, &PlayerHurtboxDamage)>,
+    mut player_hurtbox_query: Query<(Entity, &GlobalTransform, &Collider, &PlayerHurtboxDamage)>,
+    mutation_manager: Res<MutationManager>,
 ) {
     for (enemy_hitbox_entity, enemy_transform, _enemy_creature, _enemy_collider) in
         enemy_hitbox_query.iter_mut()
@@ -454,16 +464,32 @@ fn player_damage_system(
             if rapier_context.intersection_pair(player_hurtbox_entity, enemy_hitbox_entity)
                 == Some(true)
             {
-                println!("Player hit enemy for {} damage", player_hurtbox_damage.0);
+                println!(
+                    "Knockback direction: {:?}",
+                    (player_transform.translation().truncate()
+                        - enemy_transform.translation.truncate())
+                    .normalize()
+                );
+
                 // Get direction to knock enemy back
                 commands.entity(enemy_hitbox_entity).insert(DealDamage {
                     amount: player_hurtbox_damage.0 as f32,
                     knockback_direction: (enemy_transform.translation.truncate()
-                        - player_transform.translation.truncate())
+                        - player_transform.translation().truncate())
                     .normalize_or_zero(),
-                    knockback_force: 100.0,
+                    knockback_force: 250.0,
                 });
+
+                // If the player has Hemophilia
+                if mutation_manager.has_mutation(MutationType::Hemophilia){
+                    commands.entity(enemy_hitbox_entity).insert(Bleed {
+                        damage: 1.0,
+                        ticks: 3,
+                        tick_timer: Timer::from_seconds(1.5, TimerMode::Once),
+                    });
+                }
             }
         }
     }
 }
+
