@@ -41,9 +41,9 @@ pub fn lab_boss_attack(
                 parent.spawn((
                     EnemyHurtbox {
                         collider: Collider::cuboid(PIXELS_PER_METER * 2.0, PIXELS_PER_METER * 1.0),
-                        damage: EnemyHurtboxDamage(12),
+                        damage: EnemyHurtboxDamage(14),
                         sensor: Sensor,
-                        transform: Transform::from_xyz(0.0, -PIXELS_PER_METER * 0.75, 0.0),
+                        transform: Transform::from_xyz(0.0, -PIXELS_PER_METER * 1.0, 0.0),
                         ..default()
                     },
                     ActiveCollisionTypes::STATIC_STATIC,

@@ -32,7 +32,6 @@ pub struct LabBossBundle {
     pub name: Name,
     pub lab_boss: LabBoss,
     pub separation: Separation,
-    pub hurtbox: EnemyHurtboxDamage,
 }
 
 impl LabBossBundle {
@@ -47,9 +46,9 @@ impl LabBossBundle {
                 creature: Creature {
                     acceleration: 1000.0,
                     friction: 500.0,
-                    max_speed: 150.0,
+                    max_speed: 175.0,
                     health: 250.0,
-                    max_health: 400.0,
+                    max_health: 250.0,
                     damage_invulnerability: Timer::from_seconds(1.25, TimerMode::Once),
                 },
                 animation: animation.clone(),
@@ -59,10 +58,10 @@ impl LabBossBundle {
                     transform,
                     ..default()
                 },
-                collider: Collider::cuboid(sprite_size / 2.0, sprite_size / 1.5),
+                collider: Collider::cuboid(sprite_size / 2.5, sprite_size / 2.0),
                 velocity: Velocity::default(),
                 zsort: ZSort {
-                    offset_y: -(sprite_size / 2.0),
+                    offset_y: (sprite_size),
                 },
                 sensor: Sensor,
                 hitbox: Hitbox,
@@ -79,7 +78,6 @@ impl LabBossBundle {
                 max_speed_reset: Some(150.0),
                 ..default()
             },
-            hurtbox: EnemyHurtboxDamage(6),
         }
     }
 }

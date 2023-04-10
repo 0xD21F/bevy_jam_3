@@ -219,7 +219,7 @@ fn spawn_skuller(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 2.0,
+                        inner_distance: PIXELS_PER_METER * 1.0,
                         outer_distance: PIXELS_PER_METER * 8.0,
                     },
                 )
@@ -237,7 +237,7 @@ fn spawn_skuller(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 2.0,
+                        inner_distance: PIXELS_PER_METER * 1.0,
                         outer_distance: PIXELS_PER_METER * 8.0,
                     },
                 )
@@ -403,35 +403,10 @@ fn spawn_mutant(
                         outer_distance: PIXELS_PER_METER * 6.0,
                     },
                 )
-                .trans::<Idle>(
-                    NotTrigger(Near {
-                        target,
-                        range: PIXELS_PER_METER * 20.0,
-                    }),
-                    Wander::default(),
-                )
-                .trans::<Wander>(
-                    Near {
-                        target,
-                        range: PIXELS_PER_METER * 20.0,
-                    },
-                    ApproachAndKeepDistance {
-                        target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
-                    },
-                )
                 .trans::<ApproachAndKeepDistance>(
                     NotTrigger(Near {
                         target,
-                        range: PIXELS_PER_METER * 20.0,
-                    }),
-                    Idle,
-                )
-                .trans::<ApproachAndKeepDistance>(
-                    NotTrigger(Near {
-                        target,
-                        range: PIXELS_PER_METER * 10.0,
+                        range: PIXELS_PER_METER * 5.0,
                     }),
                     FireProjectileAndKeepDistance {
                         fire_projectile: FireProjectile {
@@ -440,7 +415,7 @@ fn spawn_mutant(
                         },
                         keep_distance: ApproachAndKeepDistance {
                             target,
-                            inner_distance: PIXELS_PER_METER * 8.0,
+                            inner_distance: PIXELS_PER_METER * 4.0,
                             outer_distance: PIXELS_PER_METER * 12.0,
                         },
                     },
@@ -448,7 +423,7 @@ fn spawn_mutant(
                 .trans::<FireProjectileAndKeepDistance>(
                     Near {
                         target,
-                        range: PIXELS_PER_METER * 7.0,
+                        range: PIXELS_PER_METER * 4.0,
                     },
                     ApproachAndKeepDistance {
                         target,
@@ -717,7 +692,7 @@ fn spawn_lab_boss(
     let sprite_size = PIXELS_PER_METER * 2.0;
     let mut rng = rand::thread_rng();
 
-    let mut timer = Timer::from_seconds(1.5, TimerMode::Repeating);
+    let mut timer = Timer::from_seconds(0.9, TimerMode::Repeating);
     timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
 
     let _enemy_entity = commands
@@ -745,7 +720,7 @@ fn spawn_lab_boss(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 3.9,
+                        inner_distance: PIXELS_PER_METER * 3.5,
                         outer_distance: PIXELS_PER_METER * 5.0,
                     },
                 )
@@ -770,7 +745,7 @@ fn spawn_lab_boss(
                     }),
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
+                        inner_distance: PIXELS_PER_METER * 3.5,
                         outer_distance: PIXELS_PER_METER * 5.0,
                     },
                 ),

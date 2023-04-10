@@ -68,7 +68,7 @@ impl GoblinBundle {
                 sensor: Sensor,
                 hitbox: Hitbox,
             },
-            hurtbox: EnemyHurtboxDamage(4),
+            hurtbox: EnemyHurtboxDamage(6),
             enemy: Enemy,
             goblin: Goblin,
             name: Name::new("Goblin"),

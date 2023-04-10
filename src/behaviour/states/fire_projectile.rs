@@ -75,7 +75,7 @@ pub fn fire_projectile(
                         .insert(Velocity {
                             value: direction.truncate().normalize() * 120.0,
                         })
-                        .insert(EnemyHurtboxDamage(3))
+                        .insert(EnemyHurtboxDamage(4))
                         .insert(Lifetime {
                             timer: Timer::from_seconds(3.0, TimerMode::Once),
                         });

@@ -333,7 +333,7 @@ pub fn player_movement_system(
                 if axis_pair.xy().length() > 0.0 {
                     if axis_pair.x() > 0.0 {
                         last_facing.facing = Facing::Right;
-                    } else {
+                    } else if axis_pair.x() < 0.0 {
                         last_facing.facing = Facing::Left;
                     }
                     let input_magnitude = axis_pair.xy().length();

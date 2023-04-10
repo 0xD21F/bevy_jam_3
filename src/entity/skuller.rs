@@ -43,8 +43,8 @@ impl SkullerBundle {
             creature: CreatureBundle {
                 creature: Creature {
                     acceleration: 2048.0,
-                    friction: 1024.0,
-                    max_speed: 256.0,
+                    friction: 512.0,
+                    max_speed: 400.0,
                     health: 20.0,
                     max_health: 20.0,
                     damage_invulnerability: Timer::from_seconds(0.2, TimerMode::Once),
@@ -64,7 +64,7 @@ impl SkullerBundle {
                 sensor: Sensor,
                 hitbox: Hitbox,
             },
-            hurtbox: EnemyHurtboxDamage(2),
+            hurtbox: EnemyHurtboxDamage(3),
             enemy: Enemy,
             skuller: Skuller,
             name: Name::new("Skuller"),
