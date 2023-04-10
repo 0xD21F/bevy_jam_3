@@ -5,6 +5,10 @@ use bevy_kira_audio::AudioControl;
 use bevy_rapier2d::prelude::*;
 use rand::Rng;
 
+use crate::app_state::loading::SpriteAssets;
+use crate::game::mutation_manager::MutationManager;
+use crate::game::mutation_manager::MutationType;
+use crate::PIXELS_PER_METER;
 use crate::{
     animation::Animated,
     app_state::{
@@ -14,6 +18,8 @@ use crate::{
     game::GameState,
 };
 
+use super::player::PlayerHurtbox;
+use super::player::PlayerHurtboxDamage;
 use super::{player::Player, ZSort};
 
 #[derive(Component, Reflect)]
@@ -111,7 +117,8 @@ impl Plugin for CreaturePlugin {
             )
             .add_system(damage_invulnerability_system.in_set(OnUpdate(GameState::InLevel)))
             .add_system(deal_damage_system.in_set(OnUpdate(GameState::InLevel)))
-            .add_system(bleed_system.in_set(OnUpdate(GameState::InLevel)));
+            .add_system(bleed_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(lifetime_system.in_set(OnUpdate(AppState::InGame)));
     }
 }
 
@@ -211,9 +218,9 @@ pub fn creature_clamp_to_current_level(
                 let level_height = level.px_hei as f32;
 
                 // Calculate the min and max values for clamping
-                let min_x = level_transform.translation.x;
-                let max_x = level_transform.translation.x + level_width;
-                let min_y = level_transform.translation.y;
+                let min_x = level_transform.translation.x + 32.0;
+                let max_x = level_transform.translation.x + level_width - 32.0;
+                let min_y = level_transform.translation.y + 64.0;
                 let max_y = level_transform.translation.y + level_height - 64.0;
 
                 // Clamp the creature's position inside the level bounds
@@ -246,16 +253,49 @@ pub fn deal_damage_system(
         &mut Velocity,
         &DealDamage,
         Option<&Player>,
+        &Transform,
     )>,
     mut next_state: ResMut<NextState<AppState>>,
     sfx: Res<AudioChannel<SoundEffects>>,
     music_assets: Res<SfxAssets>,
+    sprite_assets: Res<SpriteAssets>,
+    mutation_manager: Res<MutationManager>,
 ) {
-    println!("deal damage system");
-    for (entity, mut creature, mut velocity, damage, player) in query.iter_mut() {
+    for (entity, mut creature, mut velocity, damage, player, transform) in query.iter_mut() {
         if creature.damage_invulnerability.finished() {
             creature.damage_invulnerability.reset();
             creature.health -= damage.amount;
+            if let Some(_player) = player {
+                if (mutation_manager.has_mutation(MutationType::DrySkin)) {
+                    for _ in 0..5 {
+                        let random_x = rand::thread_rng().gen_range(-1.0..1.0);
+                        let random_y = rand::thread_rng().gen_range(0.0..1.0) + 1.0; // Ensure a slightly upward direction
+
+                        let random_velocity =
+                            Vec2::new(random_x, random_y).normalize() * creature.max_speed;
+
+                        commands
+                            .spawn(SpriteBundle {
+                                texture: sprite_assets.dryskin.clone(),
+                                ..default()
+                            })
+                            .insert(PlayerHurtbox {
+                                collider: Collider::cuboid(4.0, 4.0),
+                                damage: PlayerHurtboxDamage(2),
+                                sensor: Sensor,
+                                transform: transform.clone(),
+                                ..default()
+                            })
+                            .insert(RigidBody::Dynamic)
+                            .insert(Velocity {
+                                value: random_velocity,
+                            })
+                            .insert(Lifetime {
+                                timer: Timer::from_seconds(2.5, TimerMode::Once),
+                            });
+                    }
+                }
+            }
             sfx.play(music_assets.hit.clone()).with_volume(0.5);
             if creature.health <= 0.0 {
                 // if the entity is the player, end the game
@@ -281,7 +321,7 @@ pub fn deal_damage_system(
 }
 
 #[derive(Component, Reflect)]
-pub struct Bleed{
+pub struct Bleed {
     pub damage: f32,
     pub ticks: u32,
     pub tick_timer: Timer,
@@ -293,7 +333,7 @@ pub fn bleed_system(
     time: Res<Time>,
 ) {
     for (entity, creature, mut bleed) in query.iter_mut() {
-        if(bleed.ticks <= 0) {
+        if (bleed.ticks <= 0) {
             commands.entity(entity).remove::<Bleed>();
             return;
         }
@@ -309,4 +349,21 @@ pub fn bleed_system(
             }
         }
     }
-}   
+}
+
+#[derive(Component, Reflect)]
+pub struct Lifetime {
+    pub timer: Timer,
+}
+
+pub fn lifetime_system(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut Lifetime)>,
+    time: Res<Time>,
+) {
+    for (entity, mut lifetime) in query.iter_mut() {
+        if lifetime.timer.tick(time.delta()).finished() {
+            commands.entity(entity).despawn_recursive();
+        }
+    }
+}

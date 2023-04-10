@@ -4,13 +4,14 @@ use crate::{
         loading::{SfxAssets, SoundEffects, SpriteAssets},
         AppState,
     },
-    entity::creature::{DealDamage, Bleed},
-    PIXELS_PER_METER, game::mutation_manager::{self, MutationManager, MutationType},
+    entity::creature::{Bleed, DealDamage},
+    game::mutation_manager::{self, MutationManager, MutationType},
+    PIXELS_PER_METER,
 };
 use bevy::prelude::*;
 use bevy_kira_audio::AudioChannel;
 use bevy_kira_audio::AudioControl;
-use bevy_rapier2d::prelude::{Collider, RapierContext, RigidBody, Sensor};
+use bevy_rapier2d::prelude::{Collider, GravityScale, RapierContext, RigidBody, Sensor};
 use leafwing_input_manager::{
     prelude::{ActionState, InputManagerPlugin, InputMap, VirtualDPad},
     Actionlike, InputManagerBundle,
@@ -74,7 +75,7 @@ pub struct PlayerHurtbox {
 }
 
 #[derive(Component, Default)]
-pub struct PlayerHurtboxDamage(u32);
+pub struct PlayerHurtboxDamage(pub u32);
 
 pub struct PlayerPlugin;
 
@@ -117,7 +118,10 @@ pub fn player_attacking_state_system(
     mut commands: Commands,
     sfx: Res<AudioChannel<SoundEffects>>,
     music_assets: Res<SfxAssets>,
+    mut mutation_manager: ResMut<MutationManager>,
 ) {
+    mutation_manager.add_mutation(MutationType::HeavyBones);
+    mutation_manager.add_mutation(MutationType::DrySkin);
     for (entity, mut player, action_state) in player_info.iter_mut() {
         let is_rolling = rolling_query.get(entity).is_ok();
         let is_attacking = attacking_query.get(entity).is_ok();
@@ -128,6 +132,11 @@ pub fn player_attacking_state_system(
             && action_state.just_pressed(PlayerAction::Attack)
             && !is_rolling
         {
+            let mut damage = 20;
+            if mutation_manager.has_mutation(MutationType::HeavyBones) {
+                damage = (damage as f32 * 1.2) as u32;
+            }
+
             sfx.play(music_assets.lariat.clone()).with_volume(0.5);
             commands
                 .entity(entity)
@@ -268,6 +277,7 @@ pub fn player_movement_system(
     >,
     mut next_state: ResMut<NextState<AppState>>,
     rolling_query: Query<&Rolling>,
+    mutation_manager: Res<MutationManager>,
 ) {
     for (entity, creature, mut velocity, action_state) in player_info.iter_mut() {
         // TODO: Move this literally anywhere else
@@ -289,8 +299,11 @@ pub fn player_movement_system(
                 let input_magnitude = axis_pair.xy().length();
                 let normalized_input_vector = axis_pair.xy() / input_magnitude;
 
-                let acceleration_vector =
+                let mut acceleration_vector =
                     normalized_input_vector * creature.acceleration * time.delta_seconds();
+                if mutation_manager.has_mutation(MutationType::HeavyBones) {
+                    acceleration_vector = acceleration_vector * 0.8;
+                }
                 velocity.value += acceleration_vector;
             }
             // Limit maximum speed
@@ -464,13 +477,6 @@ fn player_damage_system(
             if rapier_context.intersection_pair(player_hurtbox_entity, enemy_hitbox_entity)
                 == Some(true)
             {
-                println!(
-                    "Knockback direction: {:?}",
-                    (player_transform.translation().truncate()
-                        - enemy_transform.translation.truncate())
-                    .normalize()
-                );
-
                 // Get direction to knock enemy back
                 commands.entity(enemy_hitbox_entity).insert(DealDamage {
                     amount: player_hurtbox_damage.0 as f32,
@@ -481,7 +487,7 @@ fn player_damage_system(
                 });
 
                 // If the player has Hemophilia
-                if mutation_manager.has_mutation(MutationType::Hemophilia){
+                if mutation_manager.has_mutation(MutationType::Hemophilia) {
                     commands.entity(enemy_hitbox_entity).insert(Bleed {
                         damage: 1.0,
                         ticks: 3,
@@ -492,4 +498,3 @@ fn player_damage_system(
         }
     }
 }
-

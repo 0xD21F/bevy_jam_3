@@ -55,6 +55,8 @@ pub struct SpriteAssets {
     pub portal1: Handle<Image>,
     #[asset(path = "sprites/portal2.png")]
     pub portal2: Handle<Image>,
+    #[asset(path = "sprites/dryskin.png")]
+    pub dryskin: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

@@ -9,7 +9,7 @@ use crate::{
 
 use super::{
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
-    Enemy, ZSort, EnemyHurtboxDamage,
+    Enemy, EnemyHurtboxDamage, ZSort,
 };
 
 pub struct LabBossPlugin;
@@ -21,7 +21,9 @@ impl Plugin for LabBossPlugin {
 }
 
 #[derive(Component, Reflect, Default)]
-pub struct LabBoss;
+pub struct LabBoss {
+    pub attack_timer: Timer,
+}
 
 #[derive(Bundle)]
 pub struct LabBossBundle {
@@ -46,7 +48,7 @@ impl LabBossBundle {
                     acceleration: 1000.0,
                     friction: 500.0,
                     max_speed: 150.0,
-                    health: 400.0,
+                    health: 250.0,
                     max_health: 400.0,
                     damage_invulnerability: Timer::from_seconds(1.25, TimerMode::Once),
                 },
@@ -66,7 +68,9 @@ impl LabBossBundle {
                 hitbox: Hitbox,
             },
             enemy: Enemy,
-            lab_boss: LabBoss,
+            lab_boss: LabBoss {
+                attack_timer: Timer::from_seconds(0.05, TimerMode::Once),
+            },
             name: Name::new("LabBoss"),
             separation: Separation {
                 radius: PIXELS_PER_METER * 1.0,

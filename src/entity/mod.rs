@@ -87,7 +87,7 @@ pub struct EnemyHurtbox {
 }
 
 #[derive(Component, Default)]
-pub struct EnemyHurtboxDamage(u32);
+pub struct EnemyHurtboxDamage(pub u32);
 
 fn enemy_damage_system(
     rapier_context: Res<RapierContext>,
@@ -117,12 +117,6 @@ fn enemy_damage_system(
             if rapier_context.intersection_pair(player_hurtbox_entity, player_hitbox_entity)
                 == Some(true)
             {
-                println!(
-                    "Knockback direction: {:?}",
-                    (player_transform.translation().truncate()
-                        - enemy_transform.translation.truncate())
-                    .normalize()
-                );
                 // Get direction to knock enemy back
                 commands.entity(player_hitbox_entity).insert(DealDamage {
                     amount: player_hurtbox_damage.0 as f32,
@@ -131,16 +125,15 @@ fn enemy_damage_system(
                     .normalize_or_zero(),
                     knockback_force: 250.0,
                 });
-                
+
                 // If the player has Hemophilia
-                if mutation_manager.has_mutation(MutationType::Hemophilia){
+                if mutation_manager.has_mutation(MutationType::Hemophilia) {
                     commands.entity(player_hitbox_entity).insert(Bleed {
                         damage: 1.0,
                         ticks: 3,
                         tick_timer: Timer::from_seconds(1.5, TimerMode::Once),
                     });
                 }
-
             }
         }
     }

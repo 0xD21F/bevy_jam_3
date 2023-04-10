@@ -65,7 +65,7 @@ fn ui_setup(
         player_mutations_version: mutation_manager.player_mutations_version,
         ui_root_node: ui_entity,
         last_index: 0,
-        last_color: Color::default()
+        last_color: Color::default(),
     });
 }
 
@@ -82,10 +82,10 @@ pub struct HealthIcon;
 fn health_icon(creature_health: f32, max_health: f32) -> usize {
     // Clamp the creature's health between 0 and max_health
     let clamped_health = creature_health.min(max_health).max(0.0);
-    
+
     // Calculate the health percentage
     let health_percentage = clamped_health / max_health * 100.0;
-    
+
     // Determine which icon to display based on health_percentage
     if health_percentage > 75.0 {
         0
@@ -109,16 +109,13 @@ fn ui_system(
     mut player_query: Query<&mut Creature, With<Player>>,
 ) {
     let player = player_query.get_single_mut();
-
     // check the result of the query
     if let Ok(player) = player {
-
         let index;
         let color;
         if !player.damage_invulnerability.finished() && player.health < player.max_health {
             index = 2;
-        }
-        else {
+        } else {
             index = health_icon(player.health, player.max_health);
         }
 
@@ -126,47 +123,47 @@ fn ui_system(
             1.0 - (player.health / player.max_health),
             player.health / player.max_health,
             0.0,
-            0.8
+            0.8,
         );
 
-        if(ui_state.last_color == color && ui_state.last_index == index) {
-            return;
-        }
-        ui_state.last_index = index;
-        ui_state.last_color = color;
+        if !(ui_state.last_color == color && ui_state.last_index == index) {
+            ui_state.last_index = index;
+            ui_state.last_color = color;
 
-        // Remove existing Health icon
-        for entity in health_icon_query.iter_mut() {
-            commands.entity(entity).despawn_recursive();
-        }
+            // Remove existing Health icon
+            for entity in health_icon_query.iter_mut() {
+                commands.entity(entity).despawn_recursive();
+            }
 
-        let image = ui_assets.portrait.clone();
-        let texture_atlas = TextureAtlas::from_grid(image, 64. * Vec2::ONE, 4, 1, None, None);
-        let texture_atlas_handle = texture_atlases.add(texture_atlas);
+            let image = ui_assets.portrait.clone();
+            let texture_atlas = TextureAtlas::from_grid(image, 64. * Vec2::ONE, 4, 1, None, None);
+            let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
-        let container = ui_state.ui_root_node;
-        commands.entity(container).with_children(|parent| {
-            parent.spawn(AtlasImageBundle {
-                style: Style {
-                    size: Size::new(Val::Px(128.0), Val::Px(128.0)),
-                    margin: UiRect {
-                        left: Val::Px(64.0 as f32),
+            let container = ui_state.ui_root_node;
+            commands.entity(container).with_children(|parent| {
+                parent
+                    .spawn(AtlasImageBundle {
+                        style: Style {
+                            size: Size::new(Val::Px(128.0), Val::Px(128.0)),
+                            margin: UiRect {
+                                left: Val::Px(64.0 as f32),
+                                ..default()
+                            },
+                            position_type: PositionType::Absolute,
+                            position: UiRect {
+                                top: Val::Px(900.0),
+                                left: Val::Px(0.0),
+                                ..Default::default()
+                            },
+                            ..default()
+                        },
+                        atlas_image: UiAtlasImage::new(texture_atlas_handle.clone(), index),
                         ..default()
-                    },
-                    position_type: PositionType::Absolute,
-                    position: UiRect {
-                        top: Val::Px(900.0),
-                        left: Val::Px(0.0),
-                        ..Default::default()
-                    },
-                    ..default()
-                },
-                atlas_image: UiAtlasImage::new(texture_atlas_handle.clone(), index),
-                ..default()
-            })
-            .insert(BackgroundColor(color))
-            .insert(HealthIcon);
-        });
+                    })
+                    .insert(BackgroundColor(color))
+                    .insert(HealthIcon);
+            });
+        }
     }
 
     if ui_state.player_mutations_version == mutation_manager.player_mutations_version {

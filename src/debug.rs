@@ -8,12 +8,13 @@ use bevy_rapier2d::render::RapierDebugRenderPlugin;
 
 use crate::{
     animation::Animated,
+    behaviour::separation::Separation,
     entity::{
         creature::{Creature, Velocity},
         player::Player,
         spawner::Spawner,
     },
-    game::level_manager::*, behaviour::separation::Separation,
+    game::level_manager::*,
 };
 
 #[derive(Resource, Default)]
@@ -35,7 +36,7 @@ impl Plugin for DebugPlugin {
                 .register_type::<Animated>()
                 .register_type::<LevelManager>()
                 .register_type::<Player>()
-                .register_type::<Separation>()                
+                .register_type::<Separation>()
                 .init_resource::<DebugState>();
         }
     }

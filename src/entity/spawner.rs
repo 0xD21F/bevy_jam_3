@@ -1,7 +1,7 @@
 use std::{str::FromStr, time::Duration};
 
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::ActiveCollisionTypes;
+use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider};
 
 use rand::Rng;
 use seldom_state::prelude::{NotTrigger, StateMachine};
@@ -10,17 +10,23 @@ use crate::{
     animation::Animated,
     app_state::{loading::SpriteAssets, AppState},
     behaviour::{
-        states::{approach_and_keep_distance::ApproachAndKeepDistance, idle::Idle, wander::Wander},
+        states::{
+            approach_and_keep_distance::ApproachAndKeepDistance,
+            attack::{AttackAndKeepDistance, LabBossAttack},
+            fire_projectile::{FireProjectile, FireProjectileAndKeepDistance},
+            idle::Idle,
+            wander::Wander,
+        },
         triggers::Near,
     },
     PIXELS_PER_METER,
 };
 
-use super::adept::AdeptBundle;
 use super::creature::FacePlayer;
 use super::goblin::GoblinBundle;
 use super::lab_boss::LabBossBundle;
 use super::sorcerian::SorcerianBundle;
+use super::{adept::AdeptBundle, EnemyHurtboxDamage};
 use super::{
     creature::DontSetFacing, mutant::MutantBundle, player::Player, skuller::SkullerBundle,
     slimer::SlimerBundle,
@@ -213,8 +219,8 @@ fn spawn_skuller(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
+                        inner_distance: PIXELS_PER_METER * 2.0,
+                        outer_distance: PIXELS_PER_METER * 8.0,
                     },
                 )
                 .trans::<Idle>(
@@ -231,8 +237,8 @@ fn spawn_skuller(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
+                        inner_distance: PIXELS_PER_METER * 2.0,
+                        outer_distance: PIXELS_PER_METER * 8.0,
                     },
                 )
                 .trans::<ApproachAndKeepDistance>(
@@ -320,6 +326,28 @@ fn spawn_slimer(
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Idle,
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 4.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 2.0,
+                        outer_distance: PIXELS_PER_METER * 3.0,
+                    },
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 1.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
                 ),
         );
 }
@@ -399,6 +427,34 @@ fn spawn_mutant(
                         range: PIXELS_PER_METER * 20.0,
                     }),
                     Idle,
+                )
+                .trans::<ApproachAndKeepDistance>(
+                    NotTrigger(Near {
+                        target,
+                        range: PIXELS_PER_METER * 10.0,
+                    }),
+                    FireProjectileAndKeepDistance {
+                        fire_projectile: FireProjectile {
+                            target,
+                            projectile: Projectile::MutantProjectile,
+                        },
+                        keep_distance: ApproachAndKeepDistance {
+                            target,
+                            inner_distance: PIXELS_PER_METER * 8.0,
+                            outer_distance: PIXELS_PER_METER * 12.0,
+                        },
+                    },
+                )
+                .trans::<FireProjectileAndKeepDistance>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 7.0,
+                    },
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 2.0,
+                        outer_distance: PIXELS_PER_METER * 6.0,
+                    },
                 ),
         );
 }
@@ -432,7 +488,7 @@ fn spawn_goblin(
             Animated {
                 timer,
                 first: 0,
-                last: 0,
+                last: 1,
                 ..default()
             },
             transform,
@@ -450,8 +506,8 @@ fn spawn_goblin(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
+                        inner_distance: PIXELS_PER_METER * rng.gen_range(1.0..4.0),
+                        outer_distance: PIXELS_PER_METER * rng.gen_range(4.0..8.0),
                     },
                 )
                 .trans::<Idle>(
@@ -468,8 +524,8 @@ fn spawn_goblin(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
+                        inner_distance: PIXELS_PER_METER * rng.gen_range(1.0..4.0),
+                        outer_distance: PIXELS_PER_METER * rng.gen_range(4.0..8.0),
                     },
                 )
                 .trans::<ApproachAndKeepDistance>(
@@ -572,8 +628,8 @@ fn spawn_adept(
     let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
         sprites.adept.clone(),
         Vec2::new(64.0, 64.0),
-        1,
         2,
+        1,
         None,
         None,
     ));
@@ -582,6 +638,8 @@ fn spawn_adept(
 
     let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
     timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
+
+    let rng = rand::thread_rng();
 
     let _enemy_entity = commands
         .spawn(AdeptBundle::new(
@@ -659,7 +717,7 @@ fn spawn_lab_boss(
     let sprite_size = PIXELS_PER_METER * 2.0;
     let mut rng = rand::thread_rng();
 
-    let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
+    let mut timer = Timer::from_seconds(1.5, TimerMode::Repeating);
     timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
 
     let _enemy_entity = commands
@@ -669,7 +727,7 @@ fn spawn_lab_boss(
             Animated {
                 timer,
                 first: 0,
-                last: 2,
+                last: 1,
                 ..default()
             },
             transform,
@@ -683,38 +741,38 @@ fn spawn_lab_boss(
                 .trans::<Idle>(
                     Near {
                         target,
-                        range: PIXELS_PER_METER * 20.0,
+                        range: PIXELS_PER_METER * 150.0,
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
-                    },
-                )
-                .trans::<Idle>(
-                    NotTrigger(Near {
-                        target,
-                        range: PIXELS_PER_METER * 20.0,
-                    }),
-                    Wander::default(),
-                )
-                .trans::<Wander>(
-                    Near {
-                        target,
-                        range: PIXELS_PER_METER * 20.0,
-                    },
-                    ApproachAndKeepDistance {
-                        target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
+                        inner_distance: PIXELS_PER_METER * 3.9,
+                        outer_distance: PIXELS_PER_METER * 5.0,
                     },
                 )
                 .trans::<ApproachAndKeepDistance>(
+                    Near {
+                        target,
+                        range: PIXELS_PER_METER * 4.0,
+                    },
+                    AttackAndKeepDistance {
+                        approach_and_keep_distance: ApproachAndKeepDistance {
+                            target,
+                            inner_distance: PIXELS_PER_METER * 1.0,
+                            outer_distance: PIXELS_PER_METER * 1.5,
+                        },
+                        attack: LabBossAttack,
+                    },
+                )
+                .trans::<AttackAndKeepDistance>(
                     NotTrigger(Near {
                         target,
-                        range: PIXELS_PER_METER * 20.0,
+                        range: PIXELS_PER_METER * 3.0,
                     }),
-                    Idle,
+                    ApproachAndKeepDistance {
+                        target,
+                        inner_distance: PIXELS_PER_METER * 4.0,
+                        outer_distance: PIXELS_PER_METER * 5.0,
+                    },
                 ),
         );
 }
@@ -766,8 +824,8 @@ fn spawn_sorcerian(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
+                        inner_distance: PIXELS_PER_METER * 5.0,
+                        outer_distance: PIXELS_PER_METER * 8.0,
                     },
                 )
                 .trans::<Idle>(
@@ -784,8 +842,8 @@ fn spawn_sorcerian(
                     },
                     ApproachAndKeepDistance {
                         target,
-                        inner_distance: PIXELS_PER_METER * 4.0,
-                        outer_distance: PIXELS_PER_METER * 6.0,
+                        inner_distance: PIXELS_PER_METER * 5.0,
+                        outer_distance: PIXELS_PER_METER * 8.0,
                     },
                 )
                 .trans::<ApproachAndKeepDistance>(
@@ -796,4 +854,9 @@ fn spawn_sorcerian(
                     Idle,
                 ),
         );
+}
+
+#[derive(Reflect, Clone, Copy)]
+pub enum Projectile {
+    MutantProjectile,
 }

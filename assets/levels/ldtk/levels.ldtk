@@ -449,23 +449,89 @@
 						},
 						{
 							"__identifier": "Spawner",
-							"__grid": [16,8],
+							"__grid": [4,5],
 							"__pivot": [0,0],
 							"__tags": ["spawner"],
 							"__tile": null,
 							"__smartColor": "#EAD4AA",
-							"iid": "4a0eeac0-c640-11ed-8985-97da504737ff",
+							"iid": "e9b1fa40-c640-11ed-80b3-693cf1f4920f",
 							"width": 16,
 							"height": 16,
 							"defUid": 22,
-							"px": [512,256],
+							"px": [128,160],
 							"fieldInstances": [
-								{ "__identifier": "timer", "__value": 1, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
-								{ "__identifier": "spawn_rate", "__value": 5, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
-								{ "__identifier": "spawn_count", "__value": 5, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
+								{ "__identifier": "timer", "__value": 3, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [3] }] },
+								{ "__identifier": "spawn_rate", "__value": 3, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
+								{ "__identifier": "spawn_count", "__value": 9, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [9] }] },
 								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["Slimer"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [33,5],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "f178cab0-c640-11ed-80b3-192419cda550",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [1056,160],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 3, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [3] }] },
+								{ "__identifier": "spawn_rate", "__value": 3, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [3] }] },
+								{ "__identifier": "spawn_count", "__value": 9, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [9] }] },
+								{ "__identifier": "enemy_type", "__value": "Slimer", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Slimer"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [16,10],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "f6100610-c640-11ed-80b3-616c15f5b5ad",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [512,320],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
+								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Mutant"]
+								}] }
+							]
+						},
+						{
+							"__identifier": "Spawner",
+							"__grid": [22,10],
+							"__pivot": [0,0],
+							"__tags": ["spawner"],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "0059d7e0-c640-11ed-80b3-d344c4be74a3",
+							"width": 16,
+							"height": 16,
+							"defUid": 22,
+							"px": [704,320],
+							"fieldInstances": [
+								{ "__identifier": "timer", "__value": 5, "__type": "Float", "__tile": null, "defUid": 25, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
+								{ "__identifier": "spawn_rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 26, "realEditorValues": [] },
+								{ "__identifier": "spawn_count", "__value": 4, "__type": "Int", "__tile": null, "defUid": 27, "realEditorValues": [{ "id": "V_Int", "params": [4] }] },
+								{ "__identifier": "enemy_type", "__value": "Mutant", "__type": "LocalEnum.EnemyType", "__tile": null, "defUid": 28, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Mutant"]
 								}] }
 							]
 						}

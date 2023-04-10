@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    entity::{player::Player, spawner::Spawner, Enemy},
+    entity::{creature::Lifetime, player::Player, spawner::Spawner, Enemy},
     game::{level_manager::LevelObject, GamePlugin, GameState},
 };
 
@@ -27,6 +27,7 @@ pub fn game_teardown(
     player_query: Query<Entity, With<Player>>,
     enemy_query: Query<Entity, With<Enemy>>,
     level_objects: Query<Entity, With<LevelObject>>,
+    lifetime_objects: Query<Entity, With<Lifetime>>,
     mut next_state: ResMut<NextState<GameState>>,
 ) {
     for entity in spawner_query.iter() {
@@ -39,6 +40,9 @@ pub fn game_teardown(
         commands.entity(entity).despawn_recursive();
     }
     for entity in level_objects.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+    for entity in lifetime_objects.iter() {
         commands.entity(entity).despawn_recursive();
     }
     next_state.set(GameState::Exited);

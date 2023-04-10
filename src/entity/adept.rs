@@ -4,11 +4,13 @@ use bevy_rapier2d::prelude::{Collider, Sensor};
 use crate::{
     animation::Animated,
     behaviour::separation::{separation_system, Separation},
+    game::{level_manager::SpawnerBundle, GameState},
     PIXELS_PER_METER,
 };
 
 use super::{
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
+    spawner::{EnemyType, Spawner},
     Enemy, ZSort,
 };
 
@@ -16,12 +18,15 @@ pub struct AdeptPlugin;
 
 impl Plugin for AdeptPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(separation_system::<Adept>);
+        app.add_system(separation_system::<Adept>)
+            .add_system(summon_skullers.in_set(OnUpdate(GameState::InLevel)));
     }
 }
 
 #[derive(Component, Reflect, Default)]
-pub struct Adept;
+pub struct Adept {
+    pub skuller_timer: Timer,
+}
 
 #[derive(Bundle)]
 pub struct AdeptBundle {
@@ -65,7 +70,9 @@ impl AdeptBundle {
                 hitbox: Hitbox,
             },
             enemy: Enemy,
-            adept: Adept,
+            adept: Adept {
+                skuller_timer: Timer::from_seconds(5.0, TimerMode::Repeating),
+            },
             name: Name::new("Adept"),
             separation: Separation {
                 radius: PIXELS_PER_METER * 1.0,
@@ -74,6 +81,31 @@ impl AdeptBundle {
                 max_speed_reset: Some(150.0),
                 ..default()
             },
+        }
+    }
+}
+
+pub fn summon_skullers(
+    mut commands: Commands,
+    mut adept_query: Query<(Entity, &Transform, &mut Adept)>,
+    time: Res<Time>,
+) {
+    for (adept_entity, adept_transform, mut adept) in adept_query.iter_mut() {
+        adept.skuller_timer.tick(time.delta());
+        if adept.skuller_timer.finished() {
+            commands.spawn((
+                SpawnerBundle {
+                    spawner: Spawner {
+                        timer: Timer::from_seconds(0.5, TimerMode::Repeating),
+                        spawn_rate: 5,
+                        spawn_count: 5,
+                        enemy_type: EnemyType::Skuller,
+                    },
+                },
+                adept_transform.clone(),
+                GlobalTransform::default(),
+            ));
+            adept.skuller_timer.reset()
         }
     }
 }

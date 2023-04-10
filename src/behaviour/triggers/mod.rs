@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use rand::rngs::ThreadRng;
 use seldom_state::prelude::*;
 
 pub struct BehaviourTriggerPlugin;

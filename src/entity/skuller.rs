@@ -8,7 +8,7 @@ use crate::{
 
 use super::{
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
-    Enemy, ZSort, EnemyHurtboxDamage,
+    Enemy, EnemyHurtboxDamage, ZSort,
 };
 
 pub struct SkullerPlugin;
@@ -44,7 +44,7 @@ impl SkullerBundle {
                 creature: Creature {
                     acceleration: 2048.0,
                     friction: 1024.0,
-                    max_speed: 128.0,
+                    max_speed: 256.0,
                     health: 20.0,
                     max_health: 20.0,
                     damage_invulnerability: Timer::from_seconds(0.2, TimerMode::Once),
