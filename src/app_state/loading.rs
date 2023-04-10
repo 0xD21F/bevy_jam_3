@@ -37,6 +37,8 @@ impl Plugin for LoadingPlugin {
 pub struct SpriteAssets {
     #[asset(path = "sprites/ape.png")]
     pub player: Handle<Image>,
+    #[asset(path = "sprites/ape_rage.png")]
+    pub player_rage: Handle<Image>,
     #[asset(path = "sprites/sorcerian.png")]
     pub sorcerian: Handle<Image>,
     #[asset(path = "sprites/skuller.png")]

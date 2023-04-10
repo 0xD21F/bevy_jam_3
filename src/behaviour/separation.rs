@@ -64,8 +64,6 @@ fn separate(
 // TODO: This is O(n^2), look into using a quadtree or something similar. Performance isn't an issue until there are a lot of enemies on screen.
 pub fn separation_system<T: Component>(
     mut enemy_query: Query<(&Separation, &Transform, &mut Velocity, &T, &mut Creature)>,
-    // mut debug_shapes: ResMut<DebugShapes>,
-    // mut debug_lines: ResMut<DebugLines>,
 ) {
     // Create a vector of positions for the enemy entities.
     let mut positions: Vec<Vec2> = Vec::new();
@@ -115,24 +113,9 @@ pub fn separation_system<T: Component>(
                 1.0 / steer_away
             };
 
-            if cfg!(debug_assertions) {
-                // debug_lines.line(
-                //     transform.translation,
-                //     transform.translation + separation.extend(0.0),
-                //     0.0,
-                // );
-            }
-
             let separation_scaled = separation_vector * separation_scale;
 
             velocity.value += separation_scaled * separation.separation_strength;
-        }
-
-        if cfg!(debug_assertions) {
-            // debug_shapes
-            //     .rect()
-            //     .position(transform.translation)
-            //     .size(Vec2::new(separation.radius, separation.radius));
         }
     }
 }

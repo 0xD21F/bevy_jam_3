@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::transform::commands;
 use bevy_ecs_ldtk::LdtkLevel;
 use bevy_kira_audio::AudioChannel;
 use bevy_kira_audio::AudioControl;
@@ -18,8 +19,11 @@ use crate::{
     game::GameState,
 };
 
+use super::player::Facing;
+use super::player::LastFacing;
 use super::player::PlayerHurtbox;
 use super::player::PlayerHurtboxDamage;
+use super::player::Rage;
 use super::{player::Player, ZSort};
 
 #[derive(Component, Reflect)]
@@ -105,6 +109,7 @@ impl Plugin for CreaturePlugin {
             .add_system(apply_velocity_system)
             .add_system(z_ordering_system)
             .add_system(set_sprite_facing_system)
+            .add_system(set_player_facing_system.in_set(OnUpdate(GameState::InLevel)))
             .add_system(
                 creature_clamp_to_current_level
                     .in_set(OnUpdate(GameState::InLevel))
@@ -118,6 +123,10 @@ impl Plugin for CreaturePlugin {
             .add_system(damage_invulnerability_system.in_set(OnUpdate(GameState::InLevel)))
             .add_system(deal_damage_system.in_set(OnUpdate(GameState::InLevel)))
             .add_system(bleed_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(knockback_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(heal_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(change_color_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(rage_system.in_set(OnUpdate(GameState::InLevel)))
             .add_system(lifetime_system.in_set(OnUpdate(AppState::InGame)));
     }
 }
@@ -127,7 +136,6 @@ pub fn apply_velocity_system(time: Res<Time>, mut player_info: Query<(&Velocity,
         let delta = velocity.value * time.delta_seconds();
         transform.translation.x += delta.x;
         transform.translation.y += delta.y;
-
         if delta == Vec2::ZERO {
             transform.translation.x = transform.translation.x.round();
             transform.translation.y = transform.translation.y.round();
@@ -179,9 +187,18 @@ pub fn set_sprite_facing_system(
                     sprite.flip_x = true;
                 }
             }
-        } else if velocity.value.x > 0.0 {
+        }
+    }
+}
+
+pub fn set_player_facing_system(
+    mut query: Query<(&mut TextureAtlasSprite), With<Player>>,
+    last_facing: Res<LastFacing>,
+) {
+    for (mut sprite) in query.iter_mut() {
+        if let Facing::Right = last_facing.facing {
             sprite.flip_x = false;
-        } else if velocity.value.x < 0.0 {
+        } else if let Facing::Left = last_facing.facing {
             sprite.flip_x = true;
         }
     }
@@ -245,6 +262,41 @@ pub fn damage_invulnerability_system(
     }
 }
 
+pub fn rage_system(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut Handle<TextureAtlas>, &mut Rage)>,
+    time: Res<Time>,
+    sprites: Res<SpriteAssets>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+) {
+    for (entity, mut sprite, mut rage) in query.iter_mut() {
+        let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+            sprites.player_rage.clone(),
+            Vec2::new(128.0, 80.0),
+            4,
+            1,
+            None,
+            None,
+        ));
+        *sprite = texture_atlas_handle;
+
+        rage.timer.tick(time.delta());
+        if rage.timer.finished() {
+            // Remove Rage component
+            commands.entity(entity).remove::<Rage>();
+            let texture_atlas_handle = texture_atlases.add(TextureAtlas::from_grid(
+                sprites.player.clone(),
+                Vec2::new(128.0, 80.0),
+                4,
+                1,
+                None,
+                None,
+            ));
+            *sprite = texture_atlas_handle;
+        }
+    }
+}
+
 pub fn deal_damage_system(
     mut commands: Commands,
     mut query: Query<(
@@ -255,24 +307,30 @@ pub fn deal_damage_system(
         Option<&Player>,
         &Transform,
     )>,
+    mut rage_query: Query<&Rage, With<Player>>,
     mut next_state: ResMut<NextState<AppState>>,
     sfx: Res<AudioChannel<SoundEffects>>,
     music_assets: Res<SfxAssets>,
     sprite_assets: Res<SpriteAssets>,
-    mutation_manager: Res<MutationManager>,
+    mut mutation_manager: ResMut<MutationManager>,
 ) {
+    mutation_manager.add_mutation(MutationType::Dizziness);
+    mutation_manager.add_mutation(MutationType::Rage);
+    mutation_manager.add_mutation(MutationType::Drowziness);
     for (entity, mut creature, mut velocity, damage, player, transform) in query.iter_mut() {
         if creature.damage_invulnerability.finished() {
             creature.damage_invulnerability.reset();
-            creature.health -= damage.amount;
+            let mut damage_amount = damage.amount;
+            let mut knockback_multiplier = 1.0;
+            let mut knockback_duration = 0.5;
+            // If it's the player being hit
             if let Some(_player) = player {
                 if mutation_manager.has_mutation(MutationType::DrySkin) {
                     for _ in 0..5 {
                         let random_x = rand::thread_rng().gen_range(-1.0..1.0);
                         let random_y = rand::thread_rng().gen_range(0.0..1.0) + 1.0; // Ensure a slightly upward direction
 
-                        let random_velocity =
-                            Vec2::new(random_x, random_y).normalize() * creature.max_speed;
+                        let random_velocity = Vec2::new(random_x, random_y).normalize() * 128.0;
 
                         commands
                             .spawn(SpriteBundle {
@@ -281,7 +339,7 @@ pub fn deal_damage_system(
                             })
                             .insert(PlayerHurtbox {
                                 collider: Collider::cuboid(4.0, 4.0),
-                                damage: PlayerHurtboxDamage(2),
+                                damage: PlayerHurtboxDamage(15),
                                 sensor: Sensor,
                                 transform: *transform,
                                 ..default()
@@ -295,7 +353,38 @@ pub fn deal_damage_system(
                             });
                     }
                 }
+
+                knockback_duration = 0.1;
+                if mutation_manager.has_mutation(MutationType::RubberBody) {
+                    knockback_multiplier = 8.0;
+                    knockback_duration = 0.05;
+                }
+
+                if mutation_manager.has_mutation(MutationType::BrittleBones) {
+                    damage_amount += 2.0;
+                }
+
+                if mutation_manager.has_mutation(MutationType::Rage) {
+                    let mut rng = rand::thread_rng();
+                    let random: f32 = rng.gen_range(0.0..1.0);
+                    if random < 0.2 {
+                        commands.entity(entity).insert(Rage {
+                            timer: Timer::from_seconds(2.5, TimerMode::Once),
+                        });
+                    }
+                }
+            } else {
+                if mutation_manager.has_mutation(MutationType::Repulsion) {
+                    knockback_multiplier = 8.0;
+                }
+                if let Ok(_rage) = rage_query.get_single() {
+                    damage_amount *= 2.0;
+                    knockback_duration *= 2.0;
+                }
             }
+
+            creature.health -= damage_amount;
+
             sfx.play(music_assets.hit.clone()).with_volume(0.5);
             if creature.health <= 0.0 {
                 // if the entity is the player, end the game
@@ -313,10 +402,32 @@ pub fn deal_damage_system(
                     commands.entity(entity).despawn_recursive();
                 }
             } else {
-                velocity.value = damage.knockback_direction * damage.knockback_force;
+                let knockback =
+                    damage.knockback_direction * damage.knockback_force * knockback_multiplier;
+                commands.entity(entity).insert(Knockback {
+                    timer: Timer::from_seconds(knockback_duration, TimerMode::Once),
+                });
+                velocity.value = knockback;
             }
         }
         commands.entity(entity).remove::<DealDamage>();
+    }
+}
+
+#[derive(Component, Reflect)]
+pub struct Knockback {
+    pub timer: Timer,
+}
+
+pub fn knockback_system(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut Velocity, &mut Knockback)>,
+    time: Res<Time>,
+) {
+    for (entity, mut velocity, mut knockback) in query.iter_mut() {
+        if knockback.timer.tick(time.delta()).finished() {
+            commands.entity(entity).remove::<Knockback>();
+        }
     }
 }
 
@@ -325,6 +436,49 @@ pub struct Bleed {
     pub damage: f32,
     pub ticks: u32,
     pub tick_timer: Timer,
+}
+
+#[derive(Component, Reflect)]
+pub struct Heal {
+    pub amount: f32,
+    pub ticks: u32,
+    pub tick_timer: Timer,
+}
+
+pub fn heal_system(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut Creature, &mut Heal)>,
+    time: Res<Time>,
+) {
+    for (entity, mut creature, mut heal) in query.iter_mut() {
+        if heal.ticks <= 0 {
+            commands.entity(entity).remove::<Heal>();
+            return;
+        }
+        if heal.tick_timer.tick(time.delta()).finished() {
+            creature.health = (creature.health + heal.amount).min(creature.max_health);
+            heal.tick_timer.reset();
+            heal.ticks -= 1;
+            commands.entity(entity).insert(ChangeColor {
+                color: Color::GREEN,
+                timer: Timer::from_seconds(0.1, TimerMode::Once),
+            });
+        }
+    }
+}
+
+pub fn change_color_system(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut TextureAtlasSprite, &mut ChangeColor)>,
+    time: Res<Time>,
+) {
+    for (entity, mut sprite, mut change_color) in query.iter_mut() {
+        if change_color.timer.tick(time.delta()).finished() {
+            commands.entity(entity).remove::<ChangeColor>();
+            return;
+        }
+        sprite.color = change_color.color;
+    }
 }
 
 pub fn bleed_system(
@@ -349,6 +503,12 @@ pub fn bleed_system(
             bleed.ticks -= 1;
         }
     }
+}
+
+#[derive(Component, Reflect)]
+pub struct ChangeColor {
+    color: Color,
+    timer: Timer,
 }
 
 #[derive(Component, Reflect)]

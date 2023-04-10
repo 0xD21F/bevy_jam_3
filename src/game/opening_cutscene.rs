@@ -105,7 +105,7 @@ pub fn opening_cutscene_system(
     cutscene_assets: Res<CutsceneAssets>,
     time: Res<Time>,
 ) {
-    if keyboard_input.any_pressed([KeyCode::Space]) {
+    if keyboard_input.just_pressed(KeyCode::Space) {
         next_state.set(GameState::SetupLevelManager);
     }
 

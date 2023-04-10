@@ -11,15 +11,18 @@ use crate::{
 use bevy::prelude::*;
 use bevy_kira_audio::AudioChannel;
 use bevy_kira_audio::AudioControl;
-use bevy_rapier2d::prelude::{Collider, GravityScale, RapierContext, RigidBody, Sensor};
+use bevy_rapier2d::prelude::{
+    ActiveCollisionTypes, Collider, GravityScale, RapierContext, RigidBody, Sensor,
+};
 use leafwing_input_manager::{
     prelude::{ActionState, InputManagerPlugin, InputMap, VirtualDPad},
     Actionlike, InputManagerBundle,
 };
+use rand::Rng;
 use seldom_state::prelude::InputTriggerPlugin;
 
 use super::{
-    creature::{Creature, CreatureBundle, Velocity, Lifetime},
+    creature::{Creature, CreatureBundle, Heal, Knockback, Lifetime, Velocity},
     Enemy, ZSort,
 };
 
@@ -91,6 +94,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugin(InputManagerPlugin::<PlayerAction>::default())
             .add_plugin(InputTriggerPlugin::<PlayerAction>::default())
+            .insert_resource(LastFacing::default())
             .add_system(spawn_player.in_schedule(OnEnter(AppState::InGame)))
             .add_system(player_movement_system.in_set(OnUpdate(AppState::InGame)))
             .add_system(player_rolling_state_system.in_set(OnUpdate(AppState::InGame)))
@@ -98,7 +102,8 @@ impl Plugin for PlayerPlugin {
             .add_system(player_attacking_state_system.in_set(OnUpdate(AppState::InGame)))
             .add_system(player_attacking_behavior_system.in_set(OnUpdate(AppState::InGame)))
             .add_system(player_animation_system.in_set(OnUpdate(AppState::InGame)))
-            .add_system(player_damage_system.in_set(OnUpdate(AppState::InGame)));
+            .add_system(player_damage_system.in_set(OnUpdate(AppState::InGame)))
+            .add_system(player_check_mutation.in_set(OnUpdate(AppState::InGame)));
     }
 }
 
@@ -120,22 +125,38 @@ pub fn player_attacking_state_system(
     music_assets: Res<SfxAssets>,
     mut mutation_manager: ResMut<MutationManager>,
 ) {
+    mutation_manager.add_mutation(MutationType::Cyclone);
+    mutation_manager.add_mutation(MutationType::BowlingBall);
     for (entity, mut player, action_state) in player_info.iter_mut() {
         let is_rolling = rolling_query.get(entity).is_ok();
         let is_attacking = attacking_query.get(entity).is_ok();
 
         player.attack_cooldown.tick(time.delta());
+
+        let mut action_state_active = action_state.just_pressed(PlayerAction::Attack);
+        // If cyclone mutation, tick the cooldown twice as fast, and allow the player to hold the button to spin
+        if mutation_manager.has_mutation(MutationType::Cyclone) {
+            player.attack_cooldown.tick(time.delta());
+            action_state_active = action_state.pressed(PlayerAction::Attack);
+        }
+
         // If the attack cooldown is finished, and the attack button is just pressed, and the player is not rolling, start attacking
-        if player.attack_cooldown.finished()
-            && action_state.just_pressed(PlayerAction::Attack)
+        // If the player has the bowling ball mutation, allow them to attack while rolling
+        if (player.attack_cooldown.finished()
+            && action_state_active
             && !is_rolling
+            && !is_attacking)
+            || (mutation_manager.has_mutation(MutationType::BowlingBall)
+                && action_state_active
+                && is_rolling
+                && !is_attacking)
         {
             let mut damage = 20;
             if mutation_manager.has_mutation(MutationType::HeavyBones) {
                 damage = (damage as f32 * 1.2) as u32;
             }
 
-            sfx.play(music_assets.lariat.clone()).with_volume(0.5);
+            sfx.play(music_assets.lariat.clone()).with_volume(0.35);
             commands
                 .entity(entity)
                 .insert(Attacking)
@@ -151,7 +172,7 @@ pub fn player_attacking_state_system(
                             transform: Transform::from_xyz(0.0, PIXELS_PER_METER * 0.5, 0.0),
                             ..default()
                         },
-                        RigidBody::Fixed,
+                        ActiveCollisionTypes::STATIC_STATIC,
                     ));
                 });
             player.attack_cooldown.reset();
@@ -198,10 +219,10 @@ fn player_animation_system(
         let is_attacking = attacking_query.get(entity).is_ok();
 
         // Determine the player's current animation state based on their rolling and attacking status
-        let current_animation_state = if is_rolling {
-            PlayerAnimationState::Rolling
-        } else if is_attacking {
+        let current_animation_state = if is_attacking {
             PlayerAnimationState::Attacking
+        } else if is_rolling {
+            PlayerAnimationState::Rolling
         } else {
             PlayerAnimationState::Idle
         };
@@ -231,16 +252,16 @@ impl PlayerAnimationState {
                 last: 0,
                 ..default()
             },
-            PlayerAnimationState::Rolling => Animated {
-                timer: Timer::from_seconds(0.1, TimerMode::Repeating),
-                first: 1, // Replace with the first frame of the rolling animation
-                last: 1,  // Replace with the last frame of the rolling animation
-                ..default()
-            },
             PlayerAnimationState::Attacking => Animated {
                 timer: Timer::from_seconds(0.1, TimerMode::Repeating),
                 first: 2, // Replace with the first frame of the attacking animation
                 last: 3,  // Replace with the last frame of the attacking animation
+                ..default()
+            },
+            PlayerAnimationState::Rolling => Animated {
+                timer: Timer::from_seconds(0.1, TimerMode::Repeating),
+                first: 1, // Replace with the first frame of the rolling animation
+                last: 1,  // Replace with the last frame of the rolling animation
                 ..default()
             },
         }
@@ -266,18 +287,37 @@ pub struct Attacking;
 #[derive(Default, Component)]
 pub struct Immune;
 
+#[derive(Default)]
+pub enum Facing {
+    #[default]
+    Left,
+    Right,
+}
+
+#[derive(Default, Resource)]
+pub struct LastFacing {
+    pub facing: Facing,
+}
+
 pub fn player_movement_system(
     time: Res<Time>,
     keyboard_input: Res<Input<KeyCode>>,
     mut player_info: Query<
-        (Entity, &Creature, &mut Velocity, &ActionState<PlayerAction>),
+        (
+            Entity,
+            &Creature,
+            &mut Velocity,
+            &ActionState<PlayerAction>,
+            Option<&Knockback>,
+        ),
         With<Player>,
     >,
     mut next_state: ResMut<NextState<AppState>>,
     rolling_query: Query<&Rolling>,
     mutation_manager: Res<MutationManager>,
+    mut last_facing: ResMut<LastFacing>,
 ) {
-    for (entity, creature, mut velocity, action_state) in player_info.iter_mut() {
+    for (entity, creature, mut velocity, action_state, knockback) in player_info.iter_mut() {
         // TODO: Move this literally anywhere else
         let quit = keyboard_input.any_pressed([KeyCode::Escape]);
         if quit {
@@ -292,20 +332,41 @@ pub fn player_movement_system(
                 Some(axis_pair) => axis_pair,
                 None => continue,
             };
+            // accept input if not being knocked back
+            if let None = knockback {
+                if axis_pair.xy().length() > 0.0 {
+                    if (axis_pair.x() > 0.0) {
+                        last_facing.facing = Facing::Right;
+                    } else {
+                        last_facing.facing = Facing::Left;
+                    }
+                    let input_magnitude = axis_pair.xy().length();
+                    let mut normalized_input_vector = axis_pair.xy() / input_magnitude;
 
-            if axis_pair.xy().length() > 0.0 {
-                let input_magnitude = axis_pair.xy().length();
-                let normalized_input_vector = axis_pair.xy() / input_magnitude;
+                    if mutation_manager.has_mutation(MutationType::Dizziness) {
+                        // Add a small amount of random movement to the input vector
+                        let random_vector = Vec2::new(
+                            rand::thread_rng().gen_range(-0.2..0.2),
+                            rand::thread_rng().gen_range(-0.2..0.2),
+                        );
+                        let normalized_random_vector = random_vector.normalize();
+                        normalized_input_vector += normalized_random_vector;
+                    }
 
-                let mut acceleration_vector =
-                    normalized_input_vector * creature.acceleration * time.delta_seconds();
-                if mutation_manager.has_mutation(MutationType::HeavyBones) {
-                    acceleration_vector = acceleration_vector * 0.8;
+                    let mut acceleration_vector =
+                        normalized_input_vector * creature.acceleration * time.delta_seconds();
+                    if mutation_manager.has_mutation(MutationType::HeavyBones) {
+                        acceleration_vector = acceleration_vector * 0.8;
+                    }
+                    velocity.value += acceleration_vector;
                 }
-                velocity.value += acceleration_vector;
+                let mut max_speed = creature.max_speed;
+                if mutation_manager.has_mutation(MutationType::Drowziness) {
+                    max_speed = creature.max_speed * rand::thread_rng().gen_range(0.5..1.7);
+                }
+
+                velocity.value = velocity.value.clamp_length_max(max_speed);
             }
-            // Limit maximum speed
-            velocity.value = velocity.value.clamp_length_max(creature.max_speed);
         }
     }
 }
@@ -318,6 +379,7 @@ pub fn player_rolling_state_system(
     immune_query: Query<&Immune>,
     mut commands: Commands,
     hurtbox_query: Query<Entity, With<PlayerHurtboxDamage>>,
+    mutation_manager: Res<MutationManager>,
 ) {
     for (entity, mut player, _velocity, action_state) in player_info.iter_mut() {
         let is_rolling = rolling_query.get(entity).is_ok();
@@ -343,7 +405,8 @@ pub fn player_rolling_state_system(
             player.roll_timer.reset();
             player.roll_invulnerable_timer.reset();
             player.roll_cooldown_timer.reset();
-            if is_attacking {
+            // If player has bowling ball mutation, don't despawn the hurtbox
+            if is_attacking && !mutation_manager.has_mutation(MutationType::BowlingBall) {
                 commands.entity(entity).remove::<Attacking>();
                 hurtbox_query.iter().for_each(|hurtbox_entity| {
                     commands.entity(hurtbox_entity).despawn_recursive();
@@ -468,6 +531,7 @@ fn player_damage_system(
     mut commands: Commands,
     mut enemy_hitbox_query: Query<(Entity, &Transform, &mut Creature, &Collider), With<Enemy>>,
     mut player_hurtbox_query: Query<(Entity, &GlobalTransform, &Collider, &PlayerHurtboxDamage)>,
+    mut player_query: Query<(Entity), With<Player>>,
     mutation_manager: Res<MutationManager>,
 ) {
     for (enemy_hitbox_entity, enemy_transform, _enemy_creature, _enemy_collider) in
@@ -479,7 +543,8 @@ fn player_damage_system(
             if rapier_context.intersection_pair(player_hurtbox_entity, enemy_hitbox_entity)
                 == Some(true)
             {
-                // Get direction to knock enemy back
+                let player_entity = player_query.get_single();
+
                 commands.entity(enemy_hitbox_entity).insert(DealDamage {
                     amount: player_hurtbox_damage.0 as f32,
                     knockback_direction: (enemy_transform.translation.truncate()
@@ -488,15 +553,75 @@ fn player_damage_system(
                     knockback_force: 250.0,
                 });
 
-                // If the player has Hemophilia
                 if mutation_manager.has_mutation(MutationType::Hemophilia) {
+                    let damage = (player_hurtbox_damage.0 as f32 / 10.0).ceil() as u32;
+
                     commands.entity(enemy_hitbox_entity).insert(Bleed {
-                        damage: 1.0,
+                        damage: damage as f32,
                         ticks: 3,
                         tick_timer: Timer::from_seconds(1.5, TimerMode::Once),
                     });
+                }
+
+                if let Ok(player_entity) = player_entity {
+                    // If the player has Vampirism
+                    if mutation_manager.has_mutation(MutationType::Vampirism) {
+                        commands.entity(player_entity).insert(Heal {
+                            amount: 1.0,
+                            ticks: 3,
+                            tick_timer: Timer::from_seconds(1.0, TimerMode::Once),
+                        });
+                    }
                 }
             }
         }
     }
 }
+
+#[derive(Default, Component)]
+pub struct Rage {
+    pub timer: Timer,
+}
+
+pub fn player_check_mutation(
+    mut commands: Commands,
+    mut player_query: Query<(
+        Entity,
+        &mut Transform,
+        &mut Player,
+        &mut Creature,
+        Option<&Shrink>,
+        Option<&Grow>,
+        Option<&ShrinkGrow>,
+    )>,
+    mutation_manager: Res<MutationManager>,
+) {
+    for (player_entity, mut transform, mut player, mut creature, shrink, grow, shrinkgrow) in
+        player_query.iter_mut()
+    {
+        if mutation_manager.has_mutation(MutationType::Grow) && grow.is_none() {
+            commands.entity(player_entity).insert(Grow);
+            transform.scale = Vec3::splat(1.25);
+        }
+        if mutation_manager.has_mutation(MutationType::Shrink) && shrink.is_none() {
+            commands.entity(player_entity).insert(Shrink);
+            transform.scale = Vec3::splat(0.75);
+        }
+
+        // If player has both shrink and grow, set to default size
+        if mutation_manager.has_mutation(MutationType::Grow)
+            && mutation_manager.has_mutation(MutationType::Shrink)
+            && shrinkgrow.is_none()
+        {
+            commands.entity(player_entity).insert(ShrinkGrow);
+            transform.scale = Vec3::splat(1.0);
+        }
+    }
+}
+
+#[derive(Component)]
+pub struct Grow;
+#[derive(Component)]
+pub struct Shrink;
+#[derive(Component)]
+pub struct ShrinkGrow;

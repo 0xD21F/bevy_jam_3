@@ -73,9 +73,9 @@ impl GoblinBundle {
             goblin: Goblin,
             name: Name::new("Goblin"),
             separation: Separation {
-                radius: PIXELS_PER_METER * 3.0,
+                radius: PIXELS_PER_METER * 2.0,
                 separation_force: 1000.0,
-                max_speed_during_separation: Some(1280.0),
+                max_speed_during_separation: Some(512.0),
                 max_speed_reset: Some(max_speed),
                 ..default()
             },

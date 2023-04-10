@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::entity::creature::{Creature, Velocity};
+use crate::entity::creature::{Creature, Knockback, Velocity};
 
 // Entities in the `ApproachAndKeepDistance` state should move towards the given entity if they are
 // too far away, and move away if they are too close
@@ -15,12 +15,18 @@ pub struct ApproachAndKeepDistance {
 
 pub fn approach_and_keep_distance(
     transforms: Query<&Transform>,
-    mut approach_query: Query<(Entity, &mut Velocity, &Creature, &ApproachAndKeepDistance)>,
+    mut approach_query: Query<(
+        Entity,
+        &mut Velocity,
+        &Creature,
+        &ApproachAndKeepDistance,
+        Option<&Knockback>,
+    )>,
     time: Res<Time>,
 ) {
     let mut rng = rand::thread_rng();
 
-    for (entity, mut velocity, creature, approach) in approach_query.iter_mut() {
+    for (entity, mut velocity, creature, approach, knockback) in approach_query.iter_mut() {
         {
             let target_position = transforms
                 .get(approach.target)
@@ -57,8 +63,10 @@ pub fn approach_and_keep_distance(
 
             // apply max_speed
             let speed = new_velocity.length();
-            if speed > creature.max_speed {
-                new_velocity *= creature.max_speed / speed;
+            if let None = knockback {
+                if speed > creature.max_speed {
+                    new_velocity *= creature.max_speed / speed;
+                }
             }
 
             velocity.value = new_velocity;
