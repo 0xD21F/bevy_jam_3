@@ -38,8 +38,8 @@ impl Plugin for UiPlugin {
 fn ui_setup(
     mut commands: Commands,
     mutation_manager: Res<MutationManager>,
-    ui_assets: Res<UiAssets>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    _ui_assets: Res<UiAssets>,
+    _texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let ui_entity = commands
         .spawn(NodeBundle {
@@ -112,14 +112,14 @@ fn ui_system(
     // check the result of the query
     if let Ok(player) = player {
         let index;
-        let color;
+
         if !player.damage_invulnerability.finished() && player.health < player.max_health {
             index = 2;
         } else {
             index = health_icon(player.health, player.max_health);
         }
 
-        color = Color::rgba(
+        let color = Color::rgba(
             1.0 - (player.health / player.max_health),
             player.health / player.max_health,
             0.0,
@@ -146,7 +146,7 @@ fn ui_system(
                         style: Style {
                             size: Size::new(Val::Px(128.0), Val::Px(128.0)),
                             margin: UiRect {
-                                left: Val::Px(64.0 as f32),
+                                left: Val::Px(64.0_f32),
                                 ..default()
                             },
                             position_type: PositionType::Absolute,

@@ -1,7 +1,7 @@
 use std::{str::FromStr, time::Duration};
 
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider};
+use bevy_rapier2d::prelude::ActiveCollisionTypes;
 
 use rand::Rng;
 use seldom_state::prelude::{NotTrigger, StateMachine};
@@ -22,11 +22,11 @@ use crate::{
     PIXELS_PER_METER,
 };
 
+use super::adept::AdeptBundle;
 use super::creature::FacePlayer;
 use super::goblin::GoblinBundle;
 use super::lab_boss::LabBossBundle;
 use super::sorcerian::SorcerianBundle;
-use super::{adept::AdeptBundle, EnemyHurtboxDamage};
 use super::{
     creature::DontSetFacing, mutant::MutantBundle, player::Player, skuller::SkullerBundle,
     slimer::SlimerBundle,
@@ -639,7 +639,7 @@ fn spawn_adept(
     let mut timer = Timer::from_seconds(0.40, TimerMode::Repeating);
     timer.tick(Duration::from_millis(rng.gen_range(0..=150)));
 
-    let rng = rand::thread_rng();
+    let _rng = rand::thread_rng();
 
     let _enemy_entity = commands
         .spawn(AdeptBundle::new(

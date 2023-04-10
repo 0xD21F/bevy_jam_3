@@ -90,7 +90,7 @@ pub fn summon_skullers(
     mut adept_query: Query<(Entity, &Transform, &mut Adept)>,
     time: Res<Time>,
 ) {
-    for (adept_entity, adept_transform, mut adept) in adept_query.iter_mut() {
+    for (_adept_entity, adept_transform, mut adept) in adept_query.iter_mut() {
         adept.skuller_timer.tick(time.delta());
         if adept.skuller_timer.finished() {
             commands.spawn((
@@ -102,7 +102,7 @@ pub fn summon_skullers(
                         enemy_type: EnemyType::Skuller,
                     },
                 },
-                adept_transform.clone(),
+                *adept_transform,
                 GlobalTransform::default(),
             ));
             adept.skuller_timer.reset()

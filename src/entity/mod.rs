@@ -12,22 +12,15 @@ pub mod sorcerian;
 pub mod spawner;
 
 use bevy::{app::PluginGroupBuilder, prelude::*};
-use bevy_kira_audio::AudioChannel;
-use bevy_kira_audio::AudioControl;
+
 use bevy_rapier2d::prelude::{Collider, RapierContext, Sensor};
 use skuller::SkullerPlugin;
 
 use crate::entity::creature::Bleed;
-use crate::game::mutation_manager;
+
 use crate::game::mutation_manager::MutationManager;
 use crate::game::mutation_manager::MutationType;
-use crate::{
-    app_state::{
-        loading::{SfxAssets, SoundEffects},
-        AppState,
-    },
-    entity::creature::DealDamage,
-};
+use crate::{app_state::AppState, entity::creature::DealDamage};
 
 use self::{
     adept::AdeptPlugin,
@@ -37,7 +30,7 @@ use self::{
     level_exit::LevelExitPlugin,
     level_start::LevelStartPlugin,
     mutant::MutantPlugin,
-    player::{Immune, Player, PlayerHurtboxDamage},
+    player::{Immune, Player},
     slimer::SlimerPlugin,
     sorcerian::SorcerianPlugin,
 };

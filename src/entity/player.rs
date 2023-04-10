@@ -5,13 +5,13 @@ use crate::{
         AppState,
     },
     entity::creature::{Bleed, DealDamage},
-    game::mutation_manager::{self, MutationManager, MutationType},
+    game::mutation_manager::{MutationManager, MutationType},
     PIXELS_PER_METER,
 };
 use bevy::prelude::*;
 use bevy_kira_audio::AudioChannel;
 use bevy_kira_audio::AudioControl;
-use bevy_rapier2d::prelude::{Collider, GravityScale, RapierContext, RigidBody, Sensor};
+use bevy_rapier2d::prelude::{Collider, RapierContext, RigidBody, Sensor};
 use leafwing_input_manager::{
     prelude::{ActionState, InputManagerPlugin, InputMap, VirtualDPad},
     Actionlike, InputManagerBundle,
@@ -302,7 +302,7 @@ pub fn player_movement_system(
                 let mut acceleration_vector =
                     normalized_input_vector * creature.acceleration * time.delta_seconds();
                 if mutation_manager.has_mutation(MutationType::HeavyBones) {
-                    acceleration_vector = acceleration_vector * 0.8;
+                    acceleration_vector *= 0.8;
                 }
                 velocity.value += acceleration_vector;
             }

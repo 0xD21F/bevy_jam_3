@@ -1,13 +1,12 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider};
-use rand::Rng;
 
 use crate::{
     app_state::loading::SpriteAssets,
     entity::{
         creature::{Creature, Lifetime, Velocity},
         spawner::Projectile,
-        EnemyHurtbox, EnemyHurtboxDamage,
+        EnemyHurtboxDamage,
     },
     PIXELS_PER_METER,
 };
@@ -40,11 +39,11 @@ pub fn fire_projectile(
         &Transform,
         &FireProjectile,
     )>,
-    time: Res<Time>,
+    _time: Res<Time>,
     sprite_assets: Res<SpriteAssets>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    for (entity, mut velocity, creature, transform, projectile) in projectile_query.iter_mut() {
+    for (entity, _velocity, _creature, transform, projectile) in projectile_query.iter_mut() {
         // Get the target entity's Transform
         if let Ok(target_transform) = transforms.get(projectile.target) {
             // Calculate the direction vector from the entity to the target
@@ -65,7 +64,7 @@ pub fn fire_projectile(
                     let sprite = SpriteSheetBundle {
                         texture_atlas: texture_atlas_handle,
                         sprite: TextureAtlasSprite::new(3),
-                        transform: transform.clone(),
+                        transform: *transform,
                         ..default()
                     };
 

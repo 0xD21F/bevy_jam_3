@@ -8,7 +8,7 @@ use rand::Rng;
 use crate::app_state::loading::SpriteAssets;
 use crate::game::mutation_manager::MutationManager;
 use crate::game::mutation_manager::MutationType;
-use crate::PIXELS_PER_METER;
+
 use crate::{
     animation::Animated,
     app_state::{
@@ -266,7 +266,7 @@ pub fn deal_damage_system(
             creature.damage_invulnerability.reset();
             creature.health -= damage.amount;
             if let Some(_player) = player {
-                if (mutation_manager.has_mutation(MutationType::DrySkin)) {
+                if mutation_manager.has_mutation(MutationType::DrySkin) {
                     for _ in 0..5 {
                         let random_x = rand::thread_rng().gen_range(-1.0..1.0);
                         let random_y = rand::thread_rng().gen_range(0.0..1.0) + 1.0; // Ensure a slightly upward direction
@@ -283,7 +283,7 @@ pub fn deal_damage_system(
                                 collider: Collider::cuboid(4.0, 4.0),
                                 damage: PlayerHurtboxDamage(2),
                                 sensor: Sensor,
-                                transform: transform.clone(),
+                                transform: *transform,
                                 ..default()
                             })
                             .insert(RigidBody::Dynamic)
@@ -333,20 +333,20 @@ pub fn bleed_system(
     time: Res<Time>,
 ) {
     for (entity, creature, mut bleed) in query.iter_mut() {
-        if (bleed.ticks <= 0) {
+        if bleed.ticks <= 0 {
             commands.entity(entity).remove::<Bleed>();
             return;
         }
-        if creature.damage_invulnerability.finished() {
-            if bleed.tick_timer.tick(time.delta()).finished() {
-                commands.entity(entity).insert(DealDamage {
-                    amount: bleed.damage as f32,
-                    knockback_direction: Vec2::ZERO,
-                    knockback_force: 0.0,
-                });
-                bleed.tick_timer.reset();
-                bleed.ticks = bleed.ticks - 1;
-            }
+        if creature.damage_invulnerability.finished()
+            && bleed.tick_timer.tick(time.delta()).finished()
+        {
+            commands.entity(entity).insert(DealDamage {
+                amount: bleed.damage,
+                knockback_direction: Vec2::ZERO,
+                knockback_force: 0.0,
+            });
+            bleed.tick_timer.reset();
+            bleed.ticks -= 1;
         }
     }
 }

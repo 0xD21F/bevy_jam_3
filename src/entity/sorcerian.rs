@@ -6,13 +6,11 @@ use rand::Rng;
 use crate::{
     animation::Animated,
     app_state::loading::{SfxAssets, SoundEffects},
-    behaviour::separation::{separation_system, Separation},
+    behaviour::separation::separation_system,
     game::{level_manager::SpawnerBundle, GameState},
-    PIXELS_PER_METER,
 };
 
 use super::{
-    adept,
     creature::{Creature, CreatureBundle, Hitbox, Velocity},
     spawner::{EnemyType, Spawner},
     Enemy, EnemyHurtboxDamage, ZSort,
@@ -90,7 +88,7 @@ pub fn do_shit(
     sfx: Res<AudioChannel<SoundEffects>>,
     music_assets: Res<SfxAssets>,
 ) {
-    for (sorcerian_query, adept_transform, mut velocity, mut sorcerian) in
+    for (_sorcerian_query, adept_transform, mut velocity, mut sorcerian) in
         sorcerian_query.iter_mut()
     {
         sorcerian.spawn_timer.tick(time.delta());
@@ -100,14 +98,14 @@ pub fn do_shit(
 
             // Play random laff
             let fiftyfifty = rng.gen_range(0..1);
-            if (fiftyfifty == 0) {
+            if fiftyfifty == 0 {
                 sfx.play(music_assets.laff1.clone());
             } else {
                 sfx.play(music_assets.laff2.clone());
             }
 
             // Sometimes dash away
-            if (fiftyfifty == 0) {
+            if fiftyfifty == 0 {
                 let random_vec2 = Vec2::new(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0));
                 velocity.value += random_vec2 * 1500.0;
             }
@@ -129,10 +127,10 @@ pub fn do_shit(
                         timer: Timer::from_seconds(0.5, TimerMode::Repeating),
                         spawn_rate: random_number,
                         spawn_count: random_number,
-                        enemy_type: enemy_type,
+                        enemy_type,
                     },
                 },
-                adept_transform.clone(),
+                *adept_transform,
                 GlobalTransform::default(),
             ));
             sorcerian.spawn_timer.reset()

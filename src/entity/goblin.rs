@@ -4,11 +4,7 @@ use rand::Rng;
 
 use crate::{
     animation::Animated,
-    app_state::AppState,
-    behaviour::{
-        separation::{separation_system, Separation},
-        states::approach_and_keep_distance::ApproachAndKeepDistance,
-    },
+    behaviour::separation::{separation_system, Separation},
     PIXELS_PER_METER,
 };
 
@@ -52,7 +48,7 @@ impl GoblinBundle {
                 creature: Creature {
                     acceleration: rng.gen_range(1000.0..2000.0),
                     friction: rng.gen_range(500.0..750.0),
-                    max_speed: max_speed,
+                    max_speed,
                     health: 80.0,
                     max_health: 80.0,
                     damage_invulnerability: Timer::from_seconds(1.0, TimerMode::Once),

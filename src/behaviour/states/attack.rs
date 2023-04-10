@@ -1,16 +1,9 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider, RigidBody, Sensor};
-use rand::Rng;
+use bevy_rapier2d::prelude::{ActiveCollisionTypes, Collider, Sensor};
 
 use crate::{
     animation::Animated,
-    app_state::loading::SpriteAssets,
-    entity::{
-        creature::{Creature, Lifetime, Velocity},
-        lab_boss::LabBoss,
-        spawner::Projectile,
-        EnemyHurtbox, EnemyHurtboxDamage,
-    },
+    entity::{creature::Lifetime, lab_boss::LabBoss, EnemyHurtbox, EnemyHurtboxDamage},
     PIXELS_PER_METER,
 };
 
