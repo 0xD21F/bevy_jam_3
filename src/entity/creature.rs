@@ -314,9 +314,6 @@ pub fn deal_damage_system(
     sprite_assets: Res<SpriteAssets>,
     mut mutation_manager: ResMut<MutationManager>,
 ) {
-    mutation_manager.add_mutation(MutationType::Dizziness);
-    mutation_manager.add_mutation(MutationType::Rage);
-    mutation_manager.add_mutation(MutationType::Drowziness);
     for (entity, mut creature, mut velocity, damage, player, transform) in query.iter_mut() {
         if creature.damage_invulnerability.finished() {
             creature.damage_invulnerability.reset();

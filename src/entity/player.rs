@@ -123,8 +123,6 @@ pub fn player_attacking_state_system(
     music_assets: Res<SfxAssets>,
     mut mutation_manager: ResMut<MutationManager>,
 ) {
-    mutation_manager.add_mutation(MutationType::Cyclone);
-    mutation_manager.add_mutation(MutationType::BowlingBall);
     for (entity, mut player, action_state) in player_info.iter_mut() {
         let is_rolling = rolling_query.get(entity).is_ok();
         let is_attacking = attacking_query.get(entity).is_ok();
