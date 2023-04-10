@@ -291,7 +291,7 @@ pub fn deal_damage_system(
                                 value: random_velocity,
                             })
                             .insert(Lifetime {
-                                timer: Timer::from_seconds(2.5, TimerMode::Once),
+                                timer: Timer::from_seconds(4.0, TimerMode::Once),
                             });
                     }
                 }

@@ -19,7 +19,7 @@ use leafwing_input_manager::{
 use seldom_state::prelude::InputTriggerPlugin;
 
 use super::{
-    creature::{Creature, CreatureBundle, Velocity},
+    creature::{Creature, CreatureBundle, Velocity, Lifetime},
     Enemy, ZSort,
 };
 
@@ -112,7 +112,7 @@ pub enum PlayerAnimationState {
 pub fn player_attacking_state_system(
     time: Res<Time>,
     mut player_info: Query<(Entity, &mut Player, &ActionState<PlayerAction>)>,
-    hurtbox_query: Query<Entity, With<PlayerHurtboxDamage>>,
+    hurtbox_query: Query<(Entity, &PlayerHurtboxDamage), Without<Lifetime>>,
     attacking_query: Query<&Attacking>,
     rolling_query: Query<&Rolling>,
     mut commands: Commands,
@@ -165,7 +165,7 @@ pub fn player_attacking_state_system(
         // If the attack_timer is finished, remove the Attacking and PlayerHurtbox components from the player and reset the cooldown timer
         if player.attack_timer.finished() && is_attacking {
             commands.entity(entity).remove::<Attacking>();
-            hurtbox_query.iter().for_each(|hurtbox_entity| {
+            hurtbox_query.iter().for_each(|(hurtbox_entity, _)| {
                 commands.entity(hurtbox_entity).despawn_recursive();
             });
 
@@ -434,6 +434,8 @@ pub fn spawn_player(
                     max_speed: 128.0,
                     acceleration: 2048.0,
                     friction: 512.0,
+                    health: 256.0,
+                    max_health: 256.0,
                     ..default()
                 },
                 ..default()
