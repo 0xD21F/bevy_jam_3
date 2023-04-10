@@ -110,6 +110,7 @@ impl Plugin for CreaturePlugin {
             .add_system(z_ordering_system)
             .add_system(set_sprite_facing_system)
             .add_system(set_player_facing_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(set_player_facing_system.in_set(OnUpdate(GameState::LevelComplete)))
             .add_system(
                 creature_clamp_to_current_level
                     .in_set(OnUpdate(GameState::InLevel))
@@ -121,6 +122,7 @@ impl Plugin for CreaturePlugin {
                     .after(apply_velocity_system),
             )
             .add_system(damage_invulnerability_system.in_set(OnUpdate(GameState::InLevel)))
+            .add_system(damage_invulnerability_system.in_set(OnUpdate(GameState::LevelComplete)))
             .add_system(deal_damage_system.in_set(OnUpdate(GameState::InLevel)))
             .add_system(bleed_system.in_set(OnUpdate(GameState::InLevel)))
             .add_system(knockback_system.in_set(OnUpdate(GameState::InLevel)))
