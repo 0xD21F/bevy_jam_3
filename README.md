@@ -1,6 +1,6 @@
 ﻿# Bevy Jam 3
-## Sorcerian rises
-![Sorcerian!](https://raw.githubusercontent.com/drifio/bevy_jam_3/main/assets/sprites/sorcerian.png?raw=true)
+## Mutape!
+![Mutape!](https://raw.githubusercontent.com/drifio/bevy_jam_3/main/assets/ui/title.png)
 
 Built in 2 weekends for the [Bevy Jam 3](https://itch.io/jam/bevy-jam-3) using [Bevy](https://bevyengine.org/).
 
